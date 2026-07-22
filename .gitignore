@@ -32,3 +32,6 @@ Thumbs.db
 
 # test
 coverage/
+
+# SDD scratch
+.superpowers/
