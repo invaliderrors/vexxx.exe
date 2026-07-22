@@ -25,6 +25,7 @@ import type { Locale } from '../../i18n/config';
 import { productPath, routePath } from '../../i18n/routes';
 import { getCatalog } from '../../lib/catalog';
 import { formatPrice } from '../../lib/format';
+import { productImage } from '../catalog/product-images';
 import ProductGrid from '../catalog/ProductGrid.astro';
 
 interface Props {
@@ -35,6 +36,7 @@ const { locale } = Astro.props;
 const dict = t(locale);
 const products = await getCatalog().getPublishedProducts();
 const featured = products.slice(0, 5);
+const shopStrip = products.filter((p) => p.availability === 'in-stock').slice(0, 3);
 const hoodie = products.find((product) => product.sku.includes('HOOD')) ?? products[0];
 const repeatedTicker = [...dict.home.ticker, ...dict.home.ticker];
 const manifestoTitleOneWords = dict.home.manifestoTitleOne.split(' ');
@@ -77,6 +79,20 @@ if (!shellPiece || !materialPiece || !duoPiece) {
           <a class="button button--outline" href={routePath('manifesto', locale)}>{dict.home.discover}</a>
         </div>
       </div>
+      <nav class="hero__shop" aria-label={dict.home.shopStripLabel}>
+        <p class="hero__shop-label eyebrow">{dict.home.shopStripLabel}</p>
+        <ul class="hero__shop-grid">
+          {shopStrip.map((item) => (
+            <li>
+              <a href={productPath(locale, item.slug[locale])}>
+                <Image src={productImage(item.sku)} alt={item.name[locale]} widths={[160, 320]} sizes="160px" loading="eager" />
+                <span class="hero__shop-name">{item.name[locale]}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <a class="button" href={routePath('products', locale)}>{dict.home.shopStripCta}</a>
+      </nav>
     </div>
     <div class="hero__scroll" aria-hidden="true">
       <span>{dict.home.scroll}</span><i></i>
@@ -357,6 +373,34 @@ if (!shellPiece || !materialPiece || !duoPiece) {
   .hero__bottom { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 2rem; margin-top: clamp(1.5rem, 4vh, 2.5rem); }
   .hero__bottom p { max-width: 25rem; margin: 0; color: #b9bcbd; font-size: 0.94rem; line-height: 1.65; }
   .hero__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .hero__shop {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    padding-top: 1.5rem;
+  }
+  .hero__shop-grid {
+    display: flex;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .hero__shop-grid img {
+    width: 4.5rem;
+    height: 4.5rem;
+    object-fit: cover;
+  }
+  .hero__shop-name {
+    display: block;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 0.4rem;
+  }
   .hero__scroll { position: absolute; bottom: 1.5rem; left: 50%; z-index: 3; display: flex; align-items: center; flex-direction: column; gap: 0.5rem; transform: translateX(-50%); color: var(--vx-dim); font-family: 'JetBrains Mono', monospace; font-size: 0.48rem; letter-spacing: 0.35em; }
   .hero__scroll i { width: 1px; height: 2.125rem; background: var(--vx-accent); animation: scroll-line 1.8s cubic-bezier(0.6, 0, 0.4, 1) infinite; }
 
@@ -546,6 +590,7 @@ if (!shellPiece || !materialPiece || !duoPiece) {
     /* Stacked full-width hero buttons need clearance above the scroll cue. */
     .hero__content { padding-bottom: 7.5rem; }
     .hero__scroll { bottom: 2.25rem; }
+    .hero__shop-grid img { width: 3.5rem; height: 3.5rem; }
     .manifesto-intro { min-height: 72vh; }
     .manifesto-intro__ghost { font-size: 45vh; }
     .manifesto-intro h2 { font-size: clamp(3.7rem, 18vw, 6rem); }

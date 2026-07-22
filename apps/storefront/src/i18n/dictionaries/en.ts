@@ -77,6 +77,8 @@ export const en: Dictionary = {
     heroTitleTwo: 'MADE TO FIT IN',
     heroBody:
       'VEXXX is not clothing. It is the uniform of those who refuse to become invisible.',
+    shopStripLabel: 'AVAILABLE NOW — DROP_001',
+    shopStripCta: 'View full catalog',
     enterDrop: 'ENTER THE DROP',
     discover: 'DISCOVER THE MOVEMENT',
     scroll: 'SCROLL',

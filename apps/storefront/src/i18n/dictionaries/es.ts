@@ -79,6 +79,8 @@ export const es = {
     heroTitleTwo: 'HECHO PARA ENCAJAR',
     heroBody:
       'VEXXX no es ropa. Es el uniforme de quienes se niegan a volverse invisibles.',
+    shopStripLabel: 'DISPONIBLE AHORA — DROP_001',
+    shopStripCta: 'Ver catálogo completo',
     enterDrop: 'ENTRAR AL DROP',
     discover: 'DESCUBRIR EL MOVIMIENTO',
     scroll: 'DESLIZA',
