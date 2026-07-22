@@ -38,7 +38,7 @@ const info = [
 <article class="product-page">
   <a class="product-back" href={routePath('products', locale)} data-cursor={dict.nav.cursorEnter}>{dict.product.back}</a>
   <div class="product-layout">
-    <div class="product-gallery" data-reveal="left">
+    <div class="product-gallery">
       <figure class="product-gallery__primary">
         <Image src={primary} alt={product.name[locale]} widths={[640, 960, 1280]} sizes="(max-width: 800px) 100vw, 55vw" loading="eager" fetchpriority="high" />
         <span>{product.sku}</span>
@@ -49,7 +49,7 @@ const info = [
       </div>
     </div>
 
-    <div class="product-summary" data-reveal="right">
+    <div class="product-summary">
       <span class="eyebrow">{dict.product.productCode}: {product.sku}</span>
       <h1 class="display-title">{product.name[locale]}</h1>
       <div class="product-price">
