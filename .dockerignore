@@ -7,5 +7,3 @@ node_modules
 .git
 .claude
 *.log
-Dockerfile
-**/Dockerfile

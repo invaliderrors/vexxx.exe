@@ -1,0 +1,27 @@
+# VEXXX platform — all apps on one network. Only the storefront runs today;
+# api and dashboard get their Dockerfile targets + services in later passes.
+services:
+  storefront:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: storefront
+    ports:
+      - '8080:80'
+    restart: unless-stopped
+    networks:
+      - vexxx
+
+  # api:                       # later pass — NestJS on :3300
+  #   build: { context: ., dockerfile: Dockerfile, target: api }
+  #   ports: ['3300:3300']
+  #   networks: [vexxx]
+
+  # dashboard:                 # later pass — Next.js on :3001, never indexed
+  #   build: { context: ., dockerfile: Dockerfile, target: dashboard }
+  #   ports: ['3001:3001']
+  #   networks: [vexxx]
+
+networks:
+  vexxx:
+    driver: bridge
