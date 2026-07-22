@@ -51,6 +51,13 @@ export default defineConfig({
     '/productos/[slug]': { status: 301, destination: '/catalog/[slug]' },
     '/en/products': { status: 301, destination: '/en/catalog' },
     '/en/products/[slug]': { status: 301, destination: '/en/catalog/[slug]' },
+    '/coleccion': { status: 301, destination: '/collection' },
+    '/colecciones': { status: 301, destination: '/collections' },
+    '/colecciones/[slug]': { status: 301, destination: '/collections/[slug]' },
+    '/manifiesto': { status: 301, destination: '/manifesto' },
+    '/privacidad': { status: 301, destination: '/privacy' },
+    '/terminos': { status: 301, destination: '/terms' },
+    '/envios': { status: 301, destination: '/shipping' },
   },
 
   vite: {

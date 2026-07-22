@@ -135,11 +135,13 @@ Review-blocking, not suggestions. All paths under `apps/storefront/`:
 - **Every user-visible string lives in `src/i18n/dictionaries/`.** `es.ts`
   defines the `Dictionary` type; `en.ts` must satisfy it — a missing
   translation is a type error. Hardcoded UI text is a defect.
-- **Localized slugs are intentional.** Spanish unprefixed (`/productos`),
-  English under `/en/products`. Static-route mapping lives in
-  `src/i18n/routes.ts`; detail pages carry per-locale slugs in data
+- **Route segments are English in BOTH locales** (owner decision, 2026-07-22):
+  Spanish unprefixed (`/catalog`), English under `/en/catalog` — brand
+  vocabulary, do NOT "re-localize" them. Static-route mapping lives in
+  `src/i18n/routes.ts`; detail pages still carry per-locale slugs in data
   (`slugs: { es, en }` raw → `slug` domain field). Never derive one locale's
-  URL from another by string manipulation — use the route helpers.
+  URL from another by string manipulation — use the route helpers. Renamed
+  URLs keep 301s in `astro.config.mjs`.
 - **hreflang is mandatory.** Every page passes `alternates` to `BaseLayout`.
 
 ## API facts (apps/api)

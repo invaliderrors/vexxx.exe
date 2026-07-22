@@ -1,26 +1,26 @@
 import type { Locale } from './config';
 
 /**
- * Route map between locales. Slugs are localized (es is unprefixed,
- * en lives under /en) — this map is what makes hreflang alternates
- * and locale switchers possible without string manipulation.
+ * Route map between locales (es is unprefixed, en lives under /en) —
+ * this map is what makes hreflang alternates and locale switchers
+ * possible without string manipulation.
+ *
+ * Deliberate product decision (2026-07-22): route SEGMENTS are English in
+ * both locales — brand vocabulary, like the rest of the VEXXX system UI.
+ * Only detail-page slugs stay per-locale (they come from data). Every
+ * pre-rename Spanish URL 301s in astro.config.mjs.
  */
 export const routes = {
   home: { es: '/', en: '/en' },
-  // '/catalog' on both locales is a deliberate product decision (was
-  // '/productos' + '/en/products'); the old URLs 301 in astro.config.mjs.
   products: { es: '/catalog', en: '/en/catalog' },
-  collections: { es: '/colecciones', en: '/en/collections' },
-  // '/archive' on es is a deliberate product decision (was '/archivo');
-  // the old URL 301s in astro.config.mjs.
+  collections: { es: '/collections', en: '/en/collections' },
   archive: { es: '/archive', en: '/en/archive' },
-  // '/drop' is intentionally shared: "drop" is brand vocabulary in both locales.
   drop: { es: '/drop', en: '/en/drop' },
-  collection: { es: '/coleccion', en: '/en/collection' },
-  manifesto: { es: '/manifiesto', en: '/en/manifesto' },
-  privacy: { es: '/privacidad', en: '/en/privacy' },
-  terms: { es: '/terminos', en: '/en/terms' },
-  shipping: { es: '/envios', en: '/en/shipping' },
+  collection: { es: '/collection', en: '/en/collection' },
+  manifesto: { es: '/manifesto', en: '/en/manifesto' },
+  privacy: { es: '/privacy', en: '/en/privacy' },
+  terms: { es: '/terms', en: '/en/terms' },
+  shipping: { es: '/shipping', en: '/en/shipping' },
 } as const satisfies Record<string, Record<Locale, string>>;
 
 export type RouteKey = keyof typeof routes;
@@ -41,5 +41,5 @@ export function productPath(locale: Locale, slug: string): string {
 }
 
 export function collectionPath(locale: Locale, slug: string): string {
-  return locale === 'es' ? `/colecciones/${slug}` : `/en/collections/${slug}`;
+  return locale === 'es' ? `/collections/${slug}` : `/en/collections/${slug}`;
 }
