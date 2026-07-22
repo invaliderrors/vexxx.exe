@@ -10,5 +10,6 @@
 ## Brand
 
 - [Manifesto (ES)](https://vexxx.co/manifesto)
+- [Manifesto (EN)](https://vexxx.co/en/manifesto)
+- [About (ES)](https://vexxx.co/about)
 - [About (EN)](https://vexxx.co/en/about)
-- [Contact (EN)](https://vexxx.co/en/contact)
