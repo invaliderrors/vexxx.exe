@@ -6,7 +6,7 @@ import {
   validateDescription,
 } from './meta';
 
-const site = new URL('https://vexxx.com');
+const site = new URL('https://vexxx.co');
 
 describe('buildTitle', () => {
   it('applies the brand template to inner pages', () => {
@@ -45,18 +45,18 @@ describe('validateDescription', () => {
 describe('canonicalUrl', () => {
   it('builds an absolute URL from a path', () => {
     expect(canonicalUrl(site, '/productos')).toBe(
-      'https://vexxx.com/productos',
+      'https://vexxx.co/productos',
     );
   });
 
   it('strips trailing slashes per the no-trailing-slash policy', () => {
     expect(canonicalUrl(site, '/productos/')).toBe(
-      'https://vexxx.com/productos',
+      'https://vexxx.co/productos',
     );
   });
 
   it('keeps the root as "/"', () => {
-    expect(canonicalUrl(site, '/')).toBe('https://vexxx.com/');
+    expect(canonicalUrl(site, '/')).toBe('https://vexxx.co/');
   });
 
   it('rejects relative paths', () => {
@@ -71,9 +71,9 @@ describe('hreflangLinks', () => {
       en: '/en/products',
     });
     expect(links).toEqual([
-      { hreflang: 'es-ES', href: 'https://vexxx.com/productos' },
-      { hreflang: 'en-US', href: 'https://vexxx.com/en/products' },
-      { hreflang: 'x-default', href: 'https://vexxx.com/productos' },
+      { hreflang: 'es-ES', href: 'https://vexxx.co/productos' },
+      { hreflang: 'en-US', href: 'https://vexxx.co/en/products' },
+      { hreflang: 'x-default', href: 'https://vexxx.co/productos' },
     ]);
   });
 });

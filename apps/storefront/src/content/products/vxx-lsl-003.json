@@ -12,6 +12,20 @@
     "es": "Manga larga de algodón de 240 GSM con lavado ácido, puños extendidos y patrón de decoloración irrepetible.",
     "en": "240 GSM cotton longsleeve with an acid wash, extended cuffs and an unrepeatable fade pattern."
   },
+  "details": {
+    "material": {
+      "es": "Algodón de 240 GSM con lavado ácido. Cada pieza tiene un patrón de decoloración irrepetible.",
+      "en": "240 GSM cotton with an acid wash. Every piece carries an unrepeatable fade pattern."
+    },
+    "fit": {
+      "es": "Corte relajado con puños extendidos. Talla habitual; el largo de manga está pensado para acumularse.",
+      "en": "Relaxed cut with extended cuffs. Usual size; the sleeve length is meant to stack."
+    },
+    "care": {
+      "es": "Lavar en frío, del revés y por separado las primeras veces. Secar al aire.",
+      "en": "Wash cold, inside out, and separately the first few times. Air dry."
+    }
+  },
   "price": { "amount": 54900000, "currency": "COP" },
   "images": [],
   "collection": "drop-001",
@@ -19,5 +33,6 @@
   "sizes": ["XS", "S", "M", "L", "XL"],
   "colors": ["washed-black", "concrete"],
   "availability": "in-stock",
-  "published": true
+  "published": true,
+  "updatedAt": "2026-07-22"
 }

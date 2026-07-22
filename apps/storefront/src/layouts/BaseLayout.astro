@@ -61,6 +61,15 @@ const accessPath = `${homePath}#access`;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      const vxRoot = document.documentElement;
+      vxRoot.classList.add('vx-anim');
+      try {
+        if (sessionStorage.getItem('vx-boot-seen') === '1') vxRoot.classList.add('vx-boot-seen');
+      } catch {
+        vxRoot.classList.add('vx-boot-seen');
+      }
+    </script>
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#050505" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -107,7 +116,12 @@ const accessPath = `${homePath}#access`;
       </div>
 
       <a class="wordmark" href={homePath} aria-label={dict.brand.name} data-cursor={dict.nav.cursorEnter}>
-        <Image src={vexxxWordmark} alt="" width={1166} height={430} />
+        <Image
+          src={vexxxWordmark}
+          alt=""
+          widths={[96, 128, 192]}
+          sizes="(max-width: 620px) 84px, 112px"
+        />
       </a>
 
       <nav class="site-header__actions" aria-label={dict.nav.ariaMain}>
@@ -175,6 +189,7 @@ const accessPath = `${homePath}#access`;
           <a href={routePath('shipping', locale)}>{dict.footer.shipping}</a>
           <a href={routePath('privacy', locale)}>{dict.footer.privacy}</a>
           <a href={routePath('terms', locale)}>{dict.footer.terms}</a>
+          <a href={routePath('about', locale)}>{dict.about.metaTitle}</a>
         </nav>
         <div>
           <p class="footer-label">{dict.footer.signal}</p>

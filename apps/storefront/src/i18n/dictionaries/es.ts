@@ -79,6 +79,8 @@ export const es = {
     heroTitleTwo: 'HECHO PARA ENCAJAR',
     heroBody:
       'VEXXX no es ropa. Es el uniforme de quienes se niegan a volverse invisibles.',
+    shopStripLabel: 'DISPONIBLE AHORA — DROP_001',
+    shopStripCta: 'Ver catálogo completo',
     enterDrop: 'ENTRAR AL DROP',
     discover: 'DESCUBRIR EL MOVIMIENTO',
     scroll: 'DESLIZA',
@@ -196,9 +198,9 @@ export const es = {
     finalQuoteTwo: 'ES AQUELLO EN LO QUE TE NIEGAS A CONVERTIRTE.',
   },
   products: {
-    metaTitle: 'Drop 001 — Streetwear premium',
+    metaTitle: 'Catálogo — Streetwear premium de edición limitada',
     metaDescription:
-      'Explora System Failure, el Drop 001 de VEXXX: prendas pesadas, técnicas y numeradas.',
+      'Catálogo completo VEXXX: streetwear premium en ediciones numeradas y limitadas. Producido una vez, después retirado.',
     eyebrow: 'SISTEMA / CATÁLOGO / DROP_001',
     heading: 'SYSTEM FAILURE',
     season: 'FW26 — PRIMERA EJECUCIÓN',
@@ -211,6 +213,7 @@ export const es = {
     campaign: 'SYSTEM FAILURE — CAMPAÑA FW26',
     filters: {
       title: 'FILTROS DEL SISTEMA',
+      filtersToggle: 'FILTROS',
       clear: 'LIMPIAR FILTROS',
       category: 'CATEGORÍA',
       size: 'TALLA',
@@ -317,21 +320,16 @@ export const es = {
     fitNote: 'FIT OVERSIZED — ELIGE TU TALLA HABITUAL',
     add: 'AÑADIR AL SISTEMA',
     save: 'GUARDAR PIEZA',
+    certificate: 'PIEZA NUMERADA — UNIDAD ASIGNADA AL PAGAR',
     unitNote:
-      'UNIDAD ASIGNADA AL PAGAR // PRODUCIDA UNA VEZ, DESPUÉS RETIRADA',
-    shippingNote: 'ENVÍO GLOBAL CON SEGUIMIENTO — DESPACHO EN 48 H',
+      'PRODUCIDA UNA VEZ, DESPUÉS RETIRADA',
+    shippingNote: 'ENVÍO NACIONAL CON SEGUIMIENTO — DESPACHO EN 48 H',
     material: 'MATERIAL Y CONSTRUCCIÓN',
     fit: 'CORTE',
     care: 'CUIDADOS',
     shipping: 'ENVÍO',
-    materialBody:
-      'Algodón pesado lavado y componentes técnicos. Costuras reforzadas y acabados diseñados para envejecer.',
-    fitBody:
-      'Silueta oversized de bloque ancho. Elige tu talla habitual para conservar la proporción diseñada.',
-    careBody:
-      'Lavar en frío y del revés. Secar al aire. El desgaste y la decoloración forman parte de la pieza.',
     shippingBody:
-      'Envío mundial con seguimiento. Despacho previsto en 48 horas. Sin reposición garantizada.',
+      'Envío nacional en Colombia con seguimiento. Despacho previsto en 48 horas. Sin reposición garantizada.',
     alsoInDrop: 'TAMBIÉN EN DROP_001',
     apparelSizes: ['XS', 'S', 'M', 'L', 'XL'],
     oneSize: ['OS'],
@@ -391,6 +389,18 @@ export const es = {
       'Llevar VEXXX es una señal: nunca fui hecho para encajar y ya no estoy pidiendo permiso. La alteración es silenciosa. No actúa para el feed.',
     end: 'FIN DE LA TRANSMISIÓN\nVEXXX.EXE // FW26',
     action: 'ENTRAR AL DROP',
+  },
+  about: {
+    metaTitle: 'Sobre la marca',
+    metaDescription:
+      'VEXXX es una marca de streetwear de edición limitada: piezas numeradas, producidas una vez y retiradas. Conoce el proceso detrás de cada drop.',
+    eyebrow: 'VEXXX.EXE / SISTEMA',
+    heading: 'SOBRE LA MARCA',
+    body: [
+      'VEXXX produce streetwear premium en ediciones numeradas y limitadas. Cada pieza se produce una sola vez; cuando un drop se agota, se retira y no se repone.',
+      'Cada drop es una serie cerrada: materiales pesados, acabados lavados y construcción pensada para envejecer con el uso. El desgaste forma parte del diseño.',
+      'El catálogo completo, las fechas de cada drop y la disponibilidad por talla se publican únicamente en este sitio.',
+    ],
   },
   legal: {
     privacy: {

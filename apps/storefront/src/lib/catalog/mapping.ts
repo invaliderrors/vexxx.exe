@@ -52,6 +52,10 @@ export const rawProductSchema = z
       .min(1),
     availability: z.enum(['in-stock', 'out-of-stock', 'pre-order']),
     published: z.boolean(),
+    updatedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    details: z
+      .object({ material: localizedText, fit: localizedText, care: localizedText })
+      .strict(),
   })
   .strict();
 
@@ -80,6 +84,8 @@ export function parseProduct(id: string, raw: unknown): Product {
     colors: data.colors,
     availability: data.availability,
     published: data.published,
+    updatedAt: data.updatedAt,
+    details: data.details,
   };
 }
 

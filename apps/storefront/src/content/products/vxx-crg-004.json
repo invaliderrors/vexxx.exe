@@ -12,6 +12,20 @@
     "es": "Cargo de ripstop reforzado con pierna ancha, rodillas articuladas, ocho bolsillos y herrajes personalizados en gunmetal.",
     "en": "Bonded-ripstop cargo with a wide leg, articulated knees, eight pockets and custom gunmetal hardware."
   },
+  "details": {
+    "material": {
+      "es": "Ripstop reforzado con ocho bolsillos y herrajes personalizados en gunmetal.",
+      "en": "Bonded ripstop with eight pockets and custom gunmetal hardware."
+    },
+    "fit": {
+      "es": "Pierna ancha con rodillas articuladas y tiro medio. Talla habitual; el bajo apila sobre la zapatilla.",
+      "en": "Wide leg with articulated knees and a mid rise. Usual size; the hem stacks over the shoe."
+    },
+    "care": {
+      "es": "Lavar en frío con los bolsillos cerrados. No usar secadora: protege el laminado del ripstop.",
+      "en": "Wash cold with the pockets closed. No tumble drying - it protects the ripstop bonding."
+    }
+  },
   "price": { "amount": 104900000, "currency": "COP" },
   "images": [],
   "collection": "drop-001",
@@ -19,5 +33,6 @@
   "sizes": ["XS", "S", "M", "L", "XL"],
   "colors": ["washed-black", "gunmetal"],
   "availability": "in-stock",
-  "published": true
+  "published": true,
+  "updatedAt": "2026-07-22"
 }

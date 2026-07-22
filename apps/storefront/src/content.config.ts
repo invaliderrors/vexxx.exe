@@ -63,6 +63,10 @@ const productsCollection = defineCollection({
         .min(1),
       availability: z.enum(['in-stock', 'out-of-stock', 'pre-order']),
       published: z.boolean(),
+      updatedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+      details: z
+        .object({ material: localizedText, fit: localizedText, care: localizedText })
+        .strict(),
     })
     .strict(),
 });

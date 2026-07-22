@@ -35,6 +35,13 @@ export interface ProductImage {
   readonly height: number;
 }
 
+/** Per-product accordion copy — factual, unique per SKU. */
+export interface ProductDetails {
+  readonly material: LocalizedText;
+  readonly fit: LocalizedText;
+  readonly care: LocalizedText;
+}
+
 export interface Product {
   /** Stable internal id (content entry id today, DB id tomorrow). */
   readonly id: string;
@@ -54,6 +61,9 @@ export interface Product {
   readonly colors: readonly ProductColor[];
   readonly availability: ProductAvailability;
   readonly published: boolean;
+  /** ISO date (YYYY-MM-DD) of last content change. Drives sitemap lastmod. */
+  readonly updatedAt: string;
+  readonly details: ProductDetails;
 }
 
 export interface Collection {

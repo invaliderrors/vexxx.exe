@@ -12,4 +12,12 @@ export const SITE = {
   socialProfiles: [] as readonly string[],
   /** Placeholder until brand assets exist. Path under /public. */
   logoPath: '/favicon.svg',
+  /** Merchant-listing facts encoded in Product JSON-LD. Owner-confirmed 2026-07-22. */
+  commerce: {
+    shipsFromCountry: 'CO',
+    // Owner-confirmed 2026-07-22: 30-day mail returns, customer pays; ships to CO only for now.
+    shippingDestinations: ['CO'] as readonly string[],
+    handlingDaysMax: 2, // "Despacho previsto en 48 horas"
+    returnDays: 30,
+  },
 } as const;

@@ -1,7 +1,5 @@
 ---
 import { Image } from 'astro:assets';
-import campaignGroup from '../../assets/vexxx/campaign-group.png';
-import campaignPortrait from '../../assets/vexxx/campaign-portrait.png';
 import { t } from '../../i18n';
 import type { Locale } from '../../i18n/config';
 import { routePath } from '../../i18n/routes';
@@ -27,10 +25,10 @@ const status = product.availability === 'out-of-stock'
   : product.availability === 'pre-order'
     ? dict.products.preOrder
     : dict.products.available;
-const info = [
-  [dict.product.material, dict.product.materialBody],
-  [dict.product.fit, dict.product.fitBody],
-  [dict.product.care, dict.product.careBody],
+const info: readonly (readonly [string, string])[] = [
+  [dict.product.material, product.details.material[locale]],
+  [dict.product.fit, product.details.fit[locale]],
+  [dict.product.care, product.details.care[locale]],
   [dict.product.shipping, dict.product.shippingBody],
 ];
 ---
@@ -38,24 +36,21 @@ const info = [
 <article class="product-page">
   <a class="product-back" href={routePath('products', locale)} data-cursor={dict.nav.cursorEnter}>{dict.product.back}</a>
   <div class="product-layout">
-    <div class="product-gallery" data-reveal="left">
+    <div class="product-gallery">
       <figure class="product-gallery__primary">
-        <Image src={primary} alt={product.name[locale]} widths={[640, 960, 1280]} sizes="(max-width: 800px) 100vw, 55vw" />
+        <Image src={primary} alt={product.name[locale]} widths={[640, 960, 1280]} sizes="(max-width: 800px) 100vw, 55vw" loading="eager" fetchpriority="high" />
         <span>{product.sku}</span>
       </figure>
-      <div class="product-gallery__secondary">
-        <figure><Image src={campaignPortrait} alt="" loading="lazy" /></figure>
-        <figure><Image src={campaignGroup} alt="" loading="lazy" /></figure>
-      </div>
     </div>
 
-    <div class="product-summary" data-reveal="right">
+    <div class="product-summary">
       <span class="eyebrow">{dict.product.productCode}: {product.sku}</span>
       <h1 class="display-title">{product.name[locale]}</h1>
       <div class="product-price">
         <data value={String(product.price.amount)}>{formatPrice(product.price, locale)}</data>
         <span>{status}</span>
       </div>
+      <p class="product-certificate">{dict.product.certificate}</p>
       <p class="product-description">{product.description[locale]}</p>
 
       <div class="size-label">
@@ -92,14 +87,13 @@ const info = [
   .product-gallery__primary { aspect-ratio: 4 / 5; }
   .product-gallery img { width: 100%; height: 100%; object-fit: cover; }
   .product-gallery__primary > span { position: absolute; top: 0.9rem; left: 0.9rem; padding: 0.4rem 0.55rem; border: 1px solid rgb(232 230 225 / 18%); background: rgb(5 5 5 / 82%); color: #9a9d9f; font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; letter-spacing: 0.16em; }
-  .product-gallery__secondary { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .product-gallery__secondary figure { aspect-ratio: 1; }
   .product-summary { position: sticky; top: calc(var(--header-height) + 2rem); }
   .product-summary h1 { margin: 1rem 0; font-size: clamp(3rem, 5vw, 5rem); }
   .product-price { display: flex; align-items: baseline; gap: 1.25rem; margin: 1.5rem 0; }
   .product-price data { font-size: 1.5rem; font-weight: 600; }
   .product-price span { color: var(--vx-accent); font-family: 'JetBrains Mono', monospace; font-size: 0.56rem; letter-spacing: 0.16em; }
   .product-description { max-width: 31rem; margin-bottom: 2rem; color: #b9bcbd; font-size: 0.9rem; line-height: 1.8; }
+  .product-certificate { font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.75; margin: 0.5rem 0 0; }
   .size-label { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 0.8rem; color: #7a7d80; font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; letter-spacing: 0.16em; }
   .size-picker { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 1.5rem; padding: 0; border: 0; }
   .size-picker label { position: relative; }
@@ -127,12 +121,16 @@ const info = [
 
   @media (max-width: 850px) {
     .product-layout { grid-template-columns: 1fr; }
-    .product-summary { position: static; }
+    .product-summary { position: static; order: -1; }
   }
 
   @media (max-width: 560px) {
     .product-page { padding-inline: 1rem; }
     .product-actions { grid-template-columns: 1fr; }
     .size-label { align-items: flex-start; flex-direction: column; }
+  }
+
+  @media (pointer: coarse) {
+    .size-picker span { min-height: 3rem; }
   }
 </style>

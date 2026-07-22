@@ -18,6 +18,7 @@ export const routes = {
   drop: { es: '/drop', en: '/en/drop' },
   collection: { es: '/collection', en: '/en/collection' },
   manifesto: { es: '/manifesto', en: '/en/manifesto' },
+  about: { es: '/about', en: '/en/about' },
   privacy: { es: '/privacy', en: '/en/privacy' },
   terms: { es: '/terms', en: '/en/terms' },
   shipping: { es: '/shipping', en: '/en/shipping' },

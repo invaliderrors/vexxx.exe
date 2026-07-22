@@ -7,14 +7,14 @@ import {
   webSiteJsonLd,
 } from './jsonld';
 
-const siteUrl = new URL('https://vexxx.com');
+const siteUrl = new URL('https://vexxx.co');
 
 describe('organizationJsonLd', () => {
   it('builds an Organization node anchored to the origin', () => {
     const node = organizationJsonLd({ siteUrl });
     expect(node['@type']).toBe('Organization');
-    expect(node['@id']).toBe('https://vexxx.com/#organization');
-    expect(node['url']).toBe('https://vexxx.com/');
+    expect(node['@id']).toBe('https://vexxx.co/#organization');
+    expect(node['url']).toBe('https://vexxx.co/');
   });
 });
 
@@ -23,7 +23,7 @@ describe('webSiteJsonLd', () => {
     const node = webSiteJsonLd({ siteUrl });
     expect(node['@type']).toBe('WebSite');
     expect(node['publisher']).toEqual({
-      '@id': 'https://vexxx.com/#organization',
+      '@id': 'https://vexxx.co/#organization',
     });
   });
 });
@@ -31,21 +31,21 @@ describe('webSiteJsonLd', () => {
 describe('breadcrumbJsonLd', () => {
   it('numbers positions starting at 1', () => {
     const node = breadcrumbJsonLd([
-      { name: 'Inicio', url: 'https://vexxx.com/' },
-      { name: 'Productos', url: 'https://vexxx.com/productos' },
+      { name: 'Inicio', url: 'https://vexxx.co/' },
+      { name: 'Productos', url: 'https://vexxx.co/productos' },
     ]);
     expect(node['itemListElement']).toEqual([
       {
         '@type': 'ListItem',
         position: 1,
         name: 'Inicio',
-        item: 'https://vexxx.com/',
+        item: 'https://vexxx.co/',
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Productos',
-        item: 'https://vexxx.com/productos',
+        item: 'https://vexxx.co/productos',
       },
     ]);
   });
@@ -65,9 +65,9 @@ describe('productJsonLd', () => {
   const validInput = {
     name: 'Oversized Tee 001',
     description: 'Heavyweight oversized tee.',
-    url: 'https://vexxx.com/productos/camiseta-oversized-001',
+    url: 'https://vexxx.co/productos/camiseta-oversized-001',
     sku: 'VX-TEE-001',
-    images: ['https://vexxx.com/images/tee-001.jpg'],
+    images: ['https://vexxx.co/images/tee-001.jpg'],
     price: { amount: 4990, currency: 'EUR' } as const,
     availability: AVAILABILITY.inStock,
   };
@@ -104,5 +104,31 @@ describe('productJsonLd', () => {
         rating: 5,
       }),
     ).toThrow();
+  });
+
+  it('includes shipping details and return policy on the offer', () => {
+    const product = productJsonLd(validInput);
+    const offers = product['offers'] as Record<string, unknown>;
+    expect(offers['shippingDetails']).toEqual({
+      '@type': 'OfferShippingDetails',
+      shippingDestination: [{ '@type': 'DefinedRegion', addressCountry: 'CO' }],
+      deliveryTime: {
+        '@type': 'ShippingDeliveryTime',
+        handlingTime: {
+          '@type': 'QuantitativeValue',
+          minValue: 0,
+          maxValue: 2,
+          unitCode: 'DAY',
+        },
+      },
+    });
+    expect(offers['hasMerchantReturnPolicy']).toEqual({
+      '@type': 'MerchantReturnPolicy',
+      applicableCountry: ['CO'],
+      returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+      merchantReturnDays: 30,
+      returnMethod: 'https://schema.org/ReturnByMail',
+      returnFees: 'https://schema.org/ReturnFeesCustomerResponsibility',
+    });
   });
 });

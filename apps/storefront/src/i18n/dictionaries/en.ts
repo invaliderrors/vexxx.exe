@@ -77,6 +77,8 @@ export const en: Dictionary = {
     heroTitleTwo: 'MADE TO FIT IN',
     heroBody:
       'VEXXX is not clothing. It is the uniform of those who refuse to become invisible.',
+    shopStripLabel: 'AVAILABLE NOW — DROP_001',
+    shopStripCta: 'View full catalog',
     enterDrop: 'ENTER THE DROP',
     discover: 'DISCOVER THE MOVEMENT',
     scroll: 'SCROLL',
@@ -194,9 +196,9 @@ export const en: Dictionary = {
     finalQuoteTwo: 'IT IS WHAT YOU REFUSE TO BECOME.',
   },
   products: {
-    metaTitle: 'Drop 001 — Premium streetwear',
+    metaTitle: 'Catalog — Limited-edition premium streetwear',
     metaDescription:
-      'Explore System Failure, VEXXX Drop 001: heavyweight, technical and numbered garments.',
+      'The full VEXXX catalog: premium streetwear in numbered, limited editions. Produced once, then retired.',
     eyebrow: 'SYSTEM / CATALOG / DROP_001',
     heading: 'SYSTEM FAILURE',
     season: 'FW26 — FIRST EXECUTION',
@@ -209,6 +211,7 @@ export const en: Dictionary = {
     campaign: 'SYSTEM FAILURE — CAMPAIGN FW26',
     filters: {
       title: 'SYSTEM FILTERS',
+      filtersToggle: 'FILTERS',
       clear: 'CLEAR FILTERS',
       category: 'CATEGORY',
       size: 'SIZE',
@@ -315,21 +318,16 @@ export const en: Dictionary = {
     fitNote: 'OVERSIZED FIT — TAKE YOUR REGULAR SIZE',
     add: 'ADD TO SYSTEM',
     save: 'SAVE PIECE',
+    certificate: 'NUMBERED PIECE — UNIT ASSIGNED AT CHECKOUT',
     unitNote:
-      'UNIT ASSIGNED AT CHECKOUT // MADE ONCE, THEN RETIRED',
-    shippingNote: 'WORLDWIDE TRACKED — 48H DISPATCH',
+      'PRODUCED ONCE, THEN RETIRED',
+    shippingNote: 'COLOMBIA TRACKED — 48H DISPATCH',
     material: 'MATERIAL & CONSTRUCTION',
     fit: 'FIT',
     care: 'CARE',
     shipping: 'SHIPPING',
-    materialBody:
-      'Washed heavyweight cotton and technical components. Reinforced seams and finishes engineered to age.',
-    fitBody:
-      'Wide, oversized block. Take your regular size to preserve the intended proportion.',
-    careBody:
-      'Cold wash inside out. Hang dry. Wear and fading are part of the object.',
     shippingBody:
-      'Worldwide tracked shipping. Dispatch expected within 48 hours. No restock guaranteed.',
+      'Tracked shipping across Colombia. Dispatch expected within 48 hours. No guaranteed restock.',
     alsoInDrop: 'ALSO IN DROP_001',
     apparelSizes: ['XS', 'S', 'M', 'L', 'XL'],
     oneSize: ['OS'],
@@ -389,6 +387,18 @@ export const en: Dictionary = {
       'Wearing VEXXX is a signal: I was never made to fit in and I am not asking anymore. The disturbance is quiet. It does not perform for the feed.',
     end: 'TRANSMISSION ENDS\nVEXXX.EXE // FW26',
     action: 'ENTER THE DROP',
+  },
+  about: {
+    metaTitle: 'About the brand',
+    metaDescription:
+      'VEXXX is a limited-edition streetwear label: numbered pieces, produced once and retired. Learn the process behind every drop.',
+    eyebrow: 'VEXXX.EXE / SYSTEM',
+    heading: 'ABOUT THE BRAND',
+    body: [
+      'VEXXX makes premium streetwear in numbered, limited editions. Every piece is produced exactly once; when a drop sells out it is retired, never restocked.',
+      'Each drop is a closed series: heavy fabrics, washed finishes and construction built to age with wear. Wear is part of the design.',
+      'The full catalog, drop dates and per-size availability are published only on this site.',
+    ],
   },
   legal: {
     privacy: {

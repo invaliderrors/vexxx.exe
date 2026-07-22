@@ -8,10 +8,9 @@ Guidance for Codex (Codex.ai/code) working in this repository.
 Bilingual throughout (Spanish default at `/`, English at `/en`).
 
 The repo is the **base** of the platform: SEO-first storefront, shell API and
-dashboard, shared contracts, strict tooling. There is deliberately **zero
-visual design** — semantic HTML placeholders only. Later passes own: brand
-look, commerce API internals (payments, inventory, orders), dashboard
-features, database.
+dashboard, shared contracts, strict tooling. The storefront's brand look has
+shipped (see Design, below). Later passes own: commerce API internals
+(payments, inventory, orders), dashboard features, database.
 
 ## Workspace layout
 
@@ -184,10 +183,10 @@ Review-blocking, not suggestions. All paths under `apps/storefront/`:
 - Pure logic lives in plain TS modules so it tests without a framework runtime;
   framework-coupled files stay thin.
 
-## Design (deliberately absent)
+## Design
 
-- `apps/storefront/src/styles/global.css` imports Tailwind and nothing else.
-  Design tokens (`@theme`) arrive with the brand identity — do not invent
-  colors, fonts or layout before that pass.
-- Keep placeholder markup semantic (`article`, `nav`, `data`, heading
-  hierarchy) — structure is SEO; styling is not.
+- The design system — tokens, typography, color — lives in
+  `apps/storefront/src/styles/global.css` plus component-scoped styles.
+  Visual changes go through those, not a new parallel system.
+- Keep markup semantic (`article`, `nav`, `data`, heading hierarchy) —
+  structure is SEO.

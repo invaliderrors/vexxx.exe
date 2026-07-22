@@ -1,11 +1,18 @@
 ---
+import { getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HomePage from '../components/home/HomePage.astro';
+import campaignHero from '../assets/vexxx/campaign-hero.png';
 import { t } from '../i18n';
 import { routeAlternates } from '../i18n/routes';
 
 const locale = 'es' as const;
 const dict = t(locale);
+const socialImage = await getImage({ src: campaignHero, format: 'jpeg', width: 1200 });
+const socialImageUrl = new URL(
+  socialImage.src,
+  Astro.site ?? new URL('https://vexxx.co'),
+).toString();
 ---
 
 <BaseLayout
@@ -15,6 +22,7 @@ const dict = t(locale);
   path="/"
   alternates={routeAlternates('home')}
   isHome={true}
+  image={socialImageUrl}
 >
   <HomePage locale={locale} />
 </BaseLayout>
