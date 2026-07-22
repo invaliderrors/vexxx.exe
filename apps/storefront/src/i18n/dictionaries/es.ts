@@ -196,9 +196,9 @@ export const es = {
     finalQuoteTwo: 'ES AQUELLO EN LO QUE TE NIEGAS A CONVERTIRTE.',
   },
   products: {
-    metaTitle: 'Drop 001 — Streetwear premium',
+    metaTitle: 'Catálogo — Streetwear premium de edición limitada',
     metaDescription:
-      'Explora System Failure, el Drop 001 de VEXXX: prendas pesadas, técnicas y numeradas.',
+      'Catálogo completo VEXXX: streetwear premium en ediciones numeradas y limitadas. Producido una vez, después retirado.',
     eyebrow: 'SISTEMA / CATÁLOGO / DROP_001',
     heading: 'SYSTEM FAILURE',
     season: 'FW26 — PRIMERA EJECUCIÓN',

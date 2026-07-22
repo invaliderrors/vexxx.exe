@@ -194,9 +194,9 @@ export const en: Dictionary = {
     finalQuoteTwo: 'IT IS WHAT YOU REFUSE TO BECOME.',
   },
   products: {
-    metaTitle: 'Drop 001 — Premium streetwear',
+    metaTitle: 'Catalog — Limited-edition premium streetwear',
     metaDescription:
-      'Explore System Failure, VEXXX Drop 001: heavyweight, technical and numbered garments.',
+      'The full VEXXX catalog: premium streetwear in numbered, limited editions. Produced once, then retired.',
     eyebrow: 'SYSTEM / CATALOG / DROP_001',
     heading: 'SYSTEM FAILURE',
     season: 'FW26 — FIRST EXECUTION',
