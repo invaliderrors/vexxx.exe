@@ -2,11 +2,22 @@
 import { Image } from 'astro:assets';
 import campaignGroup from '../../assets/vexxx/campaign-group.png';
 import campaignHero from '../../assets/vexxx/campaign-hero.png';
+import campaignHeroAlt from '../../assets/vexxx/campaign-hero-2.png';
 import campaignPortrait from '../../assets/vexxx/campaign-portrait.png';
+import collectionHero from '../../assets/vexxx/collection-hero.png';
+import communityMember from '../../assets/vexxx/community-member.png';
+import countdownCrowd from '../../assets/vexxx/countdown-crowd.png';
+import dropHero from '../../assets/vexxx/drop-hero.png';
+import editorialSkin from '../../assets/vexxx/editorial-concrete-skin.png';
+import editorialFlash from '../../assets/vexxx/editorial-flash-study.png';
+import editorialMacro from '../../assets/vexxx/editorial-hardware-macro.png';
+import editorialMotion from '../../assets/vexxx/editorial-motion-blur.png';
+import editorialNight from '../../assets/vexxx/editorial-night-exterior.png';
 import campaignDuo from '../../assets/vexxx/fw26-duo-stairwell.png';
 import campaignTunnel from '../../assets/vexxx/fw26-tunnel-campaign.png';
 import hoodieStudy from '../../assets/vexxx/hoodie-study.png';
 import materialStudy from '../../assets/vexxx/material-study-red-tack.png';
+import hoodProduct from '../../assets/vexxx/products/vxx-hood-001.png';
 import prototypeShell from '../../assets/vexxx/prototype-shell-jacket.png';
 import vexxxMark from '../../assets/vexxx/vexxx-mark.png';
 import { t } from '../../i18n';
@@ -28,7 +39,7 @@ const hoodie = products.find((product) => product.sku.includes('HOOD')) ?? produ
 const repeatedTicker = [...dict.home.ticker, ...dict.home.ticker];
 const manifestoTitleOneWords = dict.home.manifestoTitleOne.split(' ');
 const manifestoTitleTwoWords = dict.home.manifestoTitleTwo.split(' ');
-const editorialImages = [campaignPortrait, materialStudy, campaignTunnel, campaignDuo, prototypeShell] as const;
+const editorialImages = [editorialFlash, editorialMacro, editorialMotion, editorialNight, editorialSkin] as const;
 const [shellPiece, materialPiece, duoPiece] = dict.home.designLabPieces;
 if (!shellPiece || !materialPiece || !duoPiece) {
   throw new Error(`The ${locale} dictionary must define all three design-lab pieces.`);
@@ -201,7 +212,7 @@ if (!shellPiece || !materialPiece || !duoPiece) {
         <i><b data-story-progress-bar></b></i>
       </div>
       <div class="story__image" data-story-image>
-        <Image src={hoodieStudy} alt={dict.home.storyTitle} loading="lazy" />
+        <Image src={hoodProduct} alt={dict.home.storyTitle} loading="lazy" />
       </div>
       {
         dict.home.storyPoints.map((point, index) => (
@@ -242,15 +253,15 @@ if (!shellPiece || !materialPiece || !duoPiece) {
       <p>{dict.home.communityBody}</p>
     </header>
     <div class="community-grid">
-      <figure data-reveal><Image src={campaignPortrait} alt="" loading="lazy" /><figcaption>{dict.home.communityMembers[0]}</figcaption></figure>
-      <figure data-reveal class="reveal-delay-05"><Image src={campaignDuo} alt="" loading="lazy" /><figcaption>{dict.home.communityMembers[1]}</figcaption></figure>
-      <figure data-reveal class="reveal-delay-1"><Image src={campaignTunnel} alt="" loading="lazy" /><figcaption>{dict.home.communityMembers[2]}</figcaption></figure>
-      <figure data-reveal class="reveal-delay-15"><Image src={prototypeShell} alt="" loading="lazy" /><figcaption>{dict.home.communityMembers[3]}</figcaption></figure>
+      <figure data-reveal><Image src={communityMember} alt="" loading="lazy" /><figcaption>{dict.home.communityMembers[0]}</figcaption></figure>
+      <figure data-reveal class="reveal-delay-05"><Image src={campaignHeroAlt} alt="" loading="lazy" /><figcaption>{dict.home.communityMembers[1]}</figcaption></figure>
+      <figure data-reveal class="reveal-delay-1"><Image src={dropHero} alt="" loading="lazy" /><figcaption>{dict.home.communityMembers[2]}</figcaption></figure>
+      <figure data-reveal class="reveal-delay-15"><Image src={collectionHero} alt="" loading="lazy" /><figcaption>{dict.home.communityMembers[3]}</figcaption></figure>
     </div>
   </section>
 
   <section class="countdown">
-    <Image src={campaignGroup} alt="" loading="lazy" aria-hidden="true" />
+    <Image src={countdownCrowd} alt="" loading="lazy" aria-hidden="true" />
     <div class="countdown__shade" aria-hidden="true"></div>
     <div class="countdown__content" data-reveal>
       <span class="eyebrow release-dot">{dict.home.nextEyebrow}</span>

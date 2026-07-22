@@ -1,13 +1,11 @@
 ---
 import { Image } from 'astro:assets';
-import campaignGroup from '../../assets/vexxx/campaign-group.png';
-import campaignPortrait from '../../assets/vexxx/campaign-portrait.png';
-import hoodieStudy from '../../assets/vexxx/hoodie-study.png';
 import { t } from '../../i18n';
 import type { Locale } from '../../i18n/config';
 import { productPath } from '../../i18n/routes';
 import type { Product } from '../../lib/catalog';
 import { formatPrice } from '../../lib/format';
+import { productImage } from './product-images';
 
 interface Props {
   product: Product;
@@ -18,11 +16,7 @@ interface Props {
 
 const { product, locale, index = 0, compact = false } = Astro.props;
 const dict = t(locale);
-const image = product.sku.includes('HOOD')
-  ? hoodieStudy
-  : product.sku.includes('TEE') || product.sku.includes('CRG')
-    ? campaignPortrait
-    : campaignGroup;
+const image = productImage(product.sku);
 const status = product.availability === 'out-of-stock'
   ? dict.products.soldOut
   : product.availability === 'pre-order'

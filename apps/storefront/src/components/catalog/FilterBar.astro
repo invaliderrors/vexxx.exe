@@ -225,6 +225,10 @@ const sortOptions = [
   }
 
   .filter-group legend {
+    /* Legends render in the fieldset's border area, ignoring its padding —
+       float pulls them into normal flow so they align with the chips. */
+    float: left;
+    width: 100%;
     padding: 0;
     margin-bottom: 0.85rem;
     color: var(--vx-dim);
@@ -236,6 +240,7 @@ const sortOptions = [
 
   .filter-group__options {
     display: flex;
+    clear: both;
     flex-wrap: wrap;
     gap: 0.45rem;
   }

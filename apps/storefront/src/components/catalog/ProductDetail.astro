@@ -2,13 +2,13 @@
 import { Image } from 'astro:assets';
 import campaignGroup from '../../assets/vexxx/campaign-group.png';
 import campaignPortrait from '../../assets/vexxx/campaign-portrait.png';
-import hoodieStudy from '../../assets/vexxx/hoodie-study.png';
 import { t } from '../../i18n';
 import type { Locale } from '../../i18n/config';
 import { routePath } from '../../i18n/routes';
 import type { Product } from '../../lib/catalog';
 import { formatPrice } from '../../lib/format';
 import ProductGrid from './ProductGrid.astro';
+import { productImage } from './product-images';
 
 interface Props {
   product: Product;
@@ -18,11 +18,7 @@ interface Props {
 
 const { product, related, locale } = Astro.props;
 const dict = t(locale);
-const primary = product.sku.includes('HOOD')
-  ? hoodieStudy
-  : product.sku.includes('TEE') || product.sku.includes('CRG')
-    ? campaignPortrait
-    : campaignGroup;
+const primary = productImage(product.sku);
 const sizes = product.sku.includes('CAP') || product.sku.includes('BAG')
   ? dict.product.oneSize
   : dict.product.apparelSizes;
