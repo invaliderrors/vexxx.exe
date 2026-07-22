@@ -33,6 +33,8 @@ export default defineConfig({
 
   integrations: [
     sitemap({
+      // eslint-disable-next-line no-undef
+      filter: (page) => !/\/(privacy|terms|shipping)$/.test(new URL(page).pathname),
       // hreflang alternates for the prefix-mapped pages. Localized-slug pages
       // (products, collections) carry their alternates in <head> via <Seo />,
       // which search engines accept equally.
