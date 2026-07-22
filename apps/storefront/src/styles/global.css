@@ -1343,8 +1343,18 @@ html.vx-boot-seen .boot-screen {
     height: 3rem;
   }
   .header-locale,
-  .header-access,
   .cart-trigger {
+    min-height: 3rem;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+/* .header-access is display:none below 621px (small-screen header only shows
+   burger + wordmark + search/cart) — bump its tap target only where it's
+   actually visible, so this rule never re-enables it by source order. */
+@media (pointer: coarse) and (min-width: 621px) {
+  .header-access {
     min-height: 3rem;
     display: inline-flex;
     align-items: center;
