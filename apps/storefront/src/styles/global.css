@@ -159,6 +159,19 @@ html.vx-anim [data-reveal].vx-on {
   transform: none;
 }
 
+/* Failsafe: if the client module never adds .vx-on (chunk failed to load),
+   decorative reveals force visible after 3s — same belt-and-braces as the
+   boot screen's autodismiss. */
+@keyframes reveal-failsafe {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+html.vx-anim [data-reveal]:not(.vx-on) {
+  animation: reveal-failsafe 0.9s ease 3s forwards;
+}
+
 [data-hscroll] {
   user-select: none;
   scrollbar-width: none;
