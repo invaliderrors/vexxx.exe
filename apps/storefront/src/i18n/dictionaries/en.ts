@@ -211,6 +211,7 @@ export const en: Dictionary = {
     campaign: 'SYSTEM FAILURE — CAMPAIGN FW26',
     filters: {
       title: 'SYSTEM FILTERS',
+      filtersToggle: 'FILTERS',
       clear: 'CLEAR FILTERS',
       category: 'CATEGORY',
       size: 'SIZE',

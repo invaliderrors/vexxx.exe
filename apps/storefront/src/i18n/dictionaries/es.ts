@@ -213,6 +213,7 @@ export const es = {
     campaign: 'SYSTEM FAILURE — CAMPAÑA FW26',
     filters: {
       title: 'FILTROS DEL SISTEMA',
+      filtersToggle: 'FILTROS',
       clear: 'LIMPIAR FILTROS',
       category: 'CATEGORÍA',
       size: 'TALLA',

@@ -129,4 +129,8 @@ const info: readonly (readonly [string, string])[] = [
     .product-actions { grid-template-columns: 1fr; }
     .size-label { align-items: flex-start; flex-direction: column; }
   }
+
+  @media (pointer: coarse) {
+    .size-picker span { min-height: 3rem; }
+  }
 </style>

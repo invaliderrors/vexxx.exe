@@ -1335,3 +1335,18 @@ html.vx-boot-seen .boot-screen {
     transform: none;
   }
 }
+
+/* 48px minimum touch targets on coarse pointers (audit: chips 31px, icons 40px). */
+@media (pointer: coarse) {
+  .icon-button {
+    width: 3rem;
+    height: 3rem;
+  }
+  .header-locale,
+  .header-access,
+  .cart-trigger {
+    min-height: 3rem;
+    display: inline-flex;
+    align-items: center;
+  }
+}

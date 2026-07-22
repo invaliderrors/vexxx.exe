@@ -75,7 +75,10 @@ const sortOptions = [
       [ {labels.clear} ]
     </button>
   </div>
-  <div class="filter-bar__groups">
+  <button type="button" class="filter-toggle" data-filter-toggle aria-expanded="true">
+    {labels.filtersToggle}
+  </button>
+  <div class="filter-bar__groups" data-filter-groups>
     <fieldset class="filter-group">
       <legend>{labels.category}</legend>
       <div class="filter-group__options">
@@ -284,6 +287,30 @@ const sortOptions = [
       border-right: 0;
     }
   }
+
+  @media (pointer: coarse) {
+    .filter-chip {
+      min-height: 3rem;
+      padding-inline: 1rem;
+    }
+  }
+
+  .filter-toggle {
+    display: none;
+  }
+
+  @media (max-width: 620px) {
+    .filter-toggle {
+      display: block;
+      width: 100%;
+      min-height: 3rem;
+      text-align: left;
+    }
+
+    [data-filter-toggle][aria-expanded='false'] + [data-filter-groups] {
+      display: none;
+    }
+  }
 </style>
 
 <script>
@@ -304,7 +331,20 @@ const sortOptions = [
     readonly facts: CardFacts;
   }
 
+  function initializeFilterToggle(bar: HTMLElement): void {
+    const toggle = bar.querySelector<HTMLButtonElement>('[data-filter-toggle]');
+    if (toggle && window.matchMedia('(max-width: 620px)').matches) {
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+    toggle?.addEventListener('click', () => {
+      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!expanded));
+    });
+  }
+
   function initializeFilterBar(bar: HTMLElement): void {
+    initializeFilterToggle(bar);
+
     const foundGrid = document.querySelector<HTMLElement>('[data-filter-grid]');
     if (!foundGrid) return;
     const grid: HTMLElement = foundGrid;
