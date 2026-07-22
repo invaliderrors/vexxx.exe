@@ -154,7 +154,7 @@ html.vx-anim [data-reveal='right'] {
   transform: translateX(56px);
 }
 
-[data-reveal].vx-on {
+html.vx-anim [data-reveal].vx-on {
   opacity: 1;
   transform: none;
 }
@@ -1330,7 +1330,7 @@ html.vx-boot-seen .boot-screen {
     transition-duration: 0.01ms !important;
   }
 
-  [data-reveal] {
+  html.vx-anim [data-reveal] {
     opacity: 1;
     transform: none;
   }
