@@ -116,7 +116,12 @@ const accessPath = `${homePath}#access`;
       </div>
 
       <a class="wordmark" href={homePath} aria-label={dict.brand.name} data-cursor={dict.nav.cursorEnter}>
-        <Image src={vexxxWordmark} alt="" width={1166} height={430} />
+        <Image
+          src={vexxxWordmark}
+          alt=""
+          widths={[96, 128, 192]}
+          sizes="(max-width: 620px) 84px, 112px"
+        />
       </a>
 
       <nav class="site-header__actions" aria-label={dict.nav.ariaMain}>
