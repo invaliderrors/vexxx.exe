@@ -386,6 +386,18 @@ export const es = {
     end: 'FIN DE LA TRANSMISIÓN\nVEXXX.EXE // FW26',
     action: 'ENTRAR AL DROP',
   },
+  about: {
+    metaTitle: 'Sobre la marca',
+    metaDescription:
+      'VEXXX es una marca de streetwear de edición limitada: piezas numeradas, producidas una vez y retiradas. Conoce el proceso detrás de cada drop.',
+    eyebrow: 'VEXXX.EXE / SISTEMA',
+    heading: 'SOBRE LA MARCA',
+    body: [
+      'VEXXX produce streetwear premium en ediciones numeradas y limitadas. Cada pieza se produce una sola vez; cuando un drop se agota, se retira y no se repone.',
+      'Cada drop es una serie cerrada: materiales pesados, acabados lavados y construcción pensada para envejecer con el uso. El desgaste forma parte del diseño.',
+      'El catálogo completo, las fechas de cada drop y la disponibilidad por talla se publican únicamente en este sitio.',
+    ],
+  },
   legal: {
     privacy: {
       metaTitle: 'Política de privacidad',

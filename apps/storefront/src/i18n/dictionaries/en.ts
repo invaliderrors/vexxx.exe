@@ -384,6 +384,18 @@ export const en: Dictionary = {
     end: 'TRANSMISSION ENDS\nVEXXX.EXE // FW26',
     action: 'ENTER THE DROP',
   },
+  about: {
+    metaTitle: 'About the brand',
+    metaDescription:
+      'VEXXX is a limited-edition streetwear label: numbered pieces, produced once and retired. Learn the process behind every drop.',
+    eyebrow: 'VEXXX.EXE / SYSTEM',
+    heading: 'ABOUT THE BRAND',
+    body: [
+      'VEXXX makes premium streetwear in numbered, limited editions. Every piece is produced exactly once; when a drop sells out it is retired, never restocked.',
+      'Each drop is a closed series: heavy fabrics, washed finishes and construction built to age with wear. Wear is part of the design.',
+      'The full catalog, drop dates and per-size availability are published only on this site.',
+    ],
+  },
   legal: {
     privacy: {
       metaTitle: 'Privacy Policy',
