@@ -1,5 +1,8 @@
 dist/
 .astro/
+.next/
+.nx/
 node_modules/
 pnpm-lock.yaml
 coverage/
+next-env.d.ts

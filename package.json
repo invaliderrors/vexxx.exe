@@ -3,47 +3,41 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "vexxx — streetwear e-commerce storefront. SEO-first Astro base.",
+  "description": "vexxx — streetwear e-commerce platform monorepo (storefront, API, dashboard).",
   "engines": {
     "node": ">=20.19"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "@swc/core",
       "esbuild",
+      "nx",
       "sharp"
     ]
   },
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "typecheck": "astro check",
+    "dev": "nx run @vexxx/storefront:dev",
+    "dev:api": "nx run @vexxx/api:dev",
+    "dev:dashboard": "nx run @vexxx/dashboard:dev",
+    "build": "nx run-many -t build",
+    "typecheck": "nx run-many -t typecheck",
+    "test": "nx run-many -t test",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "verify": "pnpm typecheck && pnpm lint && pnpm test && pnpm build"
-  },
-  "dependencies": {
-    "@astrojs/node": "^9.3.0",
-    "@astrojs/sitemap": "^3.4.0",
-    "@tailwindcss/vite": "^4.1.0",
-    "astro": "^5.13.0",
-    "tailwindcss": "^4.1.0",
-    "zod": "^3.25.0"
+    "verify": "pnpm typecheck && pnpm lint && pnpm test && pnpm build",
+    "affected": "nx affected -t typecheck,test,build"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.4",
     "@eslint/js": "^9.30.0",
     "eslint": "^9.30.0",
     "eslint-plugin-astro": "^1.3.0",
     "eslint-plugin-jsx-a11y": "^6.10.0",
+    "nx": "^21.3.0",
     "prettier": "^3.6.0",
     "prettier-plugin-astro": "^0.14.0",
     "typescript": "^5.8.0",
-    "typescript-eslint": "^8.35.0",
-    "vitest": "^3.2.0"
+    "typescript-eslint": "^8.35.0"
   }
 }

@@ -5,7 +5,15 @@ import eslintPluginAstro from 'eslint-plugin-astro';
 
 export default tseslint.config(
   {
-    ignores: ['dist/', '.astro/', 'node_modules/', 'coverage/'],
+    ignores: [
+      '**/dist/',
+      '**/.astro/',
+      '**/.next/',
+      '**/node_modules/',
+      '**/coverage/',
+      '.nx/',
+      '**/next-env.d.ts',
+    ],
   },
   js.configs.recommended,
   ...tseslint.configs.strict,
@@ -40,6 +48,11 @@ export default tseslint.config(
       '@typescript-eslint/consistent-type-imports': [
         'error',
         { prefer: 'type-imports' },
+      ],
+      // Nest modules are decorator-carrying empty classes by design.
+      '@typescript-eslint/no-extraneous-class': [
+        'error',
+        { allowWithDecorator: true },
       ],
     },
   },

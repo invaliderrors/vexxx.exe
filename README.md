@@ -1,17 +1,24 @@
 # vexxx
 
-SEO-first Astro storefront base for **VEXXX**, a streetwear clothing brand.
+Monorepo for **VEXXX**, a streetwear e-commerce platform. SEO-first Astro
+storefront, NestJS API and Next.js dashboard shells, shared zod contracts.
 Bilingual (Spanish default at `/`, English at `/en`). Zero visual design by
-intent — this repo ships the structural, SEO and data foundations only.
+intent — this repo ships structural, SEO and data foundations only.
 
-## Stack
+## Workspace
 
-- [Astro 5](https://astro.build) — static-first, `@astrojs/node` adapter ready
-  for future on-demand routes (cart, checkout, API).
-- TypeScript (`strictest` preset), ESLint (flat, astro + ts-strict), Prettier.
-- Tailwind CSS v4 (tooling installed; no design tokens yet).
-- Vitest for unit tests, zod for boundary validation.
-- `@astrojs/sitemap` + generated `robots.txt`.
+```
+apps/
+  storefront/   Astro 5 public storefront — SEO-first, static-first (:4321)
+  api/          NestJS 11 API shell — payments/inventory/orders stubs (:3300)
+  dashboard/    Next 15 customer dashboard shell — never indexed (:3001)
+libs/
+  contracts/    zod schemas + types: money, order, payment, inventory
+  money/        Integer minor-unit money; the only formatting code
+```
+
+Orchestrated by **Nx** (package-based): builds are cached and dependency-
+ordered; libs compile to `dist/` and every app consumes plain JS + d.ts.
 
 ## Getting started
 
@@ -19,45 +26,29 @@ Requires Node >= 20.19 and pnpm.
 
 ```bash
 pnpm install
-pnpm dev        # http://localhost:4321
+pnpm dev              # storefront http://localhost:4321
+pnpm dev:api          # API http://localhost:3300/health
+pnpm dev:dashboard    # dashboard http://localhost:3001
 ```
 
 Before committing:
 
 ```bash
-pnpm verify     # typecheck + lint + test + build
-```
-
-## Project layout
-
-```
-src/
-  components/seo/   Seo.astro (head meta) + JsonLd.astro (structured data)
-  config/           site.ts — brand identity (name, title template, socials)
-  content/          Placeholder catalog data (products, collections as JSON)
-  i18n/             Locales, typed dictionaries (es defines, en satisfies),
-                    localized route map + helpers
-  layouts/          BaseLayout.astro — head, sitewide JSON-LD, semantic shell
-  lib/
-    catalog/        Backend-agnostic catalog: domain types, CatalogAdapter
-                    interface, zod boundary mapping, content-collection source
-    money/          Integer minor-unit Money + the only formatting code
-    seo/            meta.ts (titles, canonical, hreflang) + jsonld.ts builders
-  pages/            es routes at root, en mirror under /en, robots.txt endpoint
-public/             Static assets (favicon placeholder)
-docs/specs/         Design documents
+pnpm verify           # typecheck + lint + test + build, all projects
 ```
 
 ## Key decisions
 
-- **Canonical origin** is `site` in `astro.config.mjs` (`https://vexxx.com`
-  placeholder — change it there and nowhere else).
-- **Catalog is swappable**: pages call `getCatalog()` and never touch the data
-  source. The future commerce API implements `CatalogAdapter` and replaces the
-  content source in one line.
-- **Meta is enforced**: empty/over-long titles and descriptions throw at build
-  time. hreflang + canonical are required props of every page.
-- **Money is integer minor units** end-to-end; formatting only via
-  `src/lib/money`.
+- **Canonical origin** is `site` in `apps/storefront/astro.config.mjs`
+  (`https://vexxx.com` placeholder — change it there and nowhere else).
+- **Contracts lock invariants early**: server-recomputed totals, PSP amounts
+  treated as untrusted, audited-only inventory movements — encoded in
+  `libs/contracts` before any implementation exists.
+- **Catalog is swappable**: storefront pages call `getCatalog()`; the future
+  API implements the same `CatalogAdapter` interface behind one switch line.
+- **Meta is enforced**: empty/over-long titles or descriptions fail the
+  storefront build; canonical + hreflang are required props of every page.
+- **Money is integer minor units** end-to-end (`@vexxx/contracts`), formatted
+  only via `@vexxx/money`.
 
-See `CLAUDE.md` for the full rule set and `docs/specs/` for the design record.
+See `CLAUDE.md` for the full rule set and `docs/specs/` for design records.

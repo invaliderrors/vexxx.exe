@@ -1,0 +1,27 @@
+{
+  "name": "@vexxx/money",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The ONLY money implementation. Integer minor units end-to-end; formatting happens here and nowhere else.",
+  "main": "./dist/money.js",
+  "types": "./dist/money.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/money.d.ts",
+      "default": "./dist/money.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.lib.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@vexxx/contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0",
+    "vitest": "^3.2.0"
+  }
+}

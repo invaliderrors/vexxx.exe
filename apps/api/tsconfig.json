@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "rootDir": "src",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    // ES2022 flips this true by default, which silently destroys decorator
+    // metadata and produces opaque runtime DI failures. Keep false.
+    "useDefineForClassFields": false,
+    // CJS emit is incompatible with verbatimModuleSyntax; isolatedModules
+    // still guards transpiler-safety.
+    "verbatimModuleSyntax": false,
+    "declaration": false
+  },
+  "include": ["src/**/*"]
+}

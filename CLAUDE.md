@@ -4,13 +4,32 @@ Guidance for Claude Code (claude.ai/code) working in this repository.
 
 ## Project
 
-**vexxx** — SEO-first Astro storefront for the VEXXX streetwear brand.
-Bilingual: Spanish (default) at `/`, English at `/en`.
+**vexxx** — monorepo for the VEXXX streetwear e-commerce platform.
+Bilingual throughout (Spanish default at `/`, English at `/en`).
 
-The repo is the **base** of the store: SEO infrastructure, i18n, a
-backend-agnostic catalog, and strict tooling. There is deliberately **zero visual
-design** — semantic HTML placeholders only. A future pass owns the brand's look;
-a future commerce API replaces the content-collection catalog source.
+The repo is the **base** of the platform: SEO-first storefront, shell API and
+dashboard, shared contracts, strict tooling. There is deliberately **zero
+visual design** — semantic HTML placeholders only. Later passes own: brand
+look, commerce API internals (payments, inventory, orders), dashboard
+features, database.
+
+## Workspace layout
+
+```
+apps/
+  storefront/   Astro 5 public storefront. SEO-first, static-first. Bilingual.
+  api/          NestJS 11 HTTP API. SHELL — health + domain module stubs
+                (payments, inventory, orders). Port 3300.
+  dashboard/    Next 15 customer dashboard. SHELL — never indexed. Port 3001.
+libs/
+  contracts/    zod schemas + types (money, order, payment, inventory).
+                Depends on NOTHING but zod.
+  money/        The ONLY money implementation. Depends on contracts.
+```
+
+Libs compile to `dist/` (plain ESM JS + d.ts) and are consumed as built
+packages — no transpile hacks in any consumer. Nx orders and caches builds:
+`typecheck`/`test`/`build` all `dependsOn ^build`, so lib dist is always fresh.
 
 ## Commands
 
@@ -18,127 +37,157 @@ a future commerce API replaces the content-collection catalog source.
 
 ```bash
 pnpm install
-pnpm dev            # dev server on :4321
-pnpm build          # production build (static, into dist/)
-pnpm preview        # serve the production build
-pnpm typecheck      # astro check (tsc over .ts and .astro)
-pnpm lint           # eslint (flat config, astro + ts strict)
-pnpm test           # vitest run
-pnpm verify         # typecheck + lint + test + build — run before every commit
+pnpm dev              # storefront on :4321
+pnpm dev:api          # API on :3300
+pnpm dev:dashboard    # dashboard on :3001
+pnpm build            # nx run-many -t build (libs first, then apps)
+pnpm typecheck        # nx run-many -t typecheck
+pnpm test             # nx run-many -t test
+pnpm lint             # eslint . (single root flat config)
+pnpm affected         # typecheck,test,build on affected projects only
+pnpm verify           # typecheck + lint + test + build — run before every commit
+
+pnpm nx run @vexxx/storefront:test        # one project
 ```
+
+## Module boundaries — enforced by review, structural where possible
+
+- `libs/contracts` depends on **zod only**. Never on another workspace package,
+  never on a framework. It is the shared language of the platform.
+- `libs/money` depends on `@vexxx/contracts` only.
+- Apps depend on libs via `@vexxx/*` workspace packages. **Apps never import
+  from other apps**, and never deep-import lib internals (`@vexxx/money` — not
+  `@vexxx/money/src/...`).
+- The storefront's catalog boundary: pages call `getCatalog()`
+  (`apps/storefront/src/lib/catalog/adapter.ts` is the seam). When the API
+  exists for real, it becomes a new source behind that interface — pages do
+  not change. A page importing `astro:content` for product data directly is
+  wrong.
 
 ## Non-negotiable engineering rules
 
-1. **Zero `any`.** No `as any`, no `@ts-ignore`, no non-null assertion to dodge a
-   type error. External data enters as `unknown` and is narrowed with zod.
+1. **Zero `any`.** No `as any`, no `@ts-ignore`, no non-null assertion to dodge
+   a type error. External data enters as `unknown` and is narrowed with zod.
    ESLint enforces this at `error`.
 2. **Validate every external input at the boundary** with zod `.strict()`
    schemas. The static type must be earned at runtime, not asserted.
-   `src/lib/catalog/mapping.ts` is the reference pattern.
+   Reference patterns: `libs/contracts/src/*`, `apps/storefront/src/lib/catalog/mapping.ts`,
+   `apps/api/src/config/env.ts`.
 3. **Money is INTEGER minor units end-to-end.** Never floats, never strings for
-   arithmetic. Format only through `src/lib/money`. Decimal conversion exists
-   solely at display/serialization boundaries inside that module.
-4. **No secrets in code.** Runtime config comes from environment variables,
-   documented in `.env.example`.
-5. **Every lib module ships tests.** TDD: failing test → minimal implementation
-   → pass. `pnpm test` must stay green; vitest deliberately has no
-   `passWithNoTests` — an empty test glob fails.
+   arithmetic. The shape is `@vexxx/contracts` `moneySchema`; formatting only
+   through `@vexxx/money`. Decimal conversion exists solely at
+   display/serialization boundaries inside that lib.
+4. **No secrets in code.** API config flows through `apps/api/src/config/env.ts`
+   (zod, fail-fast on boot). Every env var is documented in the app's
+   `.env.example` in the same commit that introduces it.
+5. **Every module ships tests.** TDD: failing test → minimal implementation →
+   pass. No `passWithNoTests` anywhere — an empty test glob must fail.
 6. **Never fabricate passing results.** Run the command; report real output.
 
-## SEO rules — the reason this repo exists
+## Payments / orders — locked early, before any implementation exists
 
-These are review-blocking, not suggestions:
+These invariants are encoded in `libs/contracts` and bind every future pass:
 
-1. **No page without complete meta.** Every page renders through
-   `BaseLayout`, which mounts `<Seo />`. Unique `title` + `description`,
-   canonical URL and hreflang alternates are **required props** — a page that
-   cannot supply them does not ship. Never write `<title>` or meta tags by hand.
+- **Totals are server-recomputed. The API never accepts an amount from the
+  client.** `orderSchema` totals are snapshots our code computed.
+- **A PSP-reported amount is untrusted input.** Payment reconciliation compares
+  it against our own order total; mismatch → `PAYMENT_MISMATCH` / `MISMATCH`
+  status and an alert. It never silently becomes `PAID`/`SUCCEEDED`.
+- **Inventory changes only through audited adjustments**
+  (`inventoryAdjustmentSchema`), never direct level writes.
+
+## SEO rules — the storefront's reason to exist
+
+Review-blocking, not suggestions. All paths under `apps/storefront/`:
+
+1. **No page without complete meta.** Every page renders through `BaseLayout`,
+   which mounts `<Seo />`. Unique `title` + `description`, canonical URL and
+   hreflang alternates are **required props**. Never write `<title>` or meta
+   tags by hand.
 2. **Meta limits fail the build.** Titles > 65 chars, descriptions > 170 chars,
-   or empty values throw in `src/lib/seo/meta.ts` at build time. Do not weaken
-   these limits to make a page pass; fix the copy.
-3. **Structured data comes from typed builders.** JSON-LD only via
-   `src/lib/seo/jsonld.ts` builders rendered through `<JsonLd />`. Never
-   hand-write `<script type="application/ld+json">`. Required per page type:
-   product pages → `Product` + `BreadcrumbList`; listing pages →
-   `BreadcrumbList`; all pages inherit `Organization` + `WebSite` from the
-   layout.
-4. **Static-first.** `output: 'static'`; every page prerenders. A page may opt
-   into SSR (`export const prerender = false`) only for genuinely dynamic
-   concerns (future cart/checkout/API routes) — never for content a crawler
-   should see.
-5. **Zero client JavaScript by default.** No UI framework is installed. Adding
-   an island (or a framework integration) requires a stated justification in the
-   PR — "interactivity" isn't one unless the interaction genuinely needs JS.
-6. **One URL per resource.** Trailing-slash policy is `'never'` and build format
-   `'file'` — canonical and served URL must always match. Permanent URL changes
-   get a 301 in the `redirects` map in `astro.config.mjs`, in the same commit
-   that moves the page.
-7. **Images go through `astro:assets`** (`<Image />` / `<Picture />`) once real
-   assets exist. Every image ships `alt` (localized), `width` and `height` — no
-   layout shift, no exceptions. Social/OG images are absolute URLs.
-8. **Core Web Vitals are a budget, not an aspiration.** Nothing render-blocking
-   in `<head>` beyond what the base ships. Fonts, when added, are self-hosted
-   with `font-display: swap` and preloaded — never a third-party CSS request.
-9. **`robots.txt` and the sitemap are generated** (`src/pages/robots.txt.ts`,
-   `@astrojs/sitemap`). Never hand-maintain either. Pages that must not be
-   indexed use the `noindex` prop (see `404.astro`), not robots.txt entries.
+   or empty values throw in `src/lib/seo/meta.ts` at build time. Fix the copy,
+   never weaken the limits.
+3. **Structured data comes from typed builders** (`src/lib/seo/jsonld.ts`)
+   rendered through `<JsonLd />`. Never hand-write
+   `<script type="application/ld+json">`. Product pages → `Product` +
+   `BreadcrumbList`; listings → `BreadcrumbList`; every page inherits
+   `Organization` + `WebSite` from the layout.
+4. **Static-first.** Every storefront page prerenders. SSR opt-out
+   (`export const prerender = false`) is only for genuinely dynamic concerns
+   (future cart/checkout) — never for content a crawler should see.
+5. **Zero client JavaScript by default.** No UI framework in the storefront.
+   Adding an island requires stated justification in the PR.
+6. **One URL per resource.** Trailing-slash `'never'`, build format `'file'`.
+   Permanent URL changes get a 301 in the `redirects` map of
+   `astro.config.mjs`, in the same commit that moves the page.
+7. **Images go through `astro:assets`** once real assets exist — localized
+   `alt`, explicit `width`/`height`, no exceptions.
+8. **Core Web Vitals are a budget.** Nothing render-blocking beyond what the
+   base ships. Fonts, when added, are self-hosted, `font-display: swap`,
+   preloaded.
+9. **`robots.txt` and the sitemap are generated.** Non-indexable pages use the
+   `noindex` prop, not robots.txt entries.
+10. **The dashboard is never indexed** — `robots` metadata in its root layout
+    plus an `X-Robots-Tag` header in `next.config.ts`. Both stay.
 
-## i18n rules
+## i18n rules (storefront)
 
-- **Every user-visible string lives in `src/i18n/dictionaries/`.** Hardcoded
-  UI text in a page or component is a defect. `es.ts` defines the `Dictionary`
-  type; `en.ts` must satisfy it — a missing translation is a type error.
-- **Localized slugs are intentional.** Spanish routes are unprefixed
-  (`/productos`), English lives under `/en/products`. The mapping lives in
-  `src/i18n/routes.ts`; detail pages carry per-locale slugs in their data
-  (`slug: { es, en }`). Never derive one locale's URL from another's by string
-  manipulation — use the route helpers.
+- **Every user-visible string lives in `src/i18n/dictionaries/`.** `es.ts`
+  defines the `Dictionary` type; `en.ts` must satisfy it — a missing
+  translation is a type error. Hardcoded UI text is a defect.
+- **Localized slugs are intentional.** Spanish unprefixed (`/productos`),
+  English under `/en/products`. Static-route mapping lives in
+  `src/i18n/routes.ts`; detail pages carry per-locale slugs in data
+  (`slugs: { es, en }` raw → `slug` domain field). Never derive one locale's
+  URL from another by string manipulation — use the route helpers.
 - **hreflang is mandatory.** Every page passes `alternates` to `BaseLayout`.
-  For static routes use `routeAlternates()`; for detail pages build the map from
-  both locales' slugs.
 
-## Architecture facts
+## API facts (apps/api)
 
-- **Pages depend on `getCatalog()`, never on a backend.**
-  `src/lib/catalog/adapter.ts` is the seam. Today's source reads Astro content
-  collections (`sources/content.ts`); the future commerce API becomes a new
-  source implementing the same interface, switched in `src/lib/catalog/index.ts`.
-  If a page imports `astro:content` for product data directly, it is wrong.
-- **Catalog validation is duplicated on purpose.** `src/content.config.ts`
-  (Astro's bundled zod) and `src/lib/catalog/mapping.ts` (our zod) declare
-  structurally identical schemas — the two zod instances cannot share objects.
-  A field change edits **both files in the same commit**; mapping.ts is
-  authoritative and rejects drift at build time.
-- **`src/config/site.ts` is the only source of brand identity** (name, title
-  template, social profiles). The canonical origin lives in `astro.config.mjs`
-  `site` and reaches code via `Astro.site` — never hardcode the domain.
-- **Fail fast on missing config.** Code that needs `Astro.site` throws when it
-  is absent rather than falling back to a relative URL.
+- CommonJS build (Nest standard). `useDefineForClassFields: false` is pinned in
+  its tsconfig — `target: ES2022` flips it true by default and silently
+  destroys decorator metadata, producing opaque runtime DI failures. Do not
+  remove.
+- Nest DI under Vitest is **proven working** by `src/nest-di.test.ts` —
+  `unplugin-swc` supplies the decorator metadata esbuild drops. That test is an
+  architecture gate, not a feature test. Keep it.
+- Workspace libs are ESM; the CJS API consumes them via Node's `require(esm)`
+  (supported from Node 20.19, our engine floor). Do not lower the Node floor.
+- `payments/`, `inventory/`, `orders/` are empty module shells marking the
+  domain structure. Their doc comments state what later passes own.
 
 ## TypeScript conventions
 
-- `astro/tsconfigs/strictest` plus `noUncheckedIndexedAccess`,
-  `exactOptionalPropertyTypes`, `noImplicitOverride`, `noImplicitReturns`,
-  `noFallthroughCasesInSwitch`, `verbatimModuleSyntax`. No exemptions.
-- Optional Astro component props are typed `foo?: T | undefined` so callers may
-  pass an explicitly-undefined value under `exactOptionalPropertyTypes`.
-- Component props: explicit `interface Props` in the frontmatter. Callbacks
-  typed precisely — never `Function`.
-- Imports of types use `import type` (`consistent-type-imports` at `error`).
+- `tsconfig.base.json` is options-only — **no `include`**, every project
+  supplies its own, so files can never leak between app programs.
+- Base: `strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`,
+  `noImplicitOverride`, `noImplicitReturns`, `noFallthroughCasesInSwitch`,
+  `noUnusedLocals`, `noUnusedParameters`, `verbatimModuleSyntax`. Apps override
+  only what their framework demands (documented inline in each tsconfig).
+- The storefront extends `astro/tsconfigs/strictest` instead (equivalent
+  strictness; Astro-aware).
+- Libs are ESM with NodeNext resolution — relative imports **must** carry the
+  `.js` extension.
+- Optional component props are typed `foo?: T | undefined`
+  (`exactOptionalPropertyTypes` compatibility). Explicit `interface Props` /
+  `interface XxxProps` above every component.
+- Type imports use `import type` (`consistent-type-imports` at `error`).
 
 ## Testing conventions
 
-- Vitest, `node` environment, tests beside source: `src/**/*.test.ts`.
-- Pure logic lives in plain TS modules (`src/lib/**`) so it tests without an
-  Astro runtime. Astro-coupled files (`sources/content.ts`, components, pages)
-  stay thin; logic worth testing gets extracted to a pure module first.
-- The catalog mapping tests are the boundary-validation reference: valid input
-  maps, floats/missing locales/unknown fields throw.
+- Vitest everywhere; tests beside source (`src/**/*.test.{ts,tsx}`).
+- Environments: `node` for libs and api, `jsdom` for the dashboard, storefront
+  lib tests run in `node`.
+- The api vitest config carries the SWC plugin for decorator metadata; the
+  dashboard vitest config sets `esbuild.jsx: 'automatic'` because its tsconfig
+  uses `jsx: preserve` for Next. Both are load-bearing.
+- Pure logic lives in plain TS modules so it tests without a framework runtime;
+  framework-coupled files stay thin.
 
 ## Design (deliberately absent)
 
-- `src/styles/global.css` imports Tailwind and nothing else. The `@theme` block
-  arrives with the brand identity — do not invent tokens, colors, fonts or
-  layout before that pass.
+- `apps/storefront/src/styles/global.css` imports Tailwind and nothing else.
+  Design tokens (`@theme`) arrive with the brand identity — do not invent
+  colors, fonts or layout before that pass.
 - Keep placeholder markup semantic (`article`, `nav`, `data`, heading
   hierarchy) — structure is SEO; styling is not.
