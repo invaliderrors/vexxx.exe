@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // The canonical production origin. Every canonical URL, hreflang alternate,
 // sitemap entry and JSON-LD @id derives from this single value.
-const SITE_URL = 'https://vexxx.com';
+const SITE_URL = 'https://vexxx.co';
 
 export default defineConfig({
   site: SITE_URL,

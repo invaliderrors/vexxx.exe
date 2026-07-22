@@ -40,7 +40,7 @@ pnpm verify           # typecheck + lint + test + build, all projects
 ## Key decisions
 
 - **Canonical origin** is `site` in `apps/storefront/astro.config.mjs`
-  (`https://vexxx.com` placeholder — change it there and nowhere else).
+  (`https://vexxx.co` placeholder — change it there and nowhere else).
 - **Contracts lock invariants early**: server-recomputed totals, PSP amounts
   treated as untrusted, audited-only inventory movements — encoded in
   `libs/contracts` before any implementation exists.
