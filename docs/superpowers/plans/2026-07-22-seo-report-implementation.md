@@ -54,6 +54,7 @@ Tasks marked **[OWNER-GATED]** implement full structure with these values; if a 
 - [ ] After Task 1 deploys: submit `https://vexxx.co/sitemap-index.xml` in Google Search Console; verify canonical + sitemap URLs show `vexxx.co`; watch `site:vexxx.co` over 2–4 weeks.
 - [ ] After Phase 1 deploys: re-run Rich Results Test on one product URL per locale.
 - [ ] After Phase 0 ships: capture drift baseline (`/seo drift baseline https://vexxx.co/`).
+- [ ] Expect a Search Console warning that shippingDetails lacks shippingRate — owner has not supplied a rate yet; add OfferShippingDetails.shippingRate once decided.
 
 ---
 
