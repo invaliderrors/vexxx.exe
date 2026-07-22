@@ -1,6 +1,8 @@
 ---
+import { getImage } from 'astro:assets';
 import JsonLd from '../../../components/seo/JsonLd.astro';
 import ProductDetail from '../../../components/catalog/ProductDetail.astro';
+import { productImage } from '../../../components/catalog/product-images';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { t } from '../../../i18n';
 import { productPath, routePath } from '../../../i18n/routes';
@@ -38,9 +40,18 @@ const alternates = {
   en: productPath('en', product.slug.en),
 };
 const url = canonicalUrl(site, path);
-const absoluteImages = product.images.map((image) =>
-  image.src.startsWith('/') ? new URL(image.src, site).toString() : image.src,
-);
+const socialImage = await getImage({
+  src: productImage(product.sku),
+  format: 'jpeg',
+  width: 1200,
+});
+const socialImageUrl = new URL(socialImage.src, site).toString();
+const absoluteImages = [
+  socialImageUrl,
+  ...product.images.map((image) =>
+    image.src.startsWith('/') ? new URL(image.src, site).toString() : image.src,
+  ),
+];
 const related = (await getCatalog().getPublishedProducts())
   .filter((item) => item.id !== product.id)
   .slice(0, 3);
