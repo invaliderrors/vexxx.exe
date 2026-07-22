@@ -1,0 +1,20 @@
+{
+  "sku": "VXX-LSL-003",
+  "slugs": {
+    "es": "camiseta-manga-larga-lavada",
+    "en": "washed-longsleeve"
+  },
+  "name": {
+    "es": "Manga Larga Lavada",
+    "en": "Washed Longsleeve"
+  },
+  "description": {
+    "es": "Manga larga de algodón de 240 GSM con lavado ácido, puños extendidos y patrón de decoloración irrepetible.",
+    "en": "240 GSM cotton longsleeve with an acid wash, extended cuffs and an unrepeatable fade pattern."
+  },
+  "price": { "amount": 54900000, "currency": "COP" },
+  "images": [],
+  "collection": "drop-001",
+  "availability": "in-stock",
+  "published": true
+}

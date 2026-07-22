@@ -27,7 +27,7 @@ const productsCollection = defineCollection({
       price: z
         .object({
           amount: z.number().int().nonnegative(),
-          currency: z.enum(['EUR', 'USD']),
+          currency: z.enum(['COP', 'EUR', 'USD']),
         })
         .strict(),
       images: z.array(

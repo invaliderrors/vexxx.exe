@@ -1,20 +1,20 @@
 {
-  "sku": "VX-TEE-001",
+  "sku": "VXX-TEE-002",
   "slugs": {
-    "es": "camiseta-oversized-001",
-    "en": "oversized-tee-001"
+    "es": "camiseta-boxy-heavyweight",
+    "en": "boxy-heavyweight-tee"
   },
   "name": {
-    "es": "Camiseta Oversized 001",
-    "en": "Oversized Tee 001"
+    "es": "Camiseta Boxy Heavyweight",
+    "en": "Boxy Heavyweight Tee"
   },
   "description": {
-    "es": "Camiseta oversized de gramaje alto (240 gsm). Corte boxy, algodón peinado. Producto de ejemplo del catálogo base.",
-    "en": "Heavyweight oversized tee (240 gsm). Boxy cut, combed cotton. Placeholder product for the base catalog."
+    "es": "Camiseta de jersey open-end de 250 GSM con bloque cuadrado, hombro ancho y acabado negro lavado. Edición numerada.",
+    "en": "250 GSM open-end jersey tee in a square block with wide shoulders and a washed-black finish. Numbered edition."
   },
   "price": {
-    "amount": 4990,
-    "currency": "EUR"
+    "amount": 41900000,
+    "currency": "COP"
   },
   "images": [],
   "collection": "drop-001",

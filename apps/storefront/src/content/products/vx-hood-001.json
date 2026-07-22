@@ -1,20 +1,20 @@
 {
-  "sku": "VX-HOOD-001",
+  "sku": "VXX-HOOD-001",
   "slugs": {
-    "es": "sudadera-capucha-001",
-    "en": "hoodie-001"
+    "es": "sudadera-heavyweight-system-failure",
+    "en": "system-failure-heavyweight-hoodie"
   },
   "name": {
-    "es": "Sudadera con Capucha 001",
-    "en": "Hoodie 001"
+    "es": "Sudadera Heavyweight",
+    "en": "Heavyweight Hoodie"
   },
   "description": {
-    "es": "Sudadera con capucha de 400 gsm, interior perchado. Producto de ejemplo del catálogo base.",
-    "en": "400 gsm brushed-fleece hoodie. Placeholder product for the base catalog."
+    "es": "Sudadera oversized de algodón lavado de 480 GSM, hombro caído, bloque ancho y bordado metálico envejecido. Edición numerada.",
+    "en": "480 GSM washed-cotton oversized hoodie with dropped shoulders, a wide block and distressed metal embroidery. Numbered edition."
   },
   "price": {
-    "amount": 8990,
-    "currency": "EUR"
+    "amount": 89900000,
+    "currency": "COP"
   },
   "images": [],
   "collection": "drop-001",

@@ -1,0 +1,20 @@
+{
+  "sku": "VXX-BAG-007",
+  "slugs": {
+    "es": "bolso-utility-crossbody",
+    "en": "crossbody-utility-bag"
+  },
+  "name": {
+    "es": "Bolso Utility Crossbody",
+    "en": "Crossbody Utility Bag"
+  },
+  "description": {
+    "es": "Bolso crossbody en ripstop reforzado con cinchas modulares, herrajes silenciosos y funda interior oculta.",
+    "en": "Bonded-ripstop crossbody bag with modular webbing, silent hardware and a concealed inner sleeve."
+  },
+  "price": { "amount": 46900000, "currency": "COP" },
+  "images": [],
+  "collection": "drop-001",
+  "availability": "in-stock",
+  "published": true
+}

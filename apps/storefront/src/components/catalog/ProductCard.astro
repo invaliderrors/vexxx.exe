@@ -1,0 +1,59 @@
+---
+import { Image } from 'astro:assets';
+import campaignGroup from '../../assets/vexxx/campaign-group.png';
+import campaignPortrait from '../../assets/vexxx/campaign-portrait.png';
+import hoodieStudy from '../../assets/vexxx/hoodie-study.png';
+import { t } from '../../i18n';
+import type { Locale } from '../../i18n/config';
+import { productPath } from '../../i18n/routes';
+import type { Product } from '../../lib/catalog';
+import { formatPrice } from '../../lib/format';
+
+interface Props {
+  product: Product;
+  locale: Locale;
+  index?: number | undefined;
+  compact?: boolean | undefined;
+}
+
+const { product, locale, index = 0, compact = false } = Astro.props;
+const dict = t(locale);
+const image = product.sku.includes('HOOD')
+  ? hoodieStudy
+  : product.sku.includes('TEE') || product.sku.includes('CRG')
+    ? campaignPortrait
+    : campaignGroup;
+const status = product.availability === 'out-of-stock'
+  ? dict.products.soldOut
+  : product.availability === 'pre-order'
+    ? dict.products.preOrder
+    : dict.products.available;
+---
+
+<article
+  class:list={['product-card', `product-card--${(index % 5) + 1}`, { 'product-card--compact': compact }]}
+  data-reveal
+  style={`--reveal-delay:${(index % 5) * 0.05}s`}
+>
+  <a class="product-card__image" href={productPath(locale, product.slug[locale])} data-cursor={dict.nav.cursorAcquire}>
+    <Image
+      src={image}
+      alt={product.name[locale]}
+      loading="lazy"
+      widths={[480, 760, 1040]}
+      sizes="(max-width: 720px) 100vw, 50vw"
+    />
+    <span class:list={['status-chip', { 'status-chip--active': product.availability === 'in-stock' }]}>
+      {status}
+    </span>
+  </a>
+  <div class="product-card__info">
+    <div>
+      <span class="product-card__sku">{product.sku}</span>
+      <a href={productPath(locale, product.slug[locale])} data-cursor={dict.nav.cursorView}>
+        {product.name[locale]} <span aria-hidden="true">→</span>
+      </a>
+    </div>
+    <data value={String(product.price.amount)}>{formatPrice(product.price, locale)}</data>
+  </div>
+</article>

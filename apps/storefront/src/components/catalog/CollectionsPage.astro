@@ -1,0 +1,57 @@
+---
+import { Image } from 'astro:assets';
+import campaignGroup from '../../assets/vexxx/campaign-group.png';
+import { t } from '../../i18n';
+import type { Locale } from '../../i18n/config';
+import { collectionPath } from '../../i18n/routes';
+import type { Collection } from '../../lib/catalog';
+
+interface Props {
+  locale: Locale;
+  collections: readonly Collection[];
+}
+
+const { locale, collections } = Astro.props;
+const dict = t(locale);
+---
+
+<section class="collections-page">
+  <div class="eyebrow" data-reveal>{dict.collections.eyebrow}</div>
+  <h1 class="display-title reveal-delay-1" data-reveal>{dict.collections.heading}</h1>
+  <div class="collection-list">
+    {
+      collections.length === 0 ? (
+        <p>{dict.collections.empty}</p>
+      ) : (
+        collections.map((collection, index) => (
+          <a href={collectionPath(locale, collection.slug[locale])} data-reveal style={`--reveal-delay:${index * 0.06}s`} data-cursor={dict.nav.cursorEnter}>
+            <span>{String(index + 1).padStart(3, '0')}</span>
+            <strong>{collection.name[locale]}</strong>
+            <em>{dict.collections.active} — {dict.collections.view} →</em>
+          </a>
+        ))
+      )
+    }
+  </div>
+  <figure data-reveal>
+    <Image src={campaignGroup} alt={dict.collections.heading} loading="lazy" widths={[768, 1280, 1920]} sizes="100vw" />
+  </figure>
+</section>
+
+<style>
+  .collections-page { max-width: 82rem; min-height: 100vh; margin: 0 auto; padding: clamp(8rem, 15vh, 11rem) var(--page-pad); }
+  h1 { margin: 1rem 0 clamp(3rem, 7vh, 5rem); font-size: clamp(4rem, 9vw, 9rem); }
+  .collection-list { border-top: 1px solid var(--vx-line); }
+  .collection-list > a { display: grid; align-items: baseline; grid-template-columns: auto 1fr auto; gap: 1.4rem; padding: clamp(2rem, 5vh, 3.25rem) 0; border-bottom: 1px solid var(--vx-line); }
+  .collection-list span, .collection-list em { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; letter-spacing: 0.16em; font-style: normal; }
+  .collection-list span, .collection-list a:hover strong { color: var(--vx-accent); }
+  .collection-list em { color: #7a7d80; text-align: right; }
+  .collection-list strong { font-family: 'Anton', sans-serif; font-size: clamp(2.6rem, 6vw, 6rem); font-weight: 400; line-height: 1; text-transform: uppercase; }
+  figure { height: min(50vh, 34rem); margin: clamp(3rem, 7vh, 5rem) 0 0; overflow: hidden; border: 1px solid rgb(232 230 225 / 7%); }
+  figure :global(img) { width: 100%; height: 100%; object-fit: cover; filter: grayscale(0.65); }
+
+  @media (max-width: 650px) {
+    .collection-list > a { grid-template-columns: auto 1fr; }
+    .collection-list em { grid-column: 1 / -1; text-align: left; }
+  }
+</style>

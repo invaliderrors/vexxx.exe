@@ -5,7 +5,7 @@ import { z } from 'zod';
  * definition every service validates against; arithmetic and formatting
  * live in @vexxx/money.
  */
-export const currencySchema = z.enum(['EUR', 'USD']);
+export const currencySchema = z.enum(['COP', 'EUR', 'USD']);
 export type Currency = z.infer<typeof currencySchema>;
 
 export const moneySchema = z

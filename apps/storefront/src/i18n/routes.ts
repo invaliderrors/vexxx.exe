@@ -9,6 +9,8 @@ export const routes = {
   home: { es: '/', en: '/en' },
   products: { es: '/productos', en: '/en/products' },
   collections: { es: '/colecciones', en: '/en/collections' },
+  archive: { es: '/archivo', en: '/en/archive' },
+  manifesto: { es: '/manifiesto', en: '/en/manifesto' },
   privacy: { es: '/privacidad', en: '/en/privacy' },
   terms: { es: '/terminos', en: '/en/terms' },
   shipping: { es: '/envios', en: '/en/shipping' },

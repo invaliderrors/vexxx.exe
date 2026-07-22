@@ -1,0 +1,32 @@
+---
+interface Props {
+  eyebrow: string;
+  heading: string;
+  body: string;
+  status?: string | undefined;
+}
+
+const { eyebrow, heading, body, status } = Astro.props;
+---
+
+<article class="document-page">
+  <div class="document-page__inner">
+    <div class="eyebrow" data-reveal>{eyebrow}</div>
+    <h1 class="reveal-delay-1" data-reveal>{heading}</h1>
+    {status && <div class="document-status reveal-delay-2" data-reveal>● {status}</div>}
+    <p class="reveal-delay-2" data-reveal>{body}</p>
+  </div>
+</article>
+
+<style>
+  .document-status {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--vx-accent) 35%, transparent);
+    color: var(--vx-accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+  }
+</style>

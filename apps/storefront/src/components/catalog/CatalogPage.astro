@@ -1,0 +1,59 @@
+---
+import { Image } from 'astro:assets';
+import campaignGroup from '../../assets/vexxx/campaign-group.png';
+import { t } from '../../i18n';
+import type { Locale } from '../../i18n/config';
+import type { Product } from '../../lib/catalog';
+import ProductGrid from './ProductGrid.astro';
+
+interface Props {
+  locale: Locale;
+  products: readonly Product[];
+  title?: string | undefined;
+  description?: string | undefined;
+  eyebrow?: string | undefined;
+}
+
+const { locale, products, title, description, eyebrow } = Astro.props;
+const dict = t(locale);
+const pageTitle = title ?? dict.products.heading;
+const pageEyebrow = eyebrow ?? dict.products.eyebrow;
+---
+
+<section class="page-hero">
+  <div class="eyebrow" data-reveal>{pageEyebrow}</div>
+  <div class="page-hero__row">
+    <div data-reveal class="reveal-delay-1">
+      <h1 class="display-title">{pageTitle}</h1>
+      {description && <p class="catalog-description">{description}</p>}
+    </div>
+    <p class="page-hero__meta reveal-delay-2" data-reveal>{dict.products.season}<br /><span>{String(products.length).padStart(2, '0')} / {dict.products.piecesShown}</span></p>
+  </div>
+</section>
+
+<section class="catalog-body">
+  {products.length === 0 ? <p>{dict.products.empty}</p> : <ProductGrid products={products} locale={locale} />}
+  <div class="campaign-banner" data-reveal>
+    <Image
+      src={campaignGroup}
+      alt={dict.products.campaign}
+      loading="lazy"
+      widths={[768, 1280, 1920]}
+      sizes="100vw"
+    />
+    <span>{dict.products.campaign}</span>
+  </div>
+</section>
+
+<style>
+  .catalog-description {
+    max-width: 38rem;
+    margin: 1.5rem 0 0;
+    color: #9a9d9f;
+    line-height: 1.75;
+  }
+
+  .page-hero__meta span {
+    color: var(--vx-accent);
+  }
+</style>

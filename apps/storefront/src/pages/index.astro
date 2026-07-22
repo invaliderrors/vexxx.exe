@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HomePage from '../components/home/HomePage.astro';
 import { t } from '../i18n';
 import { routeAlternates } from '../i18n/routes';
 
@@ -15,5 +16,5 @@ const dict = t(locale);
   alternates={routeAlternates('home')}
   isHome={true}
 >
-  <h1>{dict.home.heading}</h1>
+  <HomePage locale={locale} />
 </BaseLayout>

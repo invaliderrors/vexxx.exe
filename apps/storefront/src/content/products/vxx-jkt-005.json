@@ -1,0 +1,20 @@
+{
+  "sku": "VXX-JKT-005",
+  "slugs": {
+    "es": "chaqueta-shell-tecnica",
+    "en": "technical-shell-jacket"
+  },
+  "name": {
+    "es": "Chaqueta Shell Técnica",
+    "en": "Technical Shell Jacket"
+  },
+  "description": {
+    "es": "Shell técnica de tres capas con costuras selladas, capucha de tormenta y ventilaciones cortadas con láser.",
+    "en": "Three-layer technical shell with taped seams, a storm hood and laser-cut vents."
+  },
+  "price": { "amount": 169900000, "currency": "COP" },
+  "images": [],
+  "collection": "drop-001",
+  "availability": "in-stock",
+  "published": true
+}

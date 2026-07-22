@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import DocumentPage from '../components/pages/DocumentPage.astro';
 import { t } from '../i18n';
 import { routeAlternates, routePath } from '../i18n/routes';
 
@@ -14,6 +15,5 @@ const dict = t(locale);
   path={routePath('privacy', locale)}
   alternates={routeAlternates('privacy')}
 >
-  <h1>{dict.legal.privacy.heading}</h1>
-  <p>{dict.legal.privacy.body}</p>
+  <DocumentPage eyebrow={dict.legal.eyebrow} heading={dict.legal.privacy.heading} body={dict.legal.privacy.body} status={dict.legal.pending} />
 </BaseLayout>

@@ -1,0 +1,20 @@
+{
+  "sku": "VXX-CRG-004",
+  "slugs": {
+    "es": "cargo-pierna-ancha",
+    "en": "wide-leg-cargo"
+  },
+  "name": {
+    "es": "Cargo de Pierna Ancha",
+    "en": "Wide-Leg Cargo"
+  },
+  "description": {
+    "es": "Cargo de ripstop reforzado con pierna ancha, rodillas articuladas, ocho bolsillos y herrajes personalizados en gunmetal.",
+    "en": "Bonded-ripstop cargo with a wide leg, articulated knees, eight pockets and custom gunmetal hardware."
+  },
+  "price": { "amount": 104900000, "currency": "COP" },
+  "images": [],
+  "collection": "drop-001",
+  "availability": "in-stock",
+  "published": true
+}

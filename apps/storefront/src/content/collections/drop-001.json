@@ -1,15 +1,15 @@
 {
   "slugs": {
-    "es": "drop-001",
-    "en": "drop-001"
+    "es": "system-failure",
+    "en": "system-failure"
   },
   "name": {
-    "es": "Drop 001",
-    "en": "Drop 001"
+    "es": "System Failure",
+    "en": "System Failure"
   },
   "description": {
-    "es": "Primer drop de VEXXX. Colección de ejemplo del catálogo base.",
-    "en": "First VEXXX drop. Placeholder collection for the base catalog."
+    "es": "Drop_001 de VEXXX. Siete objetos streetwear numerados, producidos una sola vez y retirados al agotarse.",
+    "en": "VEXXX Drop_001. Seven numbered streetwear objects, produced once and retired when sold out."
   },
   "published": true
 }

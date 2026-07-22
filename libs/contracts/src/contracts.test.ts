@@ -14,6 +14,11 @@ describe('moneySchema', () => {
     expect(moneySchema.parse(money)).toEqual(money);
   });
 
+  it('accepts Colombian pesos', () => {
+    const cop = { amount: 89_900_000, currency: 'COP' } as const;
+    expect(moneySchema.parse(cop)).toEqual(cop);
+  });
+
   it('rejects float amounts', () => {
     expect(() =>
       moneySchema.parse({ amount: 49.9, currency: 'EUR' }),

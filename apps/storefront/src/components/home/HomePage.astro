@@ -1,0 +1,547 @@
+---
+import { Image } from 'astro:assets';
+import campaignGroup from '../../assets/vexxx/campaign-group.png';
+import campaignHero from '../../assets/vexxx/campaign-hero.png';
+import campaignPortrait from '../../assets/vexxx/campaign-portrait.png';
+import campaignDuo from '../../assets/vexxx/fw26-duo-stairwell.png';
+import campaignTunnel from '../../assets/vexxx/fw26-tunnel-campaign.png';
+import hoodieStudy from '../../assets/vexxx/hoodie-study.png';
+import materialStudy from '../../assets/vexxx/material-study-red-tack.png';
+import prototypeShell from '../../assets/vexxx/prototype-shell-jacket.png';
+import vexxxMark from '../../assets/vexxx/vexxx-mark.png';
+import { t } from '../../i18n';
+import type { Locale } from '../../i18n/config';
+import { productPath, routePath } from '../../i18n/routes';
+import { getCatalog } from '../../lib/catalog';
+import { formatPrice } from '../../lib/format';
+import ProductGrid from '../catalog/ProductGrid.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const dict = t(locale);
+const products = await getCatalog().getPublishedProducts();
+const featured = products.slice(0, 5);
+const hoodie = products.find((product) => product.sku.includes('HOOD')) ?? products[0];
+const repeatedTicker = [...dict.home.ticker, ...dict.home.ticker];
+const manifestoTitleOneWords = dict.home.manifestoTitleOne.split(' ');
+const manifestoTitleTwoWords = dict.home.manifestoTitleTwo.split(' ');
+const editorialImages = [campaignPortrait, materialStudy, campaignTunnel, campaignDuo, prototypeShell] as const;
+const [shellPiece, materialPiece, duoPiece] = dict.home.designLabPieces;
+if (!shellPiece || !materialPiece || !duoPiece) {
+  throw new Error(`The ${locale} dictionary must define all three design-lab pieces.`);
+}
+---
+
+<div class="home-page">
+  <section class="hero">
+    <Image
+      class="hero__image"
+      src={campaignHero}
+      alt={dict.home.heroBody}
+      widths={[768, 1280, 1920]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div class="hero__shade" aria-hidden="true"></div>
+    <Image class="hero__mark" src={vexxxMark} alt="" aria-hidden="true" data-vx-emb />
+    <div class="hero__status eyebrow">
+      <span>{dict.brand.status} — <b>{dict.brand.live}</b></span>
+      <span>{dict.home.heroEyebrow}</span>
+      <span>{dict.home.heroUnits}</span>
+    </div>
+    <div class="hero__city eyebrow">{dict.home.cityLine}</div>
+    <div class="hero__content">
+      <h1 class="display-title">
+        <span data-reveal>{dict.home.heroTitleOne}</span>
+        <span class="outline-text reveal-delay-1" data-reveal>{dict.home.heroTitleTwo}<b>_</b></span>
+      </h1>
+      <div class="hero__bottom reveal-delay-2" data-reveal>
+        <p>{dict.home.heroBody}</p>
+        <div class="hero__actions">
+          <a class="button" href="#drop" data-cursor={dict.nav.cursorEnter}>{dict.home.enterDrop} <span>→</span></a>
+          <a class="button button--outline" href={routePath('manifesto', locale)}>{dict.home.discover}</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero__scroll" aria-hidden="true">
+      <span>{dict.home.scroll}</span><i></i>
+    </div>
+  </section>
+
+  <div class="marquee" aria-label={dict.home.ticker.join('. ')}>
+    <div>
+      {repeatedTicker.map((item) => <><span>{item}</span><b>///</b></>)}
+    </div>
+  </div>
+
+  <section class="manifesto-intro section-shell">
+    <span class="manifesto-intro__ghost" aria-hidden="true">VX</span>
+    <div class="eyebrow">{dict.home.manifestoEyebrow}</div>
+    <h2 class="display-title">
+      {manifestoTitleOneWords.map((word, index) => <span data-reveal style={`--reveal-delay:${index * 0.09}s`}>{word} </span>)}<br />
+      <span class="outline-text">
+        {manifestoTitleTwoWords.map((word, index) => <span data-reveal style={`--reveal-delay:${(index + manifestoTitleOneWords.length) * 0.09}s`}>{word} </span>)}
+      </span>
+    </h2>
+    <p class="reveal-delay-4" data-reveal>{dict.home.manifestoBody}</p>
+  </section>
+
+  <section id="drop" class="drop-section section-shell">
+    <header class="drop-heading" data-reveal>
+      <div>
+        <div class="eyebrow release-dot">{dict.home.releaseEyebrow}</div>
+        <h2 class="display-title">{dict.home.releaseTitle}</h2>
+      </div>
+      <p>{dict.home.releaseMeta}</p>
+    </header>
+    {
+      featured.length === 0 ? (
+        <p>{dict.products.empty}</p>
+      ) : (
+        <ProductGrid products={featured} locale={locale} />
+      )
+    }
+    <div class="drop-end" data-reveal>
+      <p>{dict.home.releaseBody}</p>
+      <a class="button button--outline" href={routePath('products', locale)} data-cursor={dict.nav.cursorEnter}>{dict.home.fullDrop} →</a>
+    </div>
+  </section>
+
+  <section class="editorial">
+    <div class="editorial__wide">
+      <Image
+        src={campaignGroup}
+        alt={dict.home.editorialCaption}
+        loading="lazy"
+        widths={[768, 1280, 1920]}
+        sizes="100vw"
+      />
+      <h2 class="display-title"><span data-reveal>{dict.home.editorialTitle}</span></h2>
+    </div>
+    <div class="editorial-strip" data-hscroll data-cursor={dict.nav.cursorDrag}>
+      {
+        editorialImages.map((image, index) => (
+          <figure class={`editorial-strip__item editorial-strip__item--${index + 1}`}>
+            <Image src={image} alt="" loading="lazy" />
+            <figcaption>{dict.home.editorialFrames[index]}</figcaption>
+          </figure>
+        ))
+      }
+      <span class="editorial-strip__drag" aria-hidden="true">{dict.nav.cursorDrag} →</span>
+    </div>
+    <div class="editorial__mosaic section-shell">
+      <figure class="editorial__portrait" data-reveal="left">
+        <Image src={campaignPortrait} alt={dict.home.editorialCaption} loading="lazy" />
+      </figure>
+      <figure class="editorial__detail" data-reveal="right">
+        <Image src={hoodieStudy} alt={dict.home.storyTitle} loading="lazy" />
+      </figure>
+      <span class="editorial__vertical outline-text" aria-hidden="true">{dict.home.storyTitle}</span>
+      <p class="eyebrow">{dict.home.editorialCaption}</p>
+    </div>
+  </section>
+
+  <section class="design-lab">
+    <header class="design-lab__header section-shell" data-reveal>
+      <div>
+        <span class="eyebrow release-dot">{dict.home.designLabEyebrow}</span>
+        <h2 class="display-title">{dict.home.designLabTitle}</h2>
+      </div>
+      <div class="design-lab__intro">
+        <p>{dict.home.designLabBody}</p>
+        <span>{dict.home.designLabStatus}</span>
+      </div>
+    </header>
+
+    <figure class="design-lab__campaign" data-reveal>
+      <Image
+        src={campaignTunnel}
+        alt={shellPiece.name}
+        loading="lazy"
+        widths={[768, 1280, 1536]}
+        sizes="100vw"
+      />
+      <div class="design-lab__telemetry" aria-hidden="true">
+        <span>{shellPiece.code}</span>
+        <span>{dict.home.designLabStatus}</span>
+      </div>
+      <figcaption>
+        <span>{shellPiece.code}</span>
+        <strong>{shellPiece.name}</strong>
+        <p>{shellPiece.detail}</p>
+      </figcaption>
+    </figure>
+
+    <div class="design-lab__grid section-shell">
+      <figure class="design-lab__piece design-lab__piece--shell" data-reveal="left">
+        <div><Image src={prototypeShell} alt={shellPiece.name} loading="lazy" /></div>
+        <figcaption><span>{shellPiece.code}</span><strong>{shellPiece.name}</strong></figcaption>
+      </figure>
+      <figure class="design-lab__piece design-lab__piece--material" data-reveal="right">
+        <div><Image src={materialStudy} alt={materialPiece.name} loading="lazy" /></div>
+        <figcaption><span>{materialPiece.code}</span><strong>{materialPiece.name}</strong></figcaption>
+      </figure>
+      <figure class="design-lab__piece design-lab__piece--duo" data-reveal>
+        <div><Image src={campaignDuo} alt={duoPiece.name} loading="lazy" /></div>
+        <figcaption><span>{duoPiece.code}</span><strong>{duoPiece.name}</strong></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="story" class="story" data-vx-story data-story-stage="0">
+    <div class="story__sticky">
+      <span class="story__eyebrow">{dict.home.storyEyebrow}</span>
+      <div class="story__progress" aria-hidden="true">
+        <span data-story-progress-label>00 / 04</span>
+        <i><b data-story-progress-bar></b></i>
+      </div>
+      <div class="story__image" data-story-image>
+        <Image src={hoodieStudy} alt={dict.home.storyTitle} loading="lazy" />
+      </div>
+      {
+        dict.home.storyPoints.map((point, index) => (
+          <div class={`story-callout story-callout--${index + 1}`} data-story-step={String(index + 1)}>
+            <i></i>
+            <span>{String(index + 1).padStart(2, '0')} / {dict.home.storyLabels[index]}</span>
+            <strong>{point}</strong>
+            <p>{dict.home.storyDetails[index]}</p>
+          </div>
+        ))
+      }
+      {
+        hoodie && (
+          <a class="button button--outline story__action" href={productPath(locale, hoodie.slug[locale])} data-cursor={dict.nav.cursorAcquire}>
+            {dict.home.quickAdd} — {formatPrice(hoodie.price, locale)}
+          </a>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="code-section section-shell">
+    <div class="code-card">
+      <header>
+        <span>{dict.home.codeEyebrow}</span>
+        <b>{dict.home.codeStamp}</b>
+      </header>
+      <ol>
+        {dict.home.codeItems.map((item, index) => <li data-reveal style={`--reveal-delay:${index * 0.06}s`}><span>{String(index + 1).padStart(2, '0')}</span><strong>{item}</strong></li>)}
+      </ol>
+      <footer><span>{dict.home.codeCoordinates}</span><span>{dict.home.codeAuth}</span><span>{dict.home.codePage}</span></footer>
+    </div>
+  </section>
+
+  <section class="community section-shell">
+    <header data-reveal>
+      <h2 class="display-title">{dict.home.communityTitle}</h2>
+      <p>{dict.home.communityBody}</p>
+    </header>
+    <div class="community-grid">
+      <figure data-reveal><Image src={campaignPortrait} alt="" loading="lazy" /><figcaption>{dict.home.communityMembers[0]}</figcaption></figure>
+      <figure data-reveal class="reveal-delay-05"><Image src={campaignDuo} alt="" loading="lazy" /><figcaption>{dict.home.communityMembers[1]}</figcaption></figure>
+      <figure data-reveal class="reveal-delay-1"><Image src={campaignTunnel} alt="" loading="lazy" /><figcaption>{dict.home.communityMembers[2]}</figcaption></figure>
+      <figure data-reveal class="reveal-delay-15"><Image src={prototypeShell} alt="" loading="lazy" /><figcaption>{dict.home.communityMembers[3]}</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="countdown">
+    <Image src={campaignGroup} alt="" loading="lazy" aria-hidden="true" />
+    <div class="countdown__shade" aria-hidden="true"></div>
+    <div class="countdown__content" data-reveal>
+      <span class="eyebrow release-dot">{dict.home.nextEyebrow}</span>
+      <h2 class="display-title">{dict.home.nextTitle}</h2>
+      <div class="countdown__clock" data-countdown data-target="2026-09-18T18:00:00Z">
+        <div><strong data-days>00</strong><span>{dict.home.days}</span></div><b>:</b>
+        <div><strong data-hours>00</strong><span>{dict.home.hours}</span></div><b>:</b>
+        <div><strong data-minutes>00</strong><span>{dict.home.minutes}</span></div><b>:</b>
+        <div><strong data-seconds>00</strong><span>{dict.home.seconds}</span></div>
+      </div>
+      <div class="countdown__facts">
+        {dict.home.nextFacts.map((fact) => <span>{fact}</span>)}
+      </div>
+      <a class="button" href="#access" data-cursor={dict.nav.cursorEnter}>{dict.home.requestAccess}</a>
+    </div>
+  </section>
+
+  <section id="access" class="access section-shell">
+    <div data-reveal="left">
+      <span class="eyebrow">{dict.home.accessEyebrow}</span>
+      <h2 class="display-title">{dict.home.accessTitle}</h2>
+      <p>{dict.home.accessBody}</p>
+    </div>
+    <div class="access-terminal" data-reveal="right">
+      <header><span>{dict.home.terminal}</span><b>{dict.home.terminalStatus}</b></header>
+      <form
+        data-access-form
+        data-invalid-message={dict.home.invalidDigitalId}
+        data-validating-label={dict.home.validating}
+      >
+        <label for={`access-email-${locale}`}>{dict.home.digitalId}</label>
+        <input id={`access-email-${locale}`} type="email" placeholder={dict.home.digitalIdPlaceholder} autocomplete="email" data-access-email />
+        <button class="button" type="submit" data-access-submit data-cursor={dict.nav.cursorEnter}>{dict.home.requestEntry}</button>
+        <p>{dict.home.transmissionNote}</p>
+      </form>
+      <div class="access-success" data-access-success hidden>
+        <span>{dict.home.identityRegistered}</span>
+        <strong>{dict.home.welcomeMember}</strong>
+        <p>{dict.home.firstTransmission}<br />{dict.home.accessMayClose}<b>_</b></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="final-quote">
+    <Image src={vexxxMark} alt="" loading="lazy" aria-hidden="true" />
+    <h2 class="display-title" data-reveal>
+      {dict.home.finalQuoteOne}<br />
+      <span class="outline-text">{dict.home.finalQuoteTwo}</span>
+    </h2>
+  </section>
+</div>
+
+<style>
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: 100svh;
+    overflow: hidden;
+  }
+
+  .hero__image,
+  .hero__shade {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero__image { object-fit: cover; object-position: center; }
+  .hero__shade { background: linear-gradient(180deg, rgb(5 5 5 / 55%), transparent 30%, transparent 52%, rgb(5 5 5 / 92%)); }
+  .hero__mark { position: absolute; top: 7vh; right: -5vw; width: min(42vw, 35rem); opacity: 0.32; mix-blend-mode: screen; }
+  .hero__status { position: absolute; top: 4.9rem; left: clamp(1rem, 3vw, 2rem); display: flex; flex-direction: column; }
+  .hero__status b { color: var(--vx-accent); font-weight: 400; }
+  .hero__city { position: absolute; top: 4.9rem; right: clamp(1rem, 3vw, 2rem); color: var(--vx-dim); writing-mode: vertical-rl; }
+  .hero__content { position: relative; z-index: 2; width: 100%; padding: 0 clamp(1rem, 3vw, 2rem) clamp(2.75rem, 7vh, 5rem); }
+  .hero h1 { font-size: clamp(3.375rem, 10.5vw, 10.5rem); line-height: 0.88; letter-spacing: 0.005em; }
+  .hero h1 span { display: block; }
+  .hero h1 b { color: var(--vx-accent); font-weight: 400; -webkit-text-stroke: 0; animation: blink 1.1s steps(1) infinite; }
+  .hero__bottom { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 2rem; margin-top: clamp(1.5rem, 4vh, 2.5rem); }
+  .hero__bottom p { max-width: 25rem; margin: 0; color: #b9bcbd; font-size: 0.94rem; line-height: 1.65; }
+  .hero__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .hero__scroll { position: absolute; bottom: 1.5rem; left: 50%; z-index: 3; display: flex; align-items: center; flex-direction: column; gap: 0.5rem; transform: translateX(-50%); color: var(--vx-dim); font-family: 'JetBrains Mono', monospace; font-size: 0.48rem; letter-spacing: 0.35em; }
+  .hero__scroll i { width: 1px; height: 2.125rem; background: var(--vx-accent); animation: scroll-line 1.8s cubic-bezier(0.6, 0, 0.4, 1) infinite; }
+
+  .marquee { overflow: hidden; padding: 13px 0; border-block: 1px solid rgb(232 230 225 / 8%); background: #070708; }
+  .marquee > div { display: flex; width: max-content; animation: marquee 30s linear infinite; }
+  .marquee span, .marquee b { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.24em; white-space: nowrap; }
+  .marquee span { color: var(--vx-muted); }
+  .marquee b { margin: 0 1.4rem; color: var(--vx-accent); font-weight: 400; }
+
+  .manifesto-intro { position: relative; min-height: 92vh; display: flex; justify-content: center; flex-direction: column; overflow: hidden; }
+  .manifesto-intro__ghost { position: absolute; right: -4vw; color: #0b0c0d; font-family: 'Anton', sans-serif; font-size: 55vh; line-height: 1; }
+  .manifesto-intro > :not(.manifesto-intro__ghost) { position: relative; }
+  .manifesto-intro h2 { margin-top: 1.5rem; font-size: clamp(3.625rem, 12vw, 12.8125rem); }
+  .manifesto-intro h2 span[data-reveal] { display: inline-block; }
+  .manifesto-intro p { max-width: 34rem; margin: clamp(2rem, 5vh, 3rem) 0 0; color: #b9bcbd; font-size: clamp(1rem, 1.4vw, 1.2rem); line-height: 1.7; }
+
+  .drop-section { padding-top: clamp(70px, 11vh, 150px); padding-bottom: clamp(50px, 8vh, 110px); }
+  .drop-heading { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 2rem; margin-bottom: clamp(3rem, 7vh, 5rem); padding-bottom: 1.6rem; border-bottom: 1px solid var(--vx-line); }
+  .drop-heading h2 { margin-top: 0.9rem; font-size: clamp(3rem, 7.5vw, 8rem); }
+  .drop-heading p { margin: 0; color: #7a7d80; font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; letter-spacing: 0.16em; line-height: 2; text-align: right; white-space: pre-line; }
+  .release-dot { color: var(--vx-accent); }
+  .drop-end { display: flex; align-items: center; justify-content: flex-end; gap: 2rem; margin-top: 4rem; }
+  .drop-end p { max-width: 22rem; margin: 0; color: #7a7d80; font-size: 0.86rem; line-height: 1.7; }
+
+  .editorial__wide { position: relative; height: 96vh; overflow: hidden; }
+  .editorial__wide img { width: 100%; height: 100%; object-fit: cover; }
+  .editorial__wide::after { content: ''; position: absolute; inset: 0; background: rgb(5 5 5 / 12%); }
+  .editorial__wide h2 { position: absolute; inset: 50% auto auto 50%; z-index: 1; font-size: clamp(3rem, 9vw, 9rem); text-align: center; white-space: pre-line; transform: translate(-50%, -50%); mix-blend-mode: difference; }
+  .editorial__wide h2 > span { display: block; white-space: pre-line; }
+  .editorial-strip { display: flex; align-items: flex-start; gap: clamp(0.875rem, 1.6vw, 1.5rem); overflow-x: auto; padding: clamp(2.5rem, 7vh, 5rem) var(--page-pad); touch-action: pan-x pan-y; }
+  .editorial-strip__item { flex: none; width: min(38vw, 32.5rem); margin: 0; }
+  .editorial-strip__item:nth-child(2), .editorial-strip__item:nth-child(5) { width: min(24vw, 20.625rem); margin-top: 10vh; }
+  .editorial-strip__item:nth-child(3) { width: min(44vw, 37.5rem); }
+  .editorial-strip__item:nth-child(4) { width: min(28vw, 23.75rem); margin-top: 6vh; }
+  .editorial-strip__item:nth-child(5) { margin-top: 14vh; }
+  .editorial-strip__item > :global(img) { width: 100%; height: min(58vh, 35rem); object-fit: cover; border: 1px solid rgb(232 230 225 / 7%); }
+  .editorial-strip__item:nth-child(2) > :global(img) { height: min(40vh, 23.75rem); }
+  .editorial-strip__item:nth-child(4) > :global(img) { height: min(46vh, 27.5rem); }
+  .editorial-strip__item:nth-child(5) > :global(img) { height: min(38vh, 22.5rem); }
+  .editorial-strip figcaption, .editorial-strip__drag { margin-top: 0.75rem; color: var(--vx-dim); font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.24em; }
+  .editorial-strip__drag { flex: none; width: 12.5rem; align-self: center; letter-spacing: 0.3em; }
+  .editorial__mosaic { position: relative; min-height: 120vh; }
+  .editorial__mosaic figure { position: absolute; margin: 0; overflow: hidden; border: 1px solid rgb(232 230 225 / 8%); }
+  .editorial__mosaic img { width: 100%; height: 100%; object-fit: cover; }
+  .editorial__portrait { top: 9vh; left: var(--page-pad); width: min(58vw, 48rem); height: 82vh; }
+  .editorial__detail { top: 42vh; right: var(--page-pad); width: min(36vw, 30rem); height: 56vh; }
+  .editorial__vertical { position: absolute; top: 38%; right: calc(min(36vw, 30rem) + var(--page-pad) + 1.5rem); font-family: 'Anton', sans-serif; font-size: clamp(1.75rem, 3.4vw, 3.375rem); line-height: 1; text-transform: uppercase; writing-mode: vertical-rl; }
+  .editorial__mosaic > p { position: absolute; bottom: 2rem; left: var(--page-pad); }
+
+  .design-lab { position: relative; overflow: hidden; border-top: 1px solid var(--vx-line); background-color: #080809; background-image: linear-gradient(rgb(232 230 225 / 2%) 1px, transparent 1px), linear-gradient(90deg, rgb(232 230 225 / 2%) 1px, transparent 1px); background-size: 5rem 5rem; }
+  .design-lab__header { display: flex; align-items: flex-end; justify-content: space-between; gap: 4rem; padding-bottom: clamp(3rem, 7vh, 5rem); }
+  .design-lab__header h2 { max-width: 52rem; margin-top: 1rem; font-size: clamp(4rem, 10vw, 10.5rem); white-space: pre-line; }
+  .design-lab__intro { display: grid; flex: 0 1 26rem; gap: 1.5rem; }
+  .design-lab__intro p { margin: 0; color: #b9bcbd; font-size: 0.95rem; line-height: 1.8; }
+  .design-lab__intro span { padding-top: 1rem; border-top: 1px solid var(--vx-line); color: var(--vx-accent); font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.22em; line-height: 1.8; text-transform: uppercase; }
+  .design-lab__campaign { position: relative; height: min(84vh, 54rem); margin: 0; overflow: hidden; border-block: 1px solid var(--vx-line); background: #0b0b0c; }
+  .design-lab__campaign > :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: center 44%; filter: saturate(0.82) contrast(1.04); }
+  .design-lab__campaign::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 45%, rgb(5 5 5 / 40%)), linear-gradient(0deg, rgb(5 5 5 / 84%), transparent 44%); pointer-events: none; }
+  .design-lab__telemetry { position: absolute; inset: 1.5rem 1.5rem auto; z-index: 1; display: flex; justify-content: space-between; color: rgb(232 230 225 / 68%); font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; letter-spacing: 0.24em; text-transform: uppercase; }
+  .design-lab__telemetry span:last-child { color: var(--vx-accent); }
+  .design-lab__campaign figcaption { position: absolute; bottom: clamp(1.5rem, 5vw, 4.5rem); left: var(--page-pad); z-index: 1; max-width: 34rem; }
+  .design-lab__campaign figcaption span, .design-lab__piece figcaption span { color: var(--vx-accent); font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.24em; }
+  .design-lab__campaign figcaption strong { display: block; margin: 0.7rem 0 0.8rem; font-family: 'Anton', sans-serif; font-size: clamp(2.5rem, 6vw, 6rem); font-weight: 400; line-height: 0.95; text-transform: uppercase; }
+  .design-lab__campaign figcaption p { max-width: 29rem; margin: 0; color: #b9bcbd; font-size: 0.85rem; line-height: 1.7; }
+  .design-lab__grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(1rem, 2vw, 2rem); padding-top: clamp(4rem, 10vh, 8rem); padding-bottom: clamp(6rem, 14vh, 11rem); }
+  .design-lab__piece { margin: 0; }
+  .design-lab__piece > div { position: relative; overflow: hidden; border: 1px solid var(--vx-line); background: #0b0b0c; }
+  .design-lab__piece > div::after { content: ''; position: absolute; inset: 0; border: 1px solid rgb(255 59 59 / 0%); transition: border-color 0.35s ease; pointer-events: none; }
+  .design-lab__piece:hover > div::after { border-color: rgb(255 59 59 / 55%); }
+  .design-lab__piece :global(img) { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.75); transition: filter 0.4s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+  .design-lab__piece:hover :global(img) { filter: saturate(1); transform: scale(1.018); }
+  .design-lab__piece--shell { grid-column: 1 / span 5; }
+  .design-lab__piece--shell > div { height: min(78vh, 49rem); }
+  .design-lab__piece--material { grid-column: 7 / span 6; margin-top: 16vh; }
+  .design-lab__piece--material > div { height: min(52vh, 34rem); }
+  .design-lab__piece--duo { grid-column: 3 / span 8; margin-top: 7vh; }
+  .design-lab__piece--duo > div { height: min(94vh, 62rem); }
+  .design-lab__piece figcaption { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding-top: 1rem; }
+  .design-lab__piece figcaption strong { font-size: 0.8rem; font-weight: 500; letter-spacing: 0.08em; text-align: right; text-transform: uppercase; }
+
+  .story { position: relative; height: 340vh; border-top: 1px solid rgb(232 230 225 / 8%); background: #070708; }
+  .story__sticky { position: sticky; top: 0; display: flex; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+  .story__eyebrow { position: absolute; top: 4.375rem; left: var(--page-pad); color: var(--vx-dim); font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.3em; }
+  .story__progress { position: absolute; top: 4.375rem; right: var(--page-pad); display: flex; align-items: center; gap: 0.875rem; color: var(--vx-accent); font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; }
+  .story__progress > i { position: relative; display: block; width: 1px; height: 60px; background: #1c1e20; }
+  .story__progress b { position: absolute; top: 0; left: 0; width: 100%; height: 0; background: var(--vx-accent); transition: height 0.5s ease; }
+  .story__image { position: relative; height: min(60vh, 33.75rem); aspect-ratio: 4 / 5; overflow: hidden; border: 1px solid rgb(232 230 225 / 8%); background: #0c0d0e; transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+  .story__image :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .story-callout { position: absolute; width: min(230px, 24vw); pointer-events: none; opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .story-callout--1 { top: 20%; left: var(--page-pad); }
+  .story-callout--2 { top: 26%; right: var(--page-pad); text-align: right; }
+  .story-callout--3 { bottom: 22%; left: var(--page-pad); }
+  .story-callout--4 { right: var(--page-pad); bottom: 16%; text-align: right; }
+  .story-callout i { display: block; width: 26px; margin-bottom: 12px; border-top: 1px solid var(--vx-accent); }
+  .story-callout--2 i, .story-callout--4 i { margin-left: auto; }
+  .story-callout span { display: block; margin-bottom: 8px; color: var(--vx-accent); font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; }
+  .story-callout strong { display: block; margin-bottom: 6px; font-size: 15px; letter-spacing: 0.04em; }
+  .story-callout p { margin: 0; color: #7a7d80; font-size: 12.5px; line-height: 1.6; }
+  .story[data-story-stage='1'] [data-story-step='1'],
+  .story[data-story-stage='2'] [data-story-step='1'], .story[data-story-stage='2'] [data-story-step='2'],
+  .story[data-story-stage='3'] [data-story-step='1'], .story[data-story-stage='3'] [data-story-step='2'], .story[data-story-stage='3'] [data-story-step='3'],
+  .story[data-story-stage='4'] .story-callout { opacity: 1; transform: none; }
+  .story__action { position: absolute; bottom: 3.5rem; left: 50%; min-height: auto; padding: 0.9375rem 1.5rem; font-size: 10px; letter-spacing: 0.26em; transform: translateX(-50%); }
+  .story__action:hover { transform: translateX(-50%); }
+
+  .code-section { background-color: var(--vx-black-soft); background-image: linear-gradient(rgb(232 230 225 / 2%) 1px, transparent 1px), linear-gradient(90deg, rgb(232 230 225 / 2%) 1px, transparent 1px); background-size: 5.6rem 5.6rem; }
+  .code-card { position: relative; max-width: 74rem; margin: 0 auto; border: 1px solid rgb(232 230 225 / 12%); background: rgb(5 5 5 / 65%); }
+  .code-card header, .code-card footer { display: flex; justify-content: space-between; gap: 1rem; padding: 1.2rem 1.75rem; color: #7a7d80; font-family: 'JetBrains Mono', monospace; font-size: 0.54rem; letter-spacing: 0.2em; }
+  .code-card header b { position: absolute; top: -1rem; right: 1rem; padding: 0.45rem 0.7rem; border: 1px solid var(--vx-accent); background: var(--vx-black); color: var(--vx-accent); font-weight: 400; transform: rotate(5deg); }
+  .code-card ol { margin: 0; padding: 0; list-style: none; border-block: 1px solid var(--vx-line); }
+  .code-card li { display: flex; align-items: baseline; gap: 1.4rem; padding: 1.6rem 1.75rem; border-bottom: 1px solid rgb(232 230 225 / 8%); }
+  .code-card li:last-child { border-bottom: 0; }
+  .code-card li span { color: var(--vx-accent); font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; }
+  .code-card li strong { font-family: 'Anton', sans-serif; font-size: clamp(1.75rem, 4.4vw, 3.7rem); font-weight: 400; line-height: 1; }
+
+  .community header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 2rem; margin-bottom: 3.5rem; }
+  .community h2 { font-size: clamp(3.5rem, 9vw, 9rem); }
+  .community header p { max-width: 24rem; margin: 0; color: #b9bcbd; line-height: 1.7; }
+  .community-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 8rem; gap: 0.9rem; }
+  .community-grid figure { position: relative; grid-row: span 3; margin: 0; overflow: hidden; border: 1px solid rgb(232 230 225 / 8%); filter: grayscale(1); }
+  .community-grid figure:nth-child(even) { grid-row: span 2; }
+  .community-grid img { width: 100%; height: 100%; object-fit: cover; transition: filter 300ms ease, transform 500ms ease; }
+  .community-grid figure:hover { filter: none; }
+  .community-grid figure:hover img { transform: scale(1.025); }
+  .community-grid figcaption { position: absolute; bottom: 0.75rem; left: 0.75rem; padding: 0.35rem 0.5rem; background: rgb(5 5 5 / 78%); font-family: 'JetBrains Mono', monospace; font-size: 0.48rem; letter-spacing: 0.1em; }
+
+  .countdown { position: relative; display: grid; min-height: 92vh; place-items: center; overflow: hidden; border-top: 1px solid var(--vx-line); }
+  .countdown > img, .countdown__shade { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .countdown > img { object-fit: cover; opacity: 0.48; }
+  .countdown__shade { background: radial-gradient(circle, rgb(5 5 5 / 40%), rgb(5 5 5 / 95%)); }
+  .countdown__content { position: relative; display: flex; align-items: center; flex-direction: column; gap: clamp(1.5rem, 4vh, 2.5rem); padding: 6rem var(--page-pad); text-align: center; }
+  .countdown h2 { font-size: clamp(2.5rem, 5.5vw, 5.3rem); }
+  .countdown__clock { display: flex; align-items: baseline; gap: clamp(0.45rem, 1.5vw, 1.4rem); }
+  .countdown__clock div { display: flex; align-items: center; flex-direction: column; }
+  .countdown__clock strong { font-family: 'Anton', sans-serif; font-size: clamp(3.4rem, 10vw, 9.5rem); font-weight: 400; line-height: 1; }
+  .countdown__clock span { margin-top: 0.4rem; color: var(--vx-dim); font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; letter-spacing: 0.3em; }
+  .countdown__clock > b { color: var(--vx-accent); font-family: 'Anton', sans-serif; font-size: clamp(3.4rem, 8vw, 8rem); font-weight: 400; animation: blink 1s steps(1) infinite; }
+  .countdown__facts { display: flex; flex-wrap: wrap; justify-content: center; border: 1px solid rgb(232 230 225 / 14%); }
+  .countdown__facts span { padding: 0.75rem 1rem; border-right: 1px solid rgb(232 230 225 / 14%); color: var(--vx-muted); font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; letter-spacing: 0.15em; }
+  .countdown__facts span:last-child { border-right: 0; }
+
+  .access { display: grid; align-items: center; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(3rem, 7vw, 7rem); border-top: 1px solid var(--vx-line); background: #070708; }
+  .access h2 { margin: 1.1rem 0 1.4rem; font-size: clamp(3.5rem, 7vw, 7rem); }
+  .access > div:first-child p { max-width: 29rem; margin: 0; color: #b9bcbd; line-height: 1.7; }
+  .access-terminal { padding: clamp(1.5rem, 3vw, 2.5rem); border: 1px solid rgb(232 230 225 / 12%); background: var(--vx-black-soft); }
+  .access-terminal header { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--vx-line); color: var(--vx-dim); font-family: 'JetBrains Mono', monospace; font-size: 0.52rem; letter-spacing: 0.2em; }
+  .access-terminal header b { color: var(--vx-accent); font-weight: 400; }
+  .access-terminal label { display: block; margin-bottom: 0.6rem; color: #7a7d80; font-family: 'JetBrains Mono', monospace; font-size: 0.52rem; letter-spacing: 0.23em; }
+  .access-terminal input { width: 100%; padding: 0.75rem 2px; border: 0; border-bottom: 1px solid rgb(232 230 225 / 25%); border-radius: 0; background: transparent; color: var(--vx-paper); font-family: 'JetBrains Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; transition: border-color 0.3s ease; }
+  .access-terminal input:focus { border-bottom-color: var(--vx-accent); outline: 0; }
+  .access-terminal .button { width: 100%; margin-top: 1.625rem; }
+  .access-terminal form > p { margin: 1.25rem 0 0; color: var(--vx-dim); font-family: 'JetBrains Mono', monospace; font-size: 0.53125rem; letter-spacing: 0.18em; line-height: 2; }
+  .access-success { padding: 0.625rem 0 0.375rem; animation: fade-up 0.5s ease both; }
+  .access-success > span { display: block; margin-bottom: 0.875rem; color: var(--vx-accent); font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.22em; }
+  .access-success > strong { display: block; margin-bottom: 0.875rem; font-family: 'Anton', sans-serif; font-size: clamp(1.625rem, 3vw, 2.5rem); font-weight: 400; line-height: 1; text-transform: uppercase; }
+  .access-success > p { margin: 0; color: #7a7d80; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.18em; line-height: 2; }
+  .access-success > p b { color: var(--vx-accent); animation: blink 0.8s steps(1) infinite; }
+
+  .final-quote { position: relative; display: grid; min-height: 85vh; place-items: center; overflow: hidden; border-top: 1px solid var(--vx-line); }
+  .final-quote img { position: absolute; width: min(76vw, 54rem); opacity: 0.13; mix-blend-mode: screen; }
+  .final-quote h2 { position: relative; max-width: 80rem; padding: 5rem var(--page-pad); font-size: clamp(2.5rem, 6.4vw, 6.5rem); text-align: center; }
+
+  @media (max-width: 850px) {
+    .design-lab__header { align-items: flex-start; flex-direction: column; }
+    .design-lab__intro { flex-basis: auto; max-width: 34rem; }
+    .design-lab__piece--shell { grid-column: 1 / span 6; }
+    .design-lab__piece--material { grid-column: 7 / span 6; }
+    .design-lab__piece--duo { grid-column: 2 / span 10; }
+    .story-callout { width: min(210px, 30vw); }
+    .story__image { height: min(54vh, 30rem); }
+    .community-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 620px) {
+    .manifesto-intro { min-height: 72vh; }
+    .manifesto-intro__ghost { font-size: 45vh; }
+    .manifesto-intro h2 { font-size: clamp(3.7rem, 18vw, 6rem); }
+    .drop-heading h2 { font-size: 3.7rem; }
+    .drop-end { align-items: flex-start; flex-direction: column; }
+    .editorial__wide { height: 75vh; }
+    .editorial__mosaic { min-height: 48rem; }
+    .editorial__portrait { top: 3rem; left: 1rem; width: 72%; height: 32rem; }
+    .editorial__detail { top: 20rem; right: 1rem; width: 55%; height: 25rem; }
+    .editorial__vertical { display: none; }
+    .design-lab__campaign { height: 72vh; }
+    .design-lab__telemetry span:last-child { display: none; }
+    .design-lab__campaign figcaption p { display: none; }
+    .design-lab__grid { display: flex; flex-direction: column; gap: 3rem; }
+    .design-lab__piece--material, .design-lab__piece--duo { margin-top: 0; }
+    .design-lab__piece--shell > div, .design-lab__piece--material > div, .design-lab__piece--duo > div { height: 68vh; }
+    .story { height: 320vh; }
+    .story__eyebrow { top: 4.5rem; left: 1rem; max-width: 55vw; font-size: 8px; }
+    .story__progress { top: 4.5rem; right: 1rem; }
+    .story__image { height: 43vh; }
+    .story-callout { width: 42vw; }
+    .story-callout--1, .story-callout--3 { left: 1rem; }
+    .story-callout--2, .story-callout--4 { right: 1rem; }
+    .story-callout strong { font-size: 12px; }
+    .story-callout p { font-size: 10px; }
+    .story__action { bottom: 2rem; width: max-content; max-width: calc(100vw - 2rem); }
+    .code-card header, .code-card footer { flex-wrap: wrap; }
+    .code-card li { padding-inline: 1rem; }
+    .code-card li strong { font-size: 1.75rem; }
+    .community-grid { grid-auto-rows: 8rem; }
+    .countdown__clock { gap: 0.25rem; }
+    .countdown__clock strong { font-size: clamp(2.6rem, 15vw, 4rem); }
+    .countdown__clock > b { font-size: 3rem; }
+    .countdown__facts { border-bottom: 0; }
+    .countdown__facts span { width: 50%; border-bottom: 1px solid rgb(232 230 225 / 14%); }
+    .access { grid-template-columns: 1fr; }
+    .final-quote { min-height: 65vh; }
+  }
+</style>

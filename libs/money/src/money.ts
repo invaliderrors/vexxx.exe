@@ -31,9 +31,12 @@ export function assertValidMoney(money: Money): void {
  */
 export function formatMoney(money: Money, localeTag: string): string {
   assertValidMoney(money);
+  const fractionDigits = money.currency === 'COP' ? 0 : 2;
   return new Intl.NumberFormat(localeTag, {
     style: 'currency',
     currency: money.currency,
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
   }).format(money.amount / MINOR_UNITS_PER_MAJOR);
 }
 

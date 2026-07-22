@@ -1,0 +1,20 @@
+{
+  "sku": "VXX-CAP-006",
+  "slugs": {
+    "es": "gorra-envejecida",
+    "en": "distressed-cap"
+  },
+  "name": {
+    "es": "Gorra Envejecida",
+    "en": "Distressed Cap"
+  },
+  "description": {
+    "es": "Gorra de seis paneles en lona lavada, visera deshilachada y cierre ajustable de metal envejecido.",
+    "en": "Six-panel cap in washed canvas with a frayed brim and distressed adjustable metal closure."
+  },
+  "price": { "amount": 29900000, "currency": "COP" },
+  "images": [],
+  "collection": "drop-001",
+  "availability": "out-of-stock",
+  "published": true
+}

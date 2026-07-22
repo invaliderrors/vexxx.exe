@@ -1,0 +1,17 @@
+---
+import type { Locale } from '../../i18n/config';
+import type { Product } from '../../lib/catalog';
+import ProductCard from './ProductCard.astro';
+
+interface Props {
+  products: readonly Product[];
+  locale: Locale;
+  compact?: boolean | undefined;
+}
+
+const { products, locale, compact = false } = Astro.props;
+---
+
+<div class:list={['product-grid', { 'product-grid--compact': compact }]}>
+  {products.map((product, index) => <ProductCard product={product} locale={locale} index={index} compact={compact} />)}
+</div>

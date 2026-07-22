@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import DocumentPage from '../components/pages/DocumentPage.astro';
 import { t } from '../i18n';
 import { routePath } from '../i18n/routes';
 
@@ -15,7 +16,10 @@ const dict = t(locale);
   alternates={{ es: '/404', en: '/404' }}
   noindex={true}
 >
-  <h1>{dict.notFound.heading}</h1>
-  <p>{dict.notFound.body}</p>
-  <a href={routePath('home', locale)}>{dict.notFound.backHome}</a>
+  <DocumentPage eyebrow={dict.brand.systemName} heading={dict.notFound.heading} body={dict.notFound.body} />
+  <a class="not-found-action button" href={routePath('home', locale)}>{dict.notFound.backHome} →</a>
 </BaseLayout>
+
+<style>
+  .not-found-action { position: relative; z-index: 2; margin: -9rem var(--page-pad) 8rem; }
+</style>

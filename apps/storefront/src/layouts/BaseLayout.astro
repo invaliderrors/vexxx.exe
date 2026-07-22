@@ -1,17 +1,24 @@
 ---
+import '@fontsource/anton/400.css';
+import '@fontsource/archivo/400.css';
+import '@fontsource/archivo/500.css';
+import '@fontsource/archivo/600.css';
+import '@fontsource/archivo/700.css';
+import '@fontsource/jetbrains-mono/400.css';
+import '@fontsource/jetbrains-mono/500.css';
+import '@fontsource/jetbrains-mono/700.css';
+import { Image } from 'astro:assets';
 import '../styles/global.css';
+import vexxxMark from '../assets/vexxx/vexxx-mark.png';
+import vexxxWordmark from '../assets/vexxx/vexxx-wordmark.png';
 import JsonLd from '../components/seo/JsonLd.astro';
 import Seo from '../components/seo/Seo.astro';
 import { t } from '../i18n';
 import type { Locale } from '../i18n/config';
-import { routePath } from '../i18n/routes';
+import { productPath, routePath } from '../i18n/routes';
+import { getCatalog } from '../lib/catalog';
 import { organizationJsonLd, webSiteJsonLd } from '../lib/seo/jsonld';
 
-/**
- * Root layout for every page. Owns <head> (via <Seo />), sitewide
- * JSON-LD (Organization + WebSite), and the semantic document shell
- * (header/nav/main/footer). Zero visual design — structure only.
- */
 interface Props {
   locale: Locale;
   title: string;
@@ -43,7 +50,10 @@ if (!site) {
 }
 
 const otherLocale: Locale = locale === 'es' ? 'en' : 'es';
-const localeSwitchLabel = otherLocale === 'en' ? 'English' : 'Español';
+const products = await getCatalog().getPublishedProducts();
+const homePath = routePath('home', locale);
+const dropPath = `${homePath}#drop`;
+const accessPath = `${homePath}#access`;
 ---
 
 <!doctype html>
@@ -52,6 +62,7 @@ const localeSwitchLabel = otherLocale === 'en' ? 'English' : 'Español';
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#050505" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <Seo
@@ -70,30 +81,231 @@ const localeSwitchLabel = otherLocale === 'en' ? 'English' : 'Español';
     <slot name="head" />
   </head>
   <body>
-    <header>
-      <nav aria-label={dict.nav.ariaMain}>
-        <a href={routePath('home', locale)}>{dict.nav.home}</a>
-        <a href={routePath('products', locale)}>{dict.nav.products}</a>
-        <a href={routePath('collections', locale)}>{dict.nav.collections}</a>
-        <a
-          href={alternates[otherLocale]}
-          hreflang={otherLocale}
-          rel="alternate"
+    <div class="grain" data-grain aria-hidden="true"></div>
+    <div class="vx-cursor" data-vx-cursor hidden aria-hidden="true">
+      <div class="vx-cursor__dot" data-vx-cursor-dot></div>
+      <div class="vx-cursor__tag" data-vx-cursor-tag></div>
+    </div>
+    <div class="boot-screen" data-boot-screen aria-hidden="true">
+      <Image class="boot-screen__mark" src={vexxxMark} alt="" width={110} height={110} />
+      <div class="boot-screen__copy">{dict.brand.systemName} — {dict.overlays.initializing}<span>_</span></div>
+      <div class="boot-screen__track"><i></i></div>
+    </div>
+    <header class="site-header" data-site-header data-vx-nav>
+      <div class="site-header__side">
+        <button
+          class="icon-button menu-trigger"
+          type="button"
+          aria-label={dict.nav.openMenu}
+          aria-controls="site-menu"
+          data-overlay-open="site-menu"
+          data-cursor={dict.nav.cursorEnter}
         >
-          {localeSwitchLabel}
-        </a>
+          <span></span><span></span>
+        </button>
+        <span class="header-system">{dict.brand.systemCode} / {dict.brand.season}</span>
+      </div>
+
+      <a class="wordmark" href={homePath} aria-label={dict.brand.name} data-cursor={dict.nav.cursorEnter}>
+        <Image src={vexxxWordmark} alt="" width={1166} height={430} />
+      </a>
+
+      <nav class="site-header__actions" aria-label={dict.nav.ariaMain}>
+        <button
+          class="icon-button search-trigger"
+          type="button"
+          aria-label={dict.nav.search}
+          aria-controls="site-search"
+          data-overlay-open="site-search"
+          data-cursor={dict.nav.cursorEnter}
+        >
+          <svg viewBox="0 0 20 20" aria-hidden="true">
+            <circle cx="8.5" cy="8.5" r="5.5"></circle>
+            <path d="m12.7 12.7 5 5"></path>
+          </svg>
+        </button>
+        <a class="header-access" href={accessPath}>{dict.nav.access}</a>
+        <button
+          class="cart-trigger"
+          type="button"
+          aria-controls="site-cart"
+          data-overlay-open="site-cart"
+          data-cursor={dict.nav.cursorEnter}
+        >
+          {dict.nav.cart} <span>[00]</span>
+        </button>
       </nav>
     </header>
+
     <main>
       <slot />
     </main>
-    <footer>
-      <nav aria-label={dict.footer.ariaLegal}>
-        <a href={routePath('privacy', locale)}>{dict.footer.privacy}</a>
-        <a href={routePath('terms', locale)}>{dict.footer.terms}</a>
-        <a href={routePath('shipping', locale)}>{dict.footer.shipping}</a>
-      </nav>
-      <p>© {new Date().getFullYear()} {dict.footer.copyright}</p>
+
+    <footer id="site-footer" class="site-footer">
+      <div class="footer-ghost-shell" aria-hidden="true">
+        <div class="footer-ghost">{dict.brand.name}</div>
+      </div>
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-brand__mark">
+            <Image src={vexxxMark} alt="" width={30} height={30} />
+            <span>{dict.brand.systemName}</span>
+          </div>
+          <p>{dict.footer.tagline}</p>
+        </div>
+        <nav aria-label={dict.nav.ariaMain}>
+          <p class="footer-label">{dict.footer.system}</p>
+          <a href={dropPath}>{dict.footer.drop}</a>
+          <a href={routePath('products', locale)}>{dict.footer.shop}</a>
+          <a href={routePath('archive', locale)}>{dict.footer.archive}</a>
+          <a href={routePath('manifesto', locale)}>{dict.footer.manifesto}</a>
+          <a href={accessPath}>{dict.footer.access}</a>
+        </nav>
+        <nav aria-label={dict.footer.ariaLegal}>
+          <p class="footer-label">{dict.footer.support}</p>
+          <a href={routePath('shipping', locale)}>{dict.footer.shipping}</a>
+          <a href={routePath('privacy', locale)}>{dict.footer.privacy}</a>
+          <a href={routePath('terms', locale)}>{dict.footer.terms}</a>
+        </nav>
+        <div>
+          <p class="footer-label">{dict.footer.signal}</p>
+          <a href="https://www.instagram.com" rel="noreferrer">{dict.footer.instagram}</a>
+          <a href="https://www.tiktok.com" rel="noreferrer">{dict.footer.tiktok}</a>
+          <a href={alternates[otherLocale]} hreflang={otherLocale} rel="alternate">
+            {dict.nav.localeLabel}
+          </a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© {new Date().getFullYear()} {dict.footer.copyright}</span>
+        <span>{dict.brand.systemName} {dict.brand.build} — {dict.brand.status}: <b>● {dict.footer.operational}</b></span>
+      </div>
     </footer>
+
+    <section id="site-menu" class="overlay overlay--menu" hidden data-overlay>
+      <div class="overlay__bar">
+        <span>{dict.nav.menuLabel}</span>
+        <button type="button" data-overlay-close>{`[ ${dict.nav.closeMenu} ]`}</button>
+      </div>
+      <div class="menu-layout">
+        <nav class="menu-links" aria-label={dict.nav.ariaMain}>
+          <a href={dropPath} data-cursor={dict.nav.cursorEnter}><span>01</span>{dict.nav.drop}</a>
+          <a href={routePath('products', locale)} data-cursor={dict.nav.cursorEnter}><span>02</span>{dict.nav.products}</a>
+          <a href={routePath('archive', locale)} data-cursor={dict.nav.cursorEnter}><span>03</span>{dict.nav.archive}</a>
+          <a href={routePath('manifesto', locale)} data-cursor={dict.nav.cursorEnter}><span>04</span>{dict.nav.manifesto}</a>
+          <a href={accessPath} data-cursor={dict.nav.cursorEnter}><span>05</span>{dict.nav.access}</a>
+        </nav>
+        <div class="menu-visual">
+          <Image src={vexxxMark} alt="" loading="lazy" />
+          <span>{dict.brand.season} — {dict.products.heading}</span>
+        </div>
+      </div>
+      <div class="overlay__foot">{dict.brand.systemName} — {dict.brand.build}</div>
+    </section>
+
+    <section id="site-search" class="overlay overlay--search" hidden data-overlay>
+      <div class="overlay__bar">
+        <span>{dict.overlays.searchTitle}</span>
+        <button type="button" data-overlay-close>{`[ ${dict.nav.closeMenu} ]`}</button>
+      </div>
+      <div class="search-panel">
+        <label class="sr-only" for="system-search">{dict.nav.search}</label>
+        <input
+          id="system-search"
+          type="search"
+          placeholder={dict.overlays.searchPlaceholder}
+          autocomplete="off"
+          data-system-search
+        />
+        <p class="search-hint">{dict.overlays.searchHint}</p>
+        <div class="search-results" data-search-results>
+          {
+            products.map((product) => (
+              <a
+                href={productPath(locale, product.slug[locale])}
+                data-search-item
+                data-search-value={`${product.sku} ${product.name[locale]}`.toLocaleLowerCase(locale)}
+                data-cursor={dict.nav.cursorView}
+              >
+                <span>{product.sku}</span>
+                <strong>{product.name[locale]}</strong>
+                <em>{dict.products.view} →</em>
+              </a>
+            ))
+          }
+          <p class="search-empty" hidden data-search-empty>{dict.overlays.searchEmpty}</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="site-cart" class="drawer" hidden data-overlay>
+      <button class="drawer__backdrop" type="button" aria-label={dict.nav.closeMenu} data-overlay-close></button>
+      <aside class="drawer__panel" aria-labelledby="cart-title">
+        <div class="overlay__bar">
+          <span id="cart-title">{dict.overlays.cartTitle}</span>
+          <button type="button" data-overlay-close>{`[ ${dict.nav.closeMenu} ]`}</button>
+        </div>
+        <div class="cart-empty">
+          <Image src={vexxxMark} alt="" width={70} height={70} />
+          <strong>{dict.overlays.cartEmpty}</strong>
+          <p>{dict.overlays.cartBody}</p>
+          <a class="button button--outline" href={routePath('products', locale)} data-cursor={dict.nav.cursorEnter}>
+            {dict.overlays.cartAction} →
+          </a>
+        </div>
+      </aside>
+    </section>
+
+    <div class="system-toast" data-system-toast hidden role="status" aria-live="polite"></div>
+
+    <script>
+      import { initializeVexxxClient } from '../scripts/vexxx-client';
+
+      const overlays = document.querySelectorAll<HTMLElement>('[data-overlay]');
+      const searchInput = document.querySelector<HTMLInputElement>('[data-system-search]');
+
+      function closeOverlays(): void {
+        overlays.forEach((overlay) => {
+          overlay.hidden = true;
+        });
+        document.body.classList.remove('overlay-open');
+      }
+
+      document.querySelectorAll<HTMLButtonElement>('[data-overlay-open]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const targetId = button.dataset.overlayOpen;
+          if (!targetId) return;
+          closeOverlays();
+          const target = document.getElementById(targetId);
+          if (!target) return;
+          target.hidden = false;
+          document.body.classList.add('overlay-open');
+          if (targetId === 'site-search') window.setTimeout(() => searchInput?.focus(), 30);
+        });
+      });
+
+      document.querySelectorAll<HTMLButtonElement>('[data-overlay-close]').forEach((button) => {
+        button.addEventListener('click', closeOverlays);
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') closeOverlays();
+      });
+
+      searchInput?.addEventListener('input', () => {
+        const query = searchInput.value.trim().toLocaleLowerCase();
+        const items = document.querySelectorAll<HTMLElement>('[data-search-item]');
+        let matches = 0;
+        items.forEach((item) => {
+          const visible = (item.dataset.searchValue ?? '').includes(query);
+          item.hidden = !visible;
+          if (visible) matches += 1;
+        });
+        const empty = document.querySelector<HTMLElement>('[data-search-empty]');
+        if (empty) empty.hidden = matches !== 0;
+      });
+
+      initializeVexxxClient();
+    </script>
   </body>
 </html>

@@ -41,6 +41,16 @@ describe('formatMoney', () => {
     expect(formatted).toBe('$49.90');
   });
 
+  it('formats COP for es-CO without fractional digits', () => {
+    const formatted = formatMoney(
+      { amount: 89_900_000, currency: 'COP' },
+      'es-CO',
+    );
+    expect(formatted).toContain('$');
+    expect(formatted).toContain('899.000');
+    expect(formatted).not.toContain(',00');
+  });
+
   it('rejects float amounts', () => {
     expect(() => formatMoney(eur(12.5), 'es-ES')).toThrow(/integer/);
   });

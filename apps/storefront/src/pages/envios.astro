@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import DocumentPage from '../components/pages/DocumentPage.astro';
 import { t } from '../i18n';
 import { routeAlternates, routePath } from '../i18n/routes';
 
@@ -14,6 +15,5 @@ const dict = t(locale);
   path={routePath('shipping', locale)}
   alternates={routeAlternates('shipping')}
 >
-  <h1>{dict.legal.shipping.heading}</h1>
-  <p>{dict.legal.shipping.body}</p>
+  <DocumentPage eyebrow={dict.legal.eyebrow} heading={dict.legal.shipping.heading} body={dict.legal.shipping.body} status={dict.legal.pending} />
 </BaseLayout>

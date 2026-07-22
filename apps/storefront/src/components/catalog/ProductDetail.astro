@@ -1,0 +1,142 @@
+---
+import { Image } from 'astro:assets';
+import campaignGroup from '../../assets/vexxx/campaign-group.png';
+import campaignPortrait from '../../assets/vexxx/campaign-portrait.png';
+import hoodieStudy from '../../assets/vexxx/hoodie-study.png';
+import { t } from '../../i18n';
+import type { Locale } from '../../i18n/config';
+import { routePath } from '../../i18n/routes';
+import type { Product } from '../../lib/catalog';
+import { formatPrice } from '../../lib/format';
+import ProductGrid from './ProductGrid.astro';
+
+interface Props {
+  product: Product;
+  related: readonly Product[];
+  locale: Locale;
+}
+
+const { product, related, locale } = Astro.props;
+const dict = t(locale);
+const primary = product.sku.includes('HOOD')
+  ? hoodieStudy
+  : product.sku.includes('TEE') || product.sku.includes('CRG')
+    ? campaignPortrait
+    : campaignGroup;
+const sizes = product.sku.includes('CAP') || product.sku.includes('BAG')
+  ? dict.product.oneSize
+  : dict.product.apparelSizes;
+const status = product.availability === 'out-of-stock'
+  ? dict.products.soldOut
+  : product.availability === 'pre-order'
+    ? dict.products.preOrder
+    : dict.products.available;
+const info = [
+  [dict.product.material, dict.product.materialBody],
+  [dict.product.fit, dict.product.fitBody],
+  [dict.product.care, dict.product.careBody],
+  [dict.product.shipping, dict.product.shippingBody],
+];
+---
+
+<article class="product-page">
+  <a class="product-back" href={routePath('products', locale)} data-cursor={dict.nav.cursorEnter}>{dict.product.back}</a>
+  <div class="product-layout">
+    <div class="product-gallery" data-reveal="left">
+      <figure class="product-gallery__primary">
+        <Image src={primary} alt={product.name[locale]} widths={[640, 960, 1280]} sizes="(max-width: 800px) 100vw, 55vw" />
+        <span>{product.sku}</span>
+      </figure>
+      <div class="product-gallery__secondary">
+        <figure><Image src={campaignPortrait} alt="" loading="lazy" /></figure>
+        <figure><Image src={campaignGroup} alt="" loading="lazy" /></figure>
+      </div>
+    </div>
+
+    <div class="product-summary" data-reveal="right">
+      <span class="eyebrow">{dict.product.productCode}: {product.sku}</span>
+      <h1 class="display-title">{product.name[locale]}</h1>
+      <div class="product-price">
+        <data value={String(product.price.amount)}>{formatPrice(product.price, locale)}</data>
+        <span>{status}</span>
+      </div>
+      <p class="product-description">{product.description[locale]}</p>
+
+      <div class="size-label">
+        <span>{dict.product.selectSize}</span>
+        <span>{dict.product.fitNote}</span>
+      </div>
+      <fieldset class="size-picker">
+        <legend class="sr-only">{dict.product.selectSize}</legend>
+        {sizes.map((size) => <label><input type="radio" name="size" value={size} /><span>{size}</span></label>)}
+      </fieldset>
+
+      <div class="product-actions">
+        <button class="button" type="button" data-overlay-open="site-cart" data-cursor={dict.nav.cursorAcquire}>{dict.product.add}</button>
+        <button class="button button--outline" type="button">{dict.product.save}</button>
+      </div>
+      <p class="unit-note">{dict.product.unitNote}<br />{dict.product.shippingNote}</p>
+
+      <div class="product-info">
+        {info.map(([title, body], index) => <details open={index === 0}><summary>{title}<span>+</span></summary><p>{body}</p></details>)}
+      </div>
+    </div>
+  </div>
+
+  {related.length > 0 && <section class="related"><div class="eyebrow" data-reveal>{dict.product.alsoInDrop}</div><ProductGrid products={related} locale={locale} compact={true} /></section>}
+</article>
+
+<style>
+  .product-page { padding: calc(var(--header-height) + clamp(1.5rem, 4vh, 3rem)) var(--page-pad) clamp(6rem, 12vh, 10rem); }
+  .product-back { display: inline-block; margin-bottom: 1.5rem; color: #7a7d80; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.18em; }
+  .product-back:hover { color: var(--vx-accent); }
+  .product-layout { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(22rem, 0.92fr); gap: clamp(2rem, 5vw, 5rem); align-items: start; }
+  .product-gallery { display: grid; gap: 1rem; }
+  .product-gallery figure { position: relative; margin: 0; overflow: hidden; border: 1px solid rgb(232 230 225 / 7%); background: #0c0d0e; }
+  .product-gallery__primary { aspect-ratio: 4 / 5; }
+  .product-gallery img { width: 100%; height: 100%; object-fit: cover; }
+  .product-gallery__primary > span { position: absolute; top: 0.9rem; left: 0.9rem; padding: 0.4rem 0.55rem; border: 1px solid rgb(232 230 225 / 18%); background: rgb(5 5 5 / 82%); color: #9a9d9f; font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; letter-spacing: 0.16em; }
+  .product-gallery__secondary { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .product-gallery__secondary figure { aspect-ratio: 1; }
+  .product-summary { position: sticky; top: calc(var(--header-height) + 2rem); }
+  .product-summary h1 { margin: 1rem 0; font-size: clamp(3rem, 5vw, 5rem); }
+  .product-price { display: flex; align-items: baseline; gap: 1.25rem; margin: 1.5rem 0; }
+  .product-price data { font-size: 1.5rem; font-weight: 600; }
+  .product-price span { color: var(--vx-accent); font-family: 'JetBrains Mono', monospace; font-size: 0.56rem; letter-spacing: 0.16em; }
+  .product-description { max-width: 31rem; margin-bottom: 2rem; color: #b9bcbd; font-size: 0.9rem; line-height: 1.8; }
+  .size-label { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 0.8rem; color: #7a7d80; font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; letter-spacing: 0.16em; }
+  .size-picker { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 1.5rem; padding: 0; border: 0; }
+  .size-picker label { position: relative; }
+  .size-picker input { position: absolute; opacity: 0; }
+  .size-picker span { display: grid; min-width: 3rem; min-height: 2.75rem; place-items: center; border: 1px solid rgb(232 230 225 / 20%); color: #c9ccce; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; cursor: pointer; transition: all 0.25s ease; }
+  .size-picker span:hover { border-color: var(--vx-accent); color: var(--vx-accent); }
+  .size-picker input:checked + span { border-color: var(--vx-paper); background: var(--vx-paper); color: var(--vx-black); }
+  .product-actions { display: grid; grid-template-columns: 1.5fr 1fr; gap: 0.65rem; }
+  .unit-note { color: var(--vx-dim); font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; letter-spacing: 0.12em; line-height: 2; }
+  .product-info { margin-top: 1.8rem; border-top: 1px solid var(--vx-line); }
+  .product-info details { border-bottom: 1px solid var(--vx-line); }
+  .product-info summary { display: flex; justify-content: space-between; padding: 1.1rem 0; font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; letter-spacing: 0.17em; cursor: pointer; list-style: none; }
+  .product-info summary::-webkit-details-marker { display: none; }
+  .product-info summary span { color: var(--vx-accent); }
+  .product-info details[open] summary span { font-size: 0; }
+  .product-info details[open] summary span::after { content: '−'; font-size: 0.58rem; }
+  .product-info p { max-width: 29rem; margin: 0 0 1.2rem; color: #9a9d9f; font-size: 0.8rem; line-height: 1.7; }
+  @supports (interpolate-size: allow-keywords) {
+    .product-info { interpolate-size: allow-keywords; }
+    .product-info details::details-content { block-size: 0; overflow: hidden; opacity: 0; transition: block-size 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease; }
+    .product-info details[open]::details-content { block-size: auto; opacity: 1; }
+  }
+  .related { margin-top: clamp(5rem, 10vh, 8rem); padding-top: 1.6rem; border-top: 1px solid var(--vx-line); }
+  .related > .eyebrow { margin-bottom: 1.5rem; }
+
+  @media (max-width: 850px) {
+    .product-layout { grid-template-columns: 1fr; }
+    .product-summary { position: static; }
+  }
+
+  @media (max-width: 560px) {
+    .product-page { padding-inline: 1rem; }
+    .product-actions { grid-template-columns: 1fr; }
+    .size-label { align-items: flex-start; flex-direction: column; }
+  }
+</style>

@@ -1,14 +1,14 @@
 ---
 import JsonLd from '../../../components/seo/JsonLd.astro';
+import CatalogPage from '../../../components/catalog/CatalogPage.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { t } from '../../../i18n';
-import { collectionPath, productPath, routePath } from '../../../i18n/routes';
+import { collectionPath, routePath } from '../../../i18n/routes';
 import {
   getCatalog,
   type Collection,
   type Product,
 } from '../../../lib/catalog';
-import { formatPrice } from '../../../lib/format';
 import { breadcrumbJsonLd } from '../../../lib/seo/jsonld';
 import { canonicalUrl } from '../../../lib/seo/meta';
 
@@ -67,24 +67,11 @@ const alternates = {
       { name: collection.name[locale], url: canonicalUrl(site, path) },
     ])}
   />
-  <h1>{collection.name[locale]}</h1>
-  <p>{collection.description[locale]}</p>
-  {
-    products.length === 0 ? (
-      <p>{dict.products.empty}</p>
-    ) : (
-      <ul>
-        {products.map((product) => (
-          <li>
-            <a href={productPath(locale, product.slug[locale])}>
-              {product.name[locale]}
-            </a>
-            <data value={String(product.price.amount)}>
-              {formatPrice(product.price, locale)}
-            </data>
-          </li>
-        ))}
-      </ul>
-    )
-  }
+  <CatalogPage
+    locale={locale}
+    products={products}
+    title={collection.name[locale]}
+    description={collection.description[locale]}
+    eyebrow={dict.collections.eyebrow}
+  />
 </BaseLayout>

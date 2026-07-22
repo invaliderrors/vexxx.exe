@@ -1,10 +1,10 @@
 ---
 import JsonLd from '../../../components/seo/JsonLd.astro';
+import CatalogPage from '../../../components/catalog/CatalogPage.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { t } from '../../../i18n';
-import { productPath, routeAlternates, routePath } from '../../../i18n/routes';
+import { routeAlternates, routePath } from '../../../i18n/routes';
 import { getCatalog } from '../../../lib/catalog';
-import { formatPrice } from '../../../lib/format';
 import { breadcrumbJsonLd } from '../../../lib/seo/jsonld';
 import { canonicalUrl } from '../../../lib/seo/meta';
 
@@ -38,23 +38,5 @@ const products = await getCatalog().getPublishedProducts();
       },
     ])}
   />
-  <h1>{dict.products.heading}</h1>
-  {
-    products.length === 0 ? (
-      <p>{dict.products.empty}</p>
-    ) : (
-      <ul>
-        {products.map((product) => (
-          <li>
-            <a href={productPath(locale, product.slug[locale])}>
-              {product.name[locale]}
-            </a>
-            <data value={String(product.price.amount)}>
-              {formatPrice(product.price, locale)}
-            </data>
-          </li>
-        ))}
-      </ul>
-    )
-  }
+  <CatalogPage locale={locale} products={products} />
 </BaseLayout>

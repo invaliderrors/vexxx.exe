@@ -1,8 +1,9 @@
 ---
 import JsonLd from '../../components/seo/JsonLd.astro';
+import CollectionsPage from '../../components/catalog/CollectionsPage.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { t } from '../../i18n';
-import { collectionPath, routeAlternates, routePath } from '../../i18n/routes';
+import { routeAlternates, routePath } from '../../i18n/routes';
 import { getCatalog } from '../../lib/catalog';
 import { breadcrumbJsonLd } from '../../lib/seo/jsonld';
 import { canonicalUrl } from '../../lib/seo/meta';
@@ -37,20 +38,5 @@ const collections = await getCatalog().getPublishedCollections();
       },
     ])}
   />
-  <h1>{dict.collections.heading}</h1>
-  {
-    collections.length === 0 ? (
-      <p>{dict.collections.empty}</p>
-    ) : (
-      <ul>
-        {collections.map((collection) => (
-          <li>
-            <a href={collectionPath(locale, collection.slug[locale])}>
-              {collection.name[locale]}
-            </a>
-          </li>
-        ))}
-      </ul>
-    )
-  }
+  <CollectionsPage locale={locale} collections={collections} />
 </BaseLayout>
