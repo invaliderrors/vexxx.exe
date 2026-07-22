@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { t } from '../i18n';
+import { routePath } from '../i18n/routes';
+
+const locale = 'es' as const;
+const dict = t(locale);
+---
+
+<BaseLayout
+  locale={locale}
+  title={dict.notFound.metaTitle}
+  description={dict.notFound.body}
+  path="/404"
+  alternates={{ es: '/404', en: '/404' }}
+  noindex={true}
+>
+  <h1>{dict.notFound.heading}</h1>
+  <p>{dict.notFound.body}</p>
+  <a href={routePath('home', locale)}>{dict.notFound.backHome}</a>
+</BaseLayout>

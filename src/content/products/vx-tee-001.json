@@ -1,0 +1,23 @@
+{
+  "sku": "VX-TEE-001",
+  "slugs": {
+    "es": "camiseta-oversized-001",
+    "en": "oversized-tee-001"
+  },
+  "name": {
+    "es": "Camiseta Oversized 001",
+    "en": "Oversized Tee 001"
+  },
+  "description": {
+    "es": "Camiseta oversized de gramaje alto (240 gsm). Corte boxy, algodón peinado. Producto de ejemplo del catálogo base.",
+    "en": "Heavyweight oversized tee (240 gsm). Boxy cut, combed cotton. Placeholder product for the base catalog."
+  },
+  "price": {
+    "amount": 4990,
+    "currency": "EUR"
+  },
+  "images": [],
+  "collection": "drop-001",
+  "availability": "in-stock",
+  "published": true
+}

@@ -1,0 +1,60 @@
+---
+import JsonLd from '../../../components/seo/JsonLd.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { t } from '../../../i18n';
+import {
+  collectionPath,
+  routeAlternates,
+  routePath,
+} from '../../../i18n/routes';
+import { getCatalog } from '../../../lib/catalog';
+import { breadcrumbJsonLd } from '../../../lib/seo/jsonld';
+import { canonicalUrl } from '../../../lib/seo/meta';
+
+const locale = 'en' as const;
+const dict = t(locale);
+const site = Astro.site;
+if (!site) {
+  throw new Error('SEO: `site` must be configured in astro.config.mjs');
+}
+
+const collections = await getCatalog().getPublishedCollections();
+---
+
+<BaseLayout
+  locale={locale}
+  title={dict.collections.metaTitle}
+  description={dict.collections.metaDescription}
+  path={routePath('collections', locale)}
+  alternates={routeAlternates('collections')}
+>
+  <JsonLd
+    slot="head"
+    data={breadcrumbJsonLd([
+      {
+        name: dict.product.breadcrumbHome,
+        url: canonicalUrl(site, routePath('home', locale)),
+      },
+      {
+        name: dict.collections.heading,
+        url: canonicalUrl(site, routePath('collections', locale)),
+      },
+    ])}
+  />
+  <h1>{dict.collections.heading}</h1>
+  {
+    collections.length === 0 ? (
+      <p>{dict.collections.empty}</p>
+    ) : (
+      <ul>
+        {collections.map((collection) => (
+          <li>
+            <a href={collectionPath(locale, collection.slug[locale])}>
+              {collection.name[locale]}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</BaseLayout>

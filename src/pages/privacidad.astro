@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { t } from '../i18n';
+import { routeAlternates, routePath } from '../i18n/routes';
+
+const locale = 'es' as const;
+const dict = t(locale);
+---
+
+<BaseLayout
+  locale={locale}
+  title={dict.legal.privacy.metaTitle}
+  description={dict.legal.privacy.metaDescription}
+  path={routePath('privacy', locale)}
+  alternates={routeAlternates('privacy')}
+>
+  <h1>{dict.legal.privacy.heading}</h1>
+  <p>{dict.legal.privacy.body}</p>
+</BaseLayout>

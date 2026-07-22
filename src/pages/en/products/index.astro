@@ -1,0 +1,60 @@
+---
+import JsonLd from '../../../components/seo/JsonLd.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { t } from '../../../i18n';
+import { productPath, routeAlternates, routePath } from '../../../i18n/routes';
+import { getCatalog } from '../../../lib/catalog';
+import { formatMoney } from '../../../lib/money/money';
+import { breadcrumbJsonLd } from '../../../lib/seo/jsonld';
+import { canonicalUrl } from '../../../lib/seo/meta';
+
+const locale = 'en' as const;
+const dict = t(locale);
+const site = Astro.site;
+if (!site) {
+  throw new Error('SEO: `site` must be configured in astro.config.mjs');
+}
+
+const products = await getCatalog().getPublishedProducts();
+---
+
+<BaseLayout
+  locale={locale}
+  title={dict.products.metaTitle}
+  description={dict.products.metaDescription}
+  path={routePath('products', locale)}
+  alternates={routeAlternates('products')}
+>
+  <JsonLd
+    slot="head"
+    data={breadcrumbJsonLd([
+      {
+        name: dict.product.breadcrumbHome,
+        url: canonicalUrl(site, routePath('home', locale)),
+      },
+      {
+        name: dict.products.heading,
+        url: canonicalUrl(site, routePath('products', locale)),
+      },
+    ])}
+  />
+  <h1>{dict.products.heading}</h1>
+  {
+    products.length === 0 ? (
+      <p>{dict.products.empty}</p>
+    ) : (
+      <ul>
+        {products.map((product) => (
+          <li>
+            <a href={productPath(locale, product.slug[locale])}>
+              {product.name[locale]}
+            </a>
+            <data value={String(product.price.amount)}>
+              {formatMoney(product.price, locale)}
+            </data>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</BaseLayout>

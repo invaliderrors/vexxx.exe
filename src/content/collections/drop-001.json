@@ -1,0 +1,15 @@
+{
+  "slugs": {
+    "es": "drop-001",
+    "en": "drop-001"
+  },
+  "name": {
+    "es": "Drop 001",
+    "en": "Drop 001"
+  },
+  "description": {
+    "es": "Primer drop de VEXXX. Colección de ejemplo del catálogo base.",
+    "en": "First VEXXX drop. Placeholder collection for the base catalog."
+  },
+  "published": true
+}

@@ -1,0 +1,16 @@
+---
+import type { JsonLd } from '../../lib/seo/jsonld';
+
+/**
+ * Serializes a JSON-LD node built by src/lib/seo/jsonld.ts into the
+ * document. Never hand-write <script type="application/ld+json"> in a
+ * page — build the node with a typed builder and pass it here.
+ */
+interface Props {
+  data: JsonLd;
+}
+
+const { data } = Astro.props;
+---
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(data)} />

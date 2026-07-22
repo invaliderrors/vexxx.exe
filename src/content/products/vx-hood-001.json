@@ -1,0 +1,23 @@
+{
+  "sku": "VX-HOOD-001",
+  "slugs": {
+    "es": "sudadera-capucha-001",
+    "en": "hoodie-001"
+  },
+  "name": {
+    "es": "Sudadera con Capucha 001",
+    "en": "Hoodie 001"
+  },
+  "description": {
+    "es": "Sudadera con capucha de 400 gsm, interior perchado. Producto de ejemplo del catálogo base.",
+    "en": "400 gsm brushed-fleece hoodie. Placeholder product for the base catalog."
+  },
+  "price": {
+    "amount": 8990,
+    "currency": "EUR"
+  },
+  "images": [],
+  "collection": "drop-001",
+  "availability": "in-stock",
+  "published": true
+}

@@ -1,0 +1,84 @@
+---
+import type { Locale } from '../../i18n/config';
+import { LOCALES, LOCALE_TAGS } from '../../i18n/config';
+import {
+  buildTitle,
+  canonicalUrl,
+  hreflangLinks,
+  validateDescription,
+} from '../../lib/seo/meta';
+
+/**
+ * The single head-meta component. Every layout mounts it; a page cannot
+ * render without unique title, description, canonical and hreflang.
+ */
+interface Props {
+  title: string;
+  description: string;
+  /** Current path, e.g. "/productos/camiseta-oversized-001". */
+  path: string;
+  /** Path of this page in every locale — feeds hreflang. */
+  alternates: Record<Locale, string>;
+  locale: Locale;
+  ogType?: 'website' | 'product' | undefined;
+  /** Absolute URL of the social-share image. Omit until assets exist. */
+  image?: string | undefined;
+  /** Home pages own their full title; inner pages get the brand template. */
+  isHome?: boolean | undefined;
+  noindex?: boolean | undefined;
+}
+
+const {
+  title,
+  description,
+  path,
+  alternates,
+  locale,
+  ogType = 'website',
+  image,
+  isHome = false,
+  noindex = false,
+} = Astro.props;
+
+const site = Astro.site;
+if (!site) {
+  throw new Error('SEO: `site` must be configured in astro.config.mjs');
+}
+
+const fullTitle = buildTitle(title, { isHome });
+const metaDescription = validateDescription(description);
+const canonical = canonicalUrl(site, path);
+const alternateLinks = hreflangLinks(site, alternates);
+const ogLocale = LOCALE_TAGS[locale].replace('-', '_');
+const ogLocaleAlternates = LOCALES.filter((l) => l !== locale).map((l) =>
+  LOCALE_TAGS[l].replace('-', '_'),
+);
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={metaDescription} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+{
+  alternateLinks.map((link) => (
+    <link rel="alternate" hreflang={link.hreflang} href={link.href} />
+  ))
+}
+
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content="VEXXX" />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={metaDescription} />
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content={ogLocale} />
+{
+  ogLocaleAlternates.map((tag) => (
+    <meta property="og:locale:alternate" content={tag} />
+  ))
+}
+{image && <meta property="og:image" content={image} />}
+
+<meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={metaDescription} />
+{image && <meta name="twitter:image" content={image} />}

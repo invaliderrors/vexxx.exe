@@ -1,0 +1,99 @@
+---
+import '../styles/global.css';
+import JsonLd from '../components/seo/JsonLd.astro';
+import Seo from '../components/seo/Seo.astro';
+import { t } from '../i18n';
+import type { Locale } from '../i18n/config';
+import { routePath } from '../i18n/routes';
+import { organizationJsonLd, webSiteJsonLd } from '../lib/seo/jsonld';
+
+/**
+ * Root layout for every page. Owns <head> (via <Seo />), sitewide
+ * JSON-LD (Organization + WebSite), and the semantic document shell
+ * (header/nav/main/footer). Zero visual design — structure only.
+ */
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  path: string;
+  alternates: Record<Locale, string>;
+  ogType?: 'website' | 'product' | undefined;
+  image?: string | undefined;
+  isHome?: boolean | undefined;
+  noindex?: boolean | undefined;
+}
+
+const {
+  locale,
+  title,
+  description,
+  path,
+  alternates,
+  ogType,
+  image,
+  isHome,
+  noindex,
+} = Astro.props;
+
+const dict = t(locale);
+const site = Astro.site;
+if (!site) {
+  throw new Error('SEO: `site` must be configured in astro.config.mjs');
+}
+
+const otherLocale: Locale = locale === 'es' ? 'en' : 'es';
+const localeSwitchLabel = otherLocale === 'en' ? 'English' : 'Español';
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <Seo
+      title={title}
+      description={description}
+      path={path}
+      alternates={alternates}
+      locale={locale}
+      ogType={ogType}
+      image={image}
+      isHome={isHome}
+      noindex={noindex}
+    />
+    <JsonLd data={organizationJsonLd({ siteUrl: site })} />
+    <JsonLd data={webSiteJsonLd({ siteUrl: site })} />
+    <slot name="head" />
+  </head>
+  <body>
+    <header>
+      <nav aria-label={dict.nav.ariaMain}>
+        <a href={routePath('home', locale)}>{dict.nav.home}</a>
+        <a href={routePath('products', locale)}>{dict.nav.products}</a>
+        <a href={routePath('collections', locale)}>{dict.nav.collections}</a>
+        <a
+          href={alternates[otherLocale]}
+          hreflang={otherLocale}
+          rel="alternate"
+        >
+          {localeSwitchLabel}
+        </a>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer>
+      <nav aria-label={dict.footer.ariaLegal}>
+        <a href={routePath('privacy', locale)}>{dict.footer.privacy}</a>
+        <a href={routePath('terms', locale)}>{dict.footer.terms}</a>
+        <a href={routePath('shipping', locale)}>{dict.footer.shipping}</a>
+      </nav>
+      <p>© {new Date().getFullYear()} {dict.footer.copyright}</p>
+    </footer>
+  </body>
+</html>
