@@ -12,6 +12,20 @@
     "es": "Sudadera oversized de algodón lavado de 480 GSM, hombro caído, bloque ancho y bordado metálico envejecido. Edición numerada.",
     "en": "480 GSM washed-cotton oversized hoodie with dropped shoulders, a wide block and distressed metal embroidery. Numbered edition."
   },
+  "details": {
+    "material": {
+      "es": "Algodón lavado de 480 GSM con costuras reforzadas y bordado metálico envejecido. Acabados diseñados para envejecer con el uso.",
+      "en": "480 GSM washed cotton with reinforced seams and distressed metal embroidery. Finishes built to age with wear."
+    },
+    "fit": {
+      "es": "Silueta oversized de bloque ancho y hombro caído. Elige tu talla habitual para conservar la proporción diseñada.",
+      "en": "Oversized wide-block silhouette with dropped shoulders. Take your usual size to keep the intended proportion."
+    },
+    "care": {
+      "es": "Lavar en frío y del revés. Secar al aire. El desgaste y la decoloración forman parte de la pieza.",
+      "en": "Wash cold, inside out. Air dry. Wear and fading are part of the piece."
+    }
+  },
   "price": {
     "amount": 89900000,
     "currency": "COP"

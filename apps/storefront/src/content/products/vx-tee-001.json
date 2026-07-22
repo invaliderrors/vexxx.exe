@@ -12,6 +12,20 @@
     "es": "Camiseta de jersey open-end de 250 GSM con bloque cuadrado, hombro ancho y acabado negro lavado. Edición numerada.",
     "en": "250 GSM open-end jersey tee in a square block with wide shoulders and a washed-black finish. Numbered edition."
   },
+  "details": {
+    "material": {
+      "es": "Jersey open-end de 250 GSM con acabado negro lavado. Cuello reforzado con tapacosturas.",
+      "en": "250 GSM open-end jersey with a washed-black finish. Reinforced collar with taped seams."
+    },
+    "fit": {
+      "es": "Bloque cuadrado de hombro ancho, largo recortado. Talla habitual para el corte boxy previsto.",
+      "en": "Square block with wide shoulders and a cropped length. Usual size for the intended boxy cut."
+    },
+    "care": {
+      "es": "Lavar en frío y del revés. Secar al aire. El lavado acentúa el acabado envejecido.",
+      "en": "Wash cold, inside out. Air dry. Washing deepens the aged finish."
+    }
+  },
   "price": {
     "amount": 41900000,
     "currency": "COP"

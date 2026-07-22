@@ -27,10 +27,10 @@ const status = product.availability === 'out-of-stock'
   : product.availability === 'pre-order'
     ? dict.products.preOrder
     : dict.products.available;
-const info = [
-  [dict.product.material, dict.product.materialBody],
-  [dict.product.fit, dict.product.fitBody],
-  [dict.product.care, dict.product.careBody],
+const info: readonly (readonly [string, string])[] = [
+  [dict.product.material, product.details.material[locale]],
+  [dict.product.fit, product.details.fit[locale]],
+  [dict.product.care, product.details.care[locale]],
   [dict.product.shipping, dict.product.shippingBody],
 ];
 ---

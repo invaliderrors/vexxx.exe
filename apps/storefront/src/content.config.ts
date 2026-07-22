@@ -63,6 +63,9 @@ const productsCollection = defineCollection({
         .min(1),
       availability: z.enum(['in-stock', 'out-of-stock', 'pre-order']),
       published: z.boolean(),
+      details: z
+        .object({ material: localizedText, fit: localizedText, care: localizedText })
+        .strict(),
     })
     .strict(),
 });

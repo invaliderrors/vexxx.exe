@@ -17,6 +17,11 @@ const validRawProduct = {
   category: 'tees',
   sizes: ['XS', 'S', 'M', 'L', 'XL'],
   colors: ['washed-black'],
+  details: {
+    material: { es: 'Algodón de prueba.', en: 'Test cotton.' },
+    fit: { es: 'Corte de prueba.', en: 'Test fit.' },
+    care: { es: 'Cuidado de prueba.', en: 'Test care.' },
+  },
 };
 
 describe('parseProduct', () => {
@@ -88,6 +93,18 @@ describe('parseProduct', () => {
   it('accepts a null collection', () => {
     const product = parseProduct('x', { ...validRawProduct, collection: null });
     expect(product.collectionId).toBeNull();
+  });
+
+  it('maps per-product details to the domain type', () => {
+    const product = parseProduct('vx-tee-001', validRawProduct);
+    expect(product.details.material.en).toBe('Test cotton.');
+    expect(product.details.care.es).toBe('Cuidado de prueba.');
+  });
+
+  it('rejects a product without details', () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- rest destructure intentionally discards `details`
+    const { details: _details, ...withoutDetails } = validRawProduct;
+    expect(() => parseProduct('x', withoutDetails)).toThrow();
   });
 });
 

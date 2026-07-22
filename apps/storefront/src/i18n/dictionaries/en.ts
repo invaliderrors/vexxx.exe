@@ -322,12 +322,6 @@ export const en: Dictionary = {
     fit: 'FIT',
     care: 'CARE',
     shipping: 'SHIPPING',
-    materialBody:
-      'Washed heavyweight cotton and technical components. Reinforced seams and finishes engineered to age.',
-    fitBody:
-      'Wide, oversized block. Take your regular size to preserve the intended proportion.',
-    careBody:
-      'Cold wash inside out. Hang dry. Wear and fading are part of the object.',
     shippingBody:
       'Worldwide tracked shipping. Dispatch expected within 48 hours. No restock guaranteed.',
     alsoInDrop: 'ALSO IN DROP_001',

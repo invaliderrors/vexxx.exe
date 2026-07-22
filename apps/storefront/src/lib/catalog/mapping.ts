@@ -52,6 +52,9 @@ export const rawProductSchema = z
       .min(1),
     availability: z.enum(['in-stock', 'out-of-stock', 'pre-order']),
     published: z.boolean(),
+    details: z
+      .object({ material: localizedText, fit: localizedText, care: localizedText })
+      .strict(),
   })
   .strict();
 
@@ -80,6 +83,7 @@ export function parseProduct(id: string, raw: unknown): Product {
     colors: data.colors,
     availability: data.availability,
     published: data.published,
+    details: data.details,
   };
 }
 

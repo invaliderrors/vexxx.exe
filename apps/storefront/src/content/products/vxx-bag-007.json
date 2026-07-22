@@ -12,6 +12,20 @@
     "es": "Bolso crossbody en ripstop reforzado con cinchas modulares, herrajes silenciosos y funda interior oculta.",
     "en": "Bonded-ripstop crossbody bag with modular webbing, silent hardware and a concealed inner sleeve."
   },
+  "details": {
+    "material": {
+      "es": "Ripstop reforzado con cinchas modulares, herrajes silenciosos y funda interior oculta.",
+      "en": "Bonded ripstop with modular webbing, silent hardware and a concealed inner sleeve."
+    },
+    "fit": {
+      "es": "Talla única con correa crossbody ajustable. Cinchas modulares para portar accesorios externos.",
+      "en": "One size with an adjustable crossbody strap. Modular webbing carries external accessories."
+    },
+    "care": {
+      "es": "Limpiar con paño húmedo. Vaciar la funda interior antes de limpiar los herrajes.",
+      "en": "Wipe clean with a damp cloth. Empty the inner sleeve before cleaning the hardware."
+    }
+  },
   "price": { "amount": 46900000, "currency": "COP" },
   "images": [],
   "collection": "drop-001",

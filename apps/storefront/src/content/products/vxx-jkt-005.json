@@ -12,6 +12,20 @@
     "es": "Shell técnica de tres capas con costuras selladas, capucha de tormenta y ventilaciones cortadas con láser.",
     "en": "Three-layer technical shell with taped seams, a storm hood and laser-cut vents."
   },
+  "details": {
+    "material": {
+      "es": "Shell técnica de tres capas con costuras selladas, capucha de tormenta y ventilaciones cortadas con láser.",
+      "en": "Three-layer technical shell with taped seams, a storm hood and laser-cut vents."
+    },
+    "fit": {
+      "es": "Corte técnico con espacio para capas intermedias. Talla habitual salvo que busques capas gruesas.",
+      "en": "Technical cut with room for mid layers. Usual size unless you layer heavy."
+    },
+    "care": {
+      "es": "Limpiar con paño húmedo. Lavado técnico ocasional en frío, sin suavizante: daña las costuras selladas.",
+      "en": "Wipe clean with a damp cloth. Occasional cold technical wash, no softener - it degrades the taped seams."
+    }
+  },
   "price": { "amount": 169900000, "currency": "COP" },
   "images": [],
   "collection": "drop-001",

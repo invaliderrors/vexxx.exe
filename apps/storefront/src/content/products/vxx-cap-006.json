@@ -12,6 +12,20 @@
     "es": "Gorra de seis paneles en lona lavada, visera deshilachada y cierre ajustable de metal envejecido.",
     "en": "Six-panel cap in washed canvas with a frayed brim and distressed adjustable metal closure."
   },
+  "details": {
+    "material": {
+      "es": "Lona lavada de seis paneles con visera deshilachada y cierre ajustable de metal envejecido.",
+      "en": "Six-panel washed canvas with a frayed brim and a distressed adjustable metal closure."
+    },
+    "fit": {
+      "es": "Talla única con cierre metálico ajustable. Perfil medio y visera plana deshilachada.",
+      "en": "One size with an adjustable metal closure. Mid profile with a flat frayed brim."
+    },
+    "care": {
+      "es": "Limpiar a mano con paño húmedo. No lavar a máquina: deformaría los paneles y la visera.",
+      "en": "Spot clean by hand with a damp cloth. No machine washing - it would warp the panels and brim."
+    }
+  },
   "price": { "amount": 29900000, "currency": "COP" },
   "images": [],
   "collection": "drop-001",

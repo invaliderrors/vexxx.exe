@@ -324,12 +324,6 @@ export const es = {
     fit: 'CORTE',
     care: 'CUIDADOS',
     shipping: 'ENVÍO',
-    materialBody:
-      'Algodón pesado lavado y componentes técnicos. Costuras reforzadas y acabados diseñados para envejecer.',
-    fitBody:
-      'Silueta oversized de bloque ancho. Elige tu talla habitual para conservar la proporción diseñada.',
-    careBody:
-      'Lavar en frío y del revés. Secar al aire. El desgaste y la decoloración forman parte de la pieza.',
     shippingBody:
       'Envío mundial con seguimiento. Despacho previsto en 48 horas. Sin reposición garantizada.',
     alsoInDrop: 'TAMBIÉN EN DROP_001',
