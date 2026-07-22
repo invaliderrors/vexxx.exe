@@ -2,6 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { MAPPED_SKUS } from './mapped-skus';
+import { productImage } from './product-images';
 
 const productsDir = new URL('../../content/products/', import.meta.url);
 const probe = z.object({ sku: z.string().min(1), published: z.boolean() }).passthrough();
@@ -17,5 +18,9 @@ describe('product image coverage', () => {
         expect(MAPPED_SKUS, `SKU ${sku} in ${file} has no mapped image`).toContain(sku);
       }
     }
+  });
+
+  it('productImage throws for an unmapped SKU', () => {
+    expect(() => productImage('VXX-NOPE-999')).toThrow(/No product image mapped/);
   });
 });
