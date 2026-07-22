@@ -75,6 +75,8 @@ function initializeDragScroll(): void {
       : null;
     if (!scroller) return;
 
+    // Stop native image/text drag from stealing the gesture.
+    event.preventDefault();
     const startX = event.clientX;
     const startLeft = scroller.scrollLeft;
     scroller.classList.add('vx-dragging');

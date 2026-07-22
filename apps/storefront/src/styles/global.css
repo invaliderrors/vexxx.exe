@@ -29,6 +29,12 @@
 }
 
 html {
+  /* Decorative elements (ghost type, emblem) intentionally overhang the right
+     edge; clipping must live on the ROOT — iOS Safari still allows horizontal
+     panning when only <body> hides overflow. `clip` also blocks programmatic
+     horizontal scroll; `hidden` is the fallback for older engines. */
+  overflow-x: hidden;
+  overflow-x: clip;
   background: var(--vx-black);
   scroll-behavior: smooth;
   scrollbar-color: #232527 var(--vx-black-soft);
@@ -52,6 +58,7 @@ body {
   margin: 0;
   min-width: 20rem;
   overflow-x: hidden;
+  overflow-x: clip;
   background: var(--vx-black);
   color: var(--vx-paper);
   font-family: 'Archivo', sans-serif;
@@ -153,11 +160,20 @@ img {
 }
 
 [data-hscroll] {
+  user-select: none;
   scrollbar-width: none;
 }
 
 [data-hscroll]::-webkit-scrollbar {
   display: none;
+}
+
+/* Images inside a drag-scroller must never start a native HTML drag —
+   the pointer belongs to the scroller. */
+[data-hscroll] img {
+  -webkit-user-drag: none;
+  user-select: none;
+  pointer-events: none;
 }
 
 .vx-dragging {
