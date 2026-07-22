@@ -321,13 +321,13 @@ export const en: Dictionary = {
     certificate: 'NUMBERED PIECE — UNIT ASSIGNED AT CHECKOUT',
     unitNote:
       'PRODUCED ONCE, THEN RETIRED',
-    shippingNote: 'WORLDWIDE TRACKED — 48H DISPATCH',
+    shippingNote: 'COLOMBIA TRACKED — 48H DISPATCH',
     material: 'MATERIAL & CONSTRUCTION',
     fit: 'FIT',
     care: 'CARE',
     shipping: 'SHIPPING',
     shippingBody:
-      'Worldwide tracked shipping. Dispatch expected within 48 hours. No restock guaranteed.',
+      'Tracked shipping across Colombia. Dispatch expected within 48 hours. No guaranteed restock.',
     alsoInDrop: 'ALSO IN DROP_001',
     apparelSizes: ['XS', 'S', 'M', 'L', 'XL'],
     oneSize: ['OS'],

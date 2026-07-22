@@ -124,7 +124,7 @@ describe('productJsonLd', () => {
     });
     expect(offers['hasMerchantReturnPolicy']).toEqual({
       '@type': 'MerchantReturnPolicy',
-      applicableCountry: 'CO',
+      applicableCountry: ['CO'],
       returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
       merchantReturnDays: 30,
       returnMethod: 'https://schema.org/ReturnByMail',

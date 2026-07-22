@@ -323,13 +323,13 @@ export const es = {
     certificate: 'PIEZA NUMERADA — UNIDAD ASIGNADA AL PAGAR',
     unitNote:
       'PRODUCIDA UNA VEZ, DESPUÉS RETIRADA',
-    shippingNote: 'ENVÍO GLOBAL CON SEGUIMIENTO — DESPACHO EN 48 H',
+    shippingNote: 'ENVÍO NACIONAL CON SEGUIMIENTO — DESPACHO EN 48 H',
     material: 'MATERIAL Y CONSTRUCCIÓN',
     fit: 'CORTE',
     care: 'CUIDADOS',
     shipping: 'ENVÍO',
     shippingBody:
-      'Envío mundial con seguimiento. Despacho previsto en 48 horas. Sin reposición garantizada.',
+      'Envío nacional en Colombia con seguimiento. Despacho previsto en 48 horas. Sin reposición garantizada.',
     alsoInDrop: 'TAMBIÉN EN DROP_001',
     apparelSizes: ['XS', 'S', 'M', 'L', 'XL'],
     oneSize: ['OS'],

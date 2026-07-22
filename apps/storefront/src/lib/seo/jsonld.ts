@@ -139,7 +139,7 @@ export function productJsonLd(input: ProductJsonLdInput): JsonLd {
       },
       hasMerchantReturnPolicy: {
         '@type': 'MerchantReturnPolicy',
-        applicableCountry: SITE.commerce.shipsFromCountry,
+        applicableCountry: [...SITE.commerce.shippingDestinations],
         returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
         merchantReturnDays: SITE.commerce.returnDays,
         returnMethod: 'https://schema.org/ReturnByMail',
