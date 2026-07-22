@@ -61,7 +61,15 @@ const accessPath = `${homePath}#access`;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script is:inline>document.documentElement.classList.add('vx-anim');</script>
+    <script is:inline>
+      const vxRoot = document.documentElement;
+      vxRoot.classList.add('vx-anim');
+      try {
+        if (sessionStorage.getItem('vx-boot-seen') === '1') vxRoot.classList.add('vx-boot-seen');
+      } catch {
+        vxRoot.classList.add('vx-boot-seen');
+      }
+    </script>
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#050505" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

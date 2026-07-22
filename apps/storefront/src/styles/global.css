@@ -242,7 +242,13 @@ html.vx-anim [data-reveal='right'] {
 
   /* Failsafe: if client JS never runs (network/module failure), the overlay
      dismisses itself — the site must never be trapped behind the boot screen. */
-  animation: boot-autodismiss 0.45s ease 2.6s forwards;
+  animation: boot-autodismiss 0.45s ease 1.4s forwards;
+}
+
+/* Overlay is a JS-only enhancement: no JS, no boot screen; repeat views skip it. */
+html:not(.vx-anim) .boot-screen,
+html.vx-boot-seen .boot-screen {
+  display: none;
 }
 
 @keyframes boot-autodismiss {

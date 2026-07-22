@@ -11,21 +11,36 @@ function revealVisibleElements(): void {
   });
 }
 
+const BOOT_SESSION_KEY = 'vx-boot-seen';
+
 function initializeBoot(reducedMotion: boolean): void {
   const boot = document.querySelector<HTMLElement>('[data-boot-screen]');
   if (!boot) return;
 
-  if (!shouldRunBoot(reducedMotion)) {
+  let seen = false;
+  try {
+    seen = sessionStorage.getItem(BOOT_SESSION_KEY) === '1';
+  } catch {
+    seen = true; // storage blocked: never replay the overlay
+  }
+
+  if (seen || !shouldRunBoot(reducedMotion)) {
     boot.hidden = true;
     return;
   }
 
+  try {
+    sessionStorage.setItem(BOOT_SESSION_KEY, '1');
+  } catch {
+    /* storage blocked - still show once */
+  }
+
   document.body.classList.add('overlay-open');
-  window.setTimeout(() => boot.classList.add('boot-screen--leaving'), 1_550);
+  window.setTimeout(() => boot.classList.add('boot-screen--leaving'), 700);
   window.setTimeout(() => {
     boot.hidden = true;
     document.body.classList.remove('overlay-open');
-  }, 2_050);
+  }, 1_000);
 }
 
 function initializeCursor(reducedMotion: boolean): void {
