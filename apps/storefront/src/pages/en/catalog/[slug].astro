@@ -5,7 +5,7 @@ import ProductDetail from '../../../components/catalog/ProductDetail.astro';
 import { productImage } from '../../../components/catalog/product-images';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { t } from '../../../i18n';
-import { productPath, routePath } from '../../../i18n/routes';
+import { collectionPath, productPath, routePath } from '../../../i18n/routes';
 import { getCatalog, type Product } from '../../../lib/catalog';
 import {
   breadcrumbJsonLd,
@@ -52,9 +52,20 @@ const absoluteImages = [
     image.src.startsWith('/') ? new URL(image.src, site).toString() : image.src,
   ),
 ];
-const related = (await getCatalog().getPublishedProducts())
-  .filter((item) => item.id !== product.id)
-  .slice(0, 3);
+const catalog = getCatalog();
+const collectionMates = product.collectionId
+  ? await catalog.getProductsByCollection(product.collectionId)
+  : [];
+const others = (await catalog.getPublishedProducts()).filter(
+  (item) => item.id !== product.id && !collectionMates.some((mate) => mate.id === item.id),
+);
+const related = [
+  ...collectionMates.filter((item) => item.id !== product.id),
+  ...others,
+].slice(0, 3);
+const collection = product.collectionId
+  ? (await catalog.getPublishedCollections()).find((entry) => entry.id === product.collectionId)
+  : undefined;
 ---
 
 <BaseLayout
@@ -77,6 +88,14 @@ const related = (await getCatalog().getPublishedProducts())
         name: dict.product.breadcrumbProducts,
         url: canonicalUrl(site, routePath('products', locale)),
       },
+      ...(collection
+        ? [
+            {
+              name: collection.name[locale],
+              url: canonicalUrl(site, collectionPath(locale, collection.slug[locale])),
+            },
+          ]
+        : []),
       { name: product.name[locale], url },
     ])}
   />
