@@ -317,8 +317,9 @@ export const en: Dictionary = {
     fitNote: 'OVERSIZED FIT — TAKE YOUR REGULAR SIZE',
     add: 'ADD TO SYSTEM',
     save: 'SAVE PIECE',
+    certificate: 'NUMBERED PIECE — UNIT ASSIGNED AT CHECKOUT',
     unitNote:
-      'UNIT ASSIGNED AT CHECKOUT // MADE ONCE, THEN RETIRED',
+      'PRODUCED ONCE, THEN RETIRED',
     shippingNote: 'WORLDWIDE TRACKED — 48H DISPATCH',
     material: 'MATERIAL & CONSTRUCTION',
     fit: 'FIT',
