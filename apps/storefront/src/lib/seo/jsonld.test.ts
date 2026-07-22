@@ -109,7 +109,26 @@ describe('productJsonLd', () => {
   it('includes shipping details and return policy on the offer', () => {
     const product = productJsonLd(validInput);
     const offers = product['offers'] as Record<string, unknown>;
-    expect(offers['shippingDetails']).toMatchObject({ '@type': 'OfferShippingDetails' });
-    expect(offers['hasMerchantReturnPolicy']).toMatchObject({ '@type': 'MerchantReturnPolicy' });
+    expect(offers['shippingDetails']).toEqual({
+      '@type': 'OfferShippingDetails',
+      shippingDestination: [{ '@type': 'DefinedRegion', addressCountry: 'CO' }],
+      deliveryTime: {
+        '@type': 'ShippingDeliveryTime',
+        handlingTime: {
+          '@type': 'QuantitativeValue',
+          minValue: 0,
+          maxValue: 2,
+          unitCode: 'DAY',
+        },
+      },
+    });
+    expect(offers['hasMerchantReturnPolicy']).toEqual({
+      '@type': 'MerchantReturnPolicy',
+      applicableCountry: 'CO',
+      returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+      merchantReturnDays: 30,
+      returnMethod: 'https://schema.org/ReturnByMail',
+      returnFees: 'https://schema.org/ReturnFeesCustomerResponsibility',
+    });
   });
 });
