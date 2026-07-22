@@ -186,10 +186,10 @@ Review-blocking, not suggestions. All paths under `apps/storefront/`:
 - Pure logic lives in plain TS modules so it tests without a framework runtime;
   framework-coupled files stay thin.
 
-## Design (deliberately absent)
+## Design
 
-- `apps/storefront/src/styles/global.css` imports Tailwind and nothing else.
-  Design tokens (`@theme`) arrive with the brand identity — do not invent
-  colors, fonts or layout before that pass.
-- Keep placeholder markup semantic (`article`, `nav`, `data`, heading
-  hierarchy) — structure is SEO; styling is not.
+- The design system — tokens, typography, color — lives in
+  `apps/storefront/src/styles/global.css` plus component-scoped styles.
+  Visual changes go through those, not a new parallel system.
+- Keep markup semantic (`article`, `nav`, `data`, heading hierarchy) —
+  structure is SEO.
