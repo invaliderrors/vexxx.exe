@@ -37,6 +37,18 @@ Before committing:
 pnpm verify           # typecheck + lint + test + build, all projects
 ```
 
+## Deploy
+
+After deploying the storefront to production, submit the sitemap to search
+engines:
+
+```bash
+pnpm --filter @vexxx/storefront indexnow
+```
+
+This pings IndexNow (Bing, Yandex, Naver) with all indexed URLs. When a CD
+pipeline is added, this should run as a post-deploy step.
+
 ## Key decisions
 
 - **Canonical origin** is `site` in `apps/storefront/astro.config.mjs`
