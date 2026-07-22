@@ -368,7 +368,15 @@ if (!shellPiece || !materialPiece || !duoPiece) {
 
   .manifesto-intro { position: relative; min-height: 92vh; display: flex; justify-content: center; flex-direction: column; overflow: hidden; }
   .manifesto-intro__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.55; }
-  .manifesto-intro__shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgb(5 5 5 / 88%), rgb(5 5 5 / 55%) 55%, rgb(5 5 5 / 78%)); }
+  .manifesto-intro__shade {
+    position: absolute;
+    inset: 0;
+    /* Vertical layer melts the video into the page background at both
+       section edges so there is no hard cut against adjacent sections. */
+    background:
+      linear-gradient(180deg, var(--vx-black), rgb(5 5 5 / 0%) 22%, rgb(5 5 5 / 0%) 70%, var(--vx-black) 96%),
+      linear-gradient(90deg, rgb(5 5 5 / 88%), rgb(5 5 5 / 55%) 55%, rgb(5 5 5 / 78%));
+  }
   @media (prefers-reduced-motion: reduce) {
     .manifesto-intro__video { display: none; }
   }
