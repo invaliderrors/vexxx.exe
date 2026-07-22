@@ -40,7 +40,7 @@ const info = [
   <div class="product-layout">
     <div class="product-gallery" data-reveal="left">
       <figure class="product-gallery__primary">
-        <Image src={primary} alt={product.name[locale]} widths={[640, 960, 1280]} sizes="(max-width: 800px) 100vw, 55vw" />
+        <Image src={primary} alt={product.name[locale]} widths={[640, 960, 1280]} sizes="(max-width: 800px) 100vw, 55vw" loading="eager" fetchpriority="high" />
         <span>{product.sku}</span>
       </figure>
       <div class="product-gallery__secondary">
