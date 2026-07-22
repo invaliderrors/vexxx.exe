@@ -8,10 +8,9 @@ Guidance for Claude Code (claude.ai/code) working in this repository.
 Bilingual throughout (Spanish default at `/`, English at `/en`).
 
 The repo is the **base** of the platform: SEO-first storefront, shell API and
-dashboard, shared contracts, strict tooling. There is deliberately **zero
-visual design** — semantic HTML placeholders only. Later passes own: brand
-look, commerce API internals (payments, inventory, orders), dashboard
-features, database.
+dashboard, shared contracts, strict tooling. The storefront's brand look has
+shipped (see Design, below). Later passes own: commerce API internals
+(payments, inventory, orders), dashboard features, database.
 
 ## Workspace layout
 
