@@ -33,5 +33,6 @@
   "sizes": ["XS", "S", "M", "L", "XL"],
   "colors": ["washed-black", "concrete"],
   "availability": "in-stock",
-  "published": true
+  "published": true,
+  "updatedAt": "2026-07-22"
 }

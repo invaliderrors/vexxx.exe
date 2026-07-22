@@ -33,5 +33,6 @@
   "sizes": ["OS"],
   "colors": ["washed-black"],
   "availability": "in-stock",
-  "published": true
+  "published": true,
+  "updatedAt": "2026-07-22"
 }

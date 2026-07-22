@@ -1,4 +1,5 @@
 // @ts-check
+import { readdirSync, readFileSync } from 'node:fs';
 import { defineConfig } from 'astro/config';
 import node from '@astrojs/node';
 import sitemap from '@astrojs/sitemap';
@@ -7,6 +8,18 @@ import tailwindcss from '@tailwindcss/vite';
 // The canonical production origin. Every canonical URL, hreflang alternate,
 // sitemap entry and JSON-LD @id derives from this single value.
 const SITE_URL = 'https://vexxx.co';
+
+// Product `updatedAt` drives sitemap <lastmod>. Read straight from the
+// content JSON (this file runs in Node, not the Astro content pipeline) and
+// key by the served pathname for both locales — mapping.ts remains the
+// authoritative schema; this is a plain read of already-validated data.
+const productLastmod = new Map();
+for (const file of readdirSync('./src/content/products')) {
+  if (!file.endsWith('.json')) continue;
+  const raw = JSON.parse(readFileSync(`./src/content/products/${file}`, 'utf8'));
+  productLastmod.set(`/catalog/${raw.slugs.es}`, raw.updatedAt);
+  productLastmod.set(`/en/catalog/${raw.slugs.en}`, raw.updatedAt);
+}
 
 export default defineConfig({
   site: SITE_URL,
@@ -41,6 +54,11 @@ export default defineConfig({
       i18n: {
         defaultLocale: 'es',
         locales: { es: 'es-ES', en: 'en-US' },
+      },
+      serialize(item) {
+        // eslint-disable-next-line no-undef
+        const lastmod = productLastmod.get(new URL(item.url).pathname);
+        return lastmod ? { ...item, lastmod } : item;
       },
     }),
   ],

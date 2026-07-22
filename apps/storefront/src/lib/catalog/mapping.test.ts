@@ -14,6 +14,7 @@ const validRawProduct = {
   collection: 'drop-001',
   availability: 'in-stock',
   published: true,
+  updatedAt: '2026-07-22',
   category: 'tees',
   sizes: ['XS', 'S', 'M', 'L', 'XL'],
   colors: ['washed-black'],
@@ -105,6 +106,13 @@ describe('parseProduct', () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars -- rest destructure intentionally discards `details`
     const { details: _details, ...withoutDetails } = validRawProduct;
     expect(() => parseProduct('x', withoutDetails)).toThrow();
+  });
+
+  it('maps updatedAt and rejects non-date values', () => {
+    expect(parseProduct('x', validRawProduct).updatedAt).toBe('2026-07-22');
+    expect(() =>
+      parseProduct('x', { ...validRawProduct, updatedAt: 'yesterday' }),
+    ).toThrow();
   });
 });
 

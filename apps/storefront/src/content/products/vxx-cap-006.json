@@ -33,5 +33,6 @@
   "sizes": ["OS"],
   "colors": ["washed-black", "gunmetal"],
   "availability": "out-of-stock",
-  "published": true
+  "published": true,
+  "updatedAt": "2026-07-22"
 }

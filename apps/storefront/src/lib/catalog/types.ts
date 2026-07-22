@@ -61,6 +61,8 @@ export interface Product {
   readonly colors: readonly ProductColor[];
   readonly availability: ProductAvailability;
   readonly published: boolean;
+  /** ISO date (YYYY-MM-DD) of last content change. Drives sitemap lastmod. */
+  readonly updatedAt: string;
   readonly details: ProductDetails;
 }
 
