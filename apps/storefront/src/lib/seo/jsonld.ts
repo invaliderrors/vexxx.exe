@@ -121,6 +121,30 @@ export function productJsonLd(input: ProductJsonLdInput): JsonLd {
       price: toDecimalString(parsed.price),
       priceCurrency: parsed.price.currency,
       availability: parsed.availability,
+      shippingDetails: {
+        '@type': 'OfferShippingDetails',
+        shippingDestination: SITE.commerce.shippingDestinations.map((country) => ({
+          '@type': 'DefinedRegion',
+          addressCountry: country,
+        })),
+        deliveryTime: {
+          '@type': 'ShippingDeliveryTime',
+          handlingTime: {
+            '@type': 'QuantitativeValue',
+            minValue: 0,
+            maxValue: SITE.commerce.handlingDaysMax,
+            unitCode: 'DAY',
+          },
+        },
+      },
+      hasMerchantReturnPolicy: {
+        '@type': 'MerchantReturnPolicy',
+        applicableCountry: SITE.commerce.shipsFromCountry,
+        returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+        merchantReturnDays: SITE.commerce.returnDays,
+        returnMethod: 'https://schema.org/ReturnByMail',
+        returnFees: 'https://schema.org/ReturnFeesCustomerResponsibility',
+      },
     },
   };
 }

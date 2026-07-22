@@ -105,4 +105,11 @@ describe('productJsonLd', () => {
       }),
     ).toThrow();
   });
+
+  it('includes shipping details and return policy on the offer', () => {
+    const product = productJsonLd(validInput);
+    const offers = product['offers'] as Record<string, unknown>;
+    expect(offers['shippingDetails']).toMatchObject({ '@type': 'OfferShippingDetails' });
+    expect(offers['hasMerchantReturnPolicy']).toMatchObject({ '@type': 'MerchantReturnPolicy' });
+  });
 });
