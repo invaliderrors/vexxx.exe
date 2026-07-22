@@ -45,9 +45,18 @@ export default defineConfig({
 
   // Permanent redirects live here so they ship as real 301s.
   // Add entries as URLs change: '/old-path': { status: 301, destination: '/new-path' }
-  redirects: {},
+  redirects: {
+    '/archivo': { status: 301, destination: '/archive' },
+    '/productos': { status: 301, destination: '/catalog' },
+    '/productos/[slug]': { status: 301, destination: '/catalog/[slug]' },
+    '/en/products': { status: 301, destination: '/en/catalog' },
+    '/en/products/[slug]': { status: 301, destination: '/en/catalog/[slug]' },
+  },
 
   vite: {
     plugins: [tailwindcss()],
+    // zod reaches the browser via the access-form script; pre-bundling it up
+    // front stops Vite's "Outdated Optimize Dep" churn on dev-server restarts.
+    optimizeDeps: { include: ['zod'] },
   },
 });

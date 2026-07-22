@@ -18,6 +18,9 @@
   },
   "images": [],
   "collection": "drop-001",
+  "category": "hoodies",
+  "sizes": ["XS", "S", "M", "L", "XL"],
+  "colors": ["washed-black", "gunmetal"],
   "availability": "in-stock",
   "published": true
 }

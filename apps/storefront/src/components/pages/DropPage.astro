@@ -1,0 +1,466 @@
+---
+import { Image } from 'astro:assets';
+import campaignDuo from '../../assets/vexxx/fw26-duo-stairwell.png';
+import campaignTunnel from '../../assets/vexxx/fw26-tunnel-campaign.png';
+import materialStudy from '../../assets/vexxx/material-study-red-tack.png';
+import { t } from '../../i18n';
+import type { Locale } from '../../i18n/config';
+import { routePath } from '../../i18n/routes';
+import { getCatalog } from '../../lib/catalog';
+import ProductGrid from '../catalog/ProductGrid.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const dict = t(locale);
+const products = await getCatalog().getProductsByCollection('drop-001');
+const repeatedProtocol = [...dict.dropPage.protocolItems, ...dict.dropPage.protocolItems];
+const pieceCount = String(products.length).padStart(2, '0');
+const heroMeta = [
+  { label: dict.dropPage.statusLabel, value: dict.dropPage.statusValue, live: true },
+  { label: dict.dropPage.unitsLabel, value: dict.dropPage.unitsValue, live: false },
+  { label: dict.dropPage.restockLabel, value: dict.dropPage.restockValue, live: false },
+] as const;
+const accessHref = `${routePath('home', locale)}#access`;
+---
+
+<div class="drop-page">
+  <section class="drop-hero">
+    <Image
+      class="drop-hero__image"
+      src={campaignTunnel}
+      alt={dict.dropPage.heroImageAlt}
+      widths={[768, 1280, 1920]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div class="drop-hero__shade" aria-hidden="true"></div>
+    <div class="drop-hero__content">
+      <div class="eyebrow drop-accent" data-reveal>{dict.dropPage.eyebrow}</div>
+      <h1 class="display-title reveal-delay-1" data-reveal>{dict.dropPage.heading}<b>_</b></h1>
+      <p class="drop-hero__sub reveal-delay-15" data-reveal>{dict.dropPage.subheading}</p>
+      <div class="drop-hero__bottom reveal-delay-2" data-reveal>
+        <p>{dict.dropPage.body}</p>
+        <dl class="drop-hero__meta">
+          {
+            heroMeta.map((row) => (
+              <div class:list={['drop-hero__meta-row', { 'drop-hero__meta-row--live': row.live }]}>
+                <dt>{row.label}</dt>
+                <dd>{row.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <div class="drop-marquee">
+    <p class="sr-only">{dict.dropPage.protocolItems.join('. ')}</p>
+    <div aria-hidden="true">
+      {repeatedProtocol.map((item) => <><span>{item}</span><b>///</b></>)}
+    </div>
+  </div>
+
+  <section class="drop-manifest section-shell">
+    <header class="drop-manifest__heading" data-reveal>
+      <div>
+        <div class="eyebrow drop-accent">{dict.dropPage.manifestEyebrow}</div>
+        <h2 class="display-title">{dict.dropPage.manifestHeading}</h2>
+      </div>
+      <p class="page-hero__meta drop-manifest__meta">
+        {dict.products.season}<br /><span>{pieceCount} / {dict.products.piecesShown}</span>
+      </p>
+    </header>
+    {products.length === 0 ? <p>{dict.products.empty}</p> : <ProductGrid products={products} locale={locale} />}
+  </section>
+
+  <section class="drop-protocol section-shell">
+    <figure class="drop-protocol__image" data-reveal="left">
+      <Image
+        src={campaignDuo}
+        alt={dict.dropPage.editorialCaptionOne}
+        loading="lazy"
+        widths={[768, 1280]}
+        sizes="(max-width: 850px) 100vw, 50vw"
+      />
+      <figcaption>{dict.dropPage.editorialCaptionOne}</figcaption>
+    </figure>
+    <div class="drop-protocol__side">
+      <div class="drop-protocol__card" data-reveal="right">
+        <header>
+          <span>{dict.dropPage.protocolEyebrow}</span>
+          <b>{dict.dropPage.statusValue}</b>
+        </header>
+        <ol>
+          {
+            dict.dropPage.protocolItems.map((item, index) => (
+              <li data-reveal style={`--reveal-delay:${index * 0.06}s`}>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <strong>{item}</strong>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+      <figure class="drop-protocol__detail" data-reveal>
+        <Image
+          src={materialStudy}
+          alt={dict.dropPage.editorialCaptionTwo}
+          loading="lazy"
+          widths={[480, 760]}
+          sizes="(max-width: 850px) 100vw, 34vw"
+        />
+        <figcaption>{dict.dropPage.editorialCaptionTwo}</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="drop-cta">
+    <p class="eyebrow drop-accent" data-reveal>{dict.dropPage.subheading}</p>
+    <h2 class="display-title outline-text reveal-delay-1" data-reveal>{dict.dropPage.ctaHeading}</h2>
+    <div class="drop-cta__actions reveal-delay-2" data-reveal>
+      <a class="button" href={routePath('products', locale)} data-cursor={dict.nav.cursorEnter}>
+        {dict.dropPage.ctaCatalog} <span>→</span>
+      </a>
+      <a class="button button--outline" href={accessHref} data-cursor={dict.nav.cursorEnter}>
+        {dict.dropPage.ctaAccess}
+      </a>
+    </div>
+  </section>
+</div>
+
+<style>
+  .drop-accent {
+    color: var(--vx-accent);
+  }
+
+  .drop-hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: 100svh;
+    overflow: hidden;
+  }
+
+  .drop-hero__image,
+  .drop-hero__shade {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .drop-hero__image {
+    object-fit: cover;
+    object-position: center 40%;
+    filter: saturate(0.82) contrast(1.05);
+  }
+
+  .drop-hero__shade {
+    background: linear-gradient(180deg, rgb(5 5 5 / 60%), transparent 32%, transparent 50%, rgb(5 5 5 / 94%));
+  }
+
+  .drop-hero__content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    padding: clamp(7rem, 14vh, 10rem) var(--page-pad) clamp(2.75rem, 7vh, 5rem);
+  }
+
+  .drop-hero h1 {
+    font-size: clamp(3.375rem, 10.5vw, 10.5rem);
+    line-height: 0.88;
+  }
+
+  .drop-hero h1 b {
+    color: var(--vx-accent);
+    font-weight: 400;
+    animation: blink 1.1s steps(1) infinite;
+  }
+
+  .drop-hero__sub {
+    margin: 1.1rem 0 0;
+    color: var(--vx-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+  }
+
+  .drop-hero__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-top: clamp(1.5rem, 4vh, 2.5rem);
+  }
+
+  .drop-hero__bottom > p {
+    max-width: 27rem;
+    margin: 0;
+    color: #b9bcbd;
+    font-size: 0.94rem;
+    line-height: 1.65;
+  }
+
+  .drop-hero__meta {
+    display: grid;
+    min-width: min(21rem, 100%);
+    margin: 0;
+    border: 1px solid rgb(232 230 225 / 14%);
+    background: rgb(5 5 5 / 72%);
+  }
+
+  .drop-hero__meta-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 0.85rem 1.1rem;
+    border-bottom: 1px solid rgb(232 230 225 / 8%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .drop-hero__meta-row:last-child {
+    border-bottom: 0;
+  }
+
+  .drop-hero__meta dt {
+    color: var(--vx-dim);
+  }
+
+  .drop-hero__meta dd {
+    margin: 0;
+    color: var(--vx-paper);
+    text-align: right;
+  }
+
+  .drop-hero__meta-row--live dd {
+    color: var(--vx-accent);
+    animation: pulse 2.2s ease infinite;
+  }
+
+  .drop-marquee {
+    overflow: hidden;
+    padding: 13px 0;
+    border-block: 1px solid rgb(232 230 225 / 8%);
+    background: #070708;
+  }
+
+  .drop-marquee > div {
+    display: flex;
+    width: max-content;
+    animation: marquee 26s linear infinite;
+  }
+
+  .drop-marquee span,
+  .drop-marquee b {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.24em;
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+
+  .drop-marquee span {
+    color: var(--vx-muted);
+  }
+
+  .drop-marquee b {
+    margin: 0 1.4rem;
+    color: var(--vx-accent);
+    font-weight: 400;
+  }
+
+  .drop-manifest {
+    padding-top: clamp(70px, 11vh, 150px);
+    padding-bottom: clamp(50px, 8vh, 110px);
+  }
+
+  .drop-manifest__heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: clamp(3rem, 7vh, 5rem);
+    padding-bottom: 1.6rem;
+    border-bottom: 1px solid var(--vx-line);
+  }
+
+  .drop-manifest__heading h2 {
+    margin-top: 0.9rem;
+    font-size: clamp(3rem, 7.5vw, 8rem);
+  }
+
+  .drop-manifest__meta span {
+    color: var(--vx-accent);
+  }
+
+  .drop-protocol {
+    display: grid;
+    align-items: start;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.5rem, 3vw, 3rem);
+    border-top: 1px solid var(--vx-line);
+    background-color: #080809;
+    background-image:
+      linear-gradient(rgb(232 230 225 / 2%) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(232 230 225 / 2%) 1px, transparent 1px);
+    background-size: 5rem 5rem;
+  }
+
+  .drop-protocol__image {
+    margin: 0;
+  }
+
+  .drop-protocol__image > :global(img) {
+    width: 100%;
+    height: min(88vh, 56rem);
+    object-fit: cover;
+    border: 1px solid rgb(232 230 225 / 8%);
+    filter: saturate(0.78) contrast(1.05);
+  }
+
+  .drop-protocol figcaption {
+    margin-top: 0.75rem;
+    color: var(--vx-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.24em;
+  }
+
+  .drop-protocol__side {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 3rem);
+  }
+
+  .drop-protocol__card {
+    border: 1px solid rgb(232 230 225 / 12%);
+    background: rgb(5 5 5 / 65%);
+  }
+
+  .drop-protocol__card header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid var(--vx-line);
+    color: #7a7d80;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.54rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .drop-protocol__card header b {
+    color: var(--vx-accent);
+    font-weight: 400;
+  }
+
+  .drop-protocol__card ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .drop-protocol__card li {
+    display: flex;
+    align-items: baseline;
+    gap: 1.4rem;
+    padding: 1.4rem 1.5rem;
+    border-bottom: 1px solid rgb(232 230 225 / 8%);
+  }
+
+  .drop-protocol__card li:last-child {
+    border-bottom: 0;
+  }
+
+  .drop-protocol__card li span {
+    color: var(--vx-accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+  }
+
+  .drop-protocol__card li strong {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(1.4rem, 2.6vw, 2.4rem);
+    font-weight: 400;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .drop-protocol__detail {
+    margin: 0;
+  }
+
+  .drop-protocol__detail > :global(img) {
+    width: 100%;
+    height: min(38vh, 24rem);
+    object-fit: cover;
+    border: 1px solid rgb(232 230 225 / 8%);
+    filter: saturate(0.78);
+  }
+
+  .drop-cta {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: clamp(1.5rem, 4vh, 2.5rem);
+    padding: clamp(6rem, 14vh, 11rem) var(--page-pad);
+    border-top: 1px solid var(--vx-line);
+    text-align: center;
+  }
+
+  .drop-cta h2 {
+    font-size: clamp(3rem, 8vw, 8.5rem);
+  }
+
+  .drop-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  @media (max-width: 850px) {
+    .drop-protocol {
+      grid-template-columns: 1fr;
+    }
+
+    .drop-protocol__image > :global(img) {
+      height: min(62vh, 38rem);
+    }
+  }
+
+  @media (max-width: 620px) {
+    .drop-hero h1 {
+      font-size: clamp(3.4rem, 16vw, 5.5rem);
+    }
+
+    .drop-hero__bottom {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .drop-manifest__heading h2 {
+      font-size: 3.4rem;
+    }
+
+    .drop-manifest__meta {
+      text-align: left;
+    }
+
+    .drop-protocol__card li strong {
+      font-size: 1.35rem;
+    }
+  }
+</style>

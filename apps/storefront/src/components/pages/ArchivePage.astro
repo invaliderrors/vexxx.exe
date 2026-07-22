@@ -1,9 +1,11 @@
 ---
 import { Image } from 'astro:assets';
 import campaignGroup from '../../assets/vexxx/campaign-group.png';
+import campaignDuo from '../../assets/vexxx/fw26-duo-stairwell.png';
 import { t } from '../../i18n';
 import type { Locale } from '../../i18n/config';
-import { routePath } from '../../i18n/routes';
+import { collectionPath, routePath } from '../../i18n/routes';
+import { getCatalog } from '../../lib/catalog';
 
 interface Props {
   locale: Locale;
@@ -11,50 +13,518 @@ interface Props {
 
 const { locale } = Astro.props;
 const dict = t(locale);
+
+const catalog = getCatalog();
+const [products, collections] = await Promise.all([
+  catalog.getPublishedProducts(),
+  catalog.getPublishedCollections(),
+]);
+
+const unitCount = String(products.length).padStart(2, '0');
+const activeCollection =
+  collections.find((collection) =>
+    products.some((product) => product.collectionId === collection.id),
+  ) ??
+  collections[0] ??
+  null;
+/* Timeline records: one per published collection + encrypted upcoming + retired DROP_000. */
+const recordCount = String(collections.length + 2).padStart(2, '0');
 ---
 
 <section class="archive-page">
-  <div class="eyebrow" data-reveal>{dict.archive.eyebrow}</div>
-  <h1 class="display-title reveal-delay-1" data-reveal>{dict.archive.heading}</h1>
-  <div class="archive-list">
-    <div class="archive-row archive-row--encrypted" data-reveal>
-      <div><span>002</span><strong>{dict.archive.drop002}</strong></div>
-      <em>{dict.archive.encrypted}</em>
+  <header class="archive-hero">
+    <div class="eyebrow" data-reveal>{dict.archive.eyebrow}</div>
+    <div class="archive-hero__row">
+      <h1 class="display-title reveal-delay-1" data-reveal>{dict.archive.heading}</h1>
+      <p class="archive-hero__meta reveal-delay-2" data-reveal>
+        {dict.brand.systemName} // {dict.brand.build}<br />
+        <span>{recordCount} / {dict.archive.recordsLabel}</span>
+      </p>
     </div>
-    <a class="archive-row reveal-delay-05" href={routePath('products', locale)} data-reveal data-cursor={dict.nav.cursorEnter}>
-      <div><span>001</span><strong>{dict.archive.drop001} →</strong></div>
-      <em>{dict.archive.active}</em>
-    </a>
-    <div class="archive-row archive-row--retired reveal-delay-1" data-reveal>
-      <div><span>000</span><strong>{dict.archive.drop000}</strong></div>
-      <em>{dict.archive.retired}</em>
-    </div>
-  </div>
-  <figure class="archive-image" data-reveal>
-    <Image src={campaignGroup} alt={dict.archive.footage} loading="lazy" widths={[768, 1280, 1920]} sizes="100vw" />
-    <figcaption>{dict.archive.footage}</figcaption>
-  </figure>
+  </header>
+
+  <ol class="archive-timeline">
+    <li class="archive-entry archive-entry--encrypted" data-reveal>
+      <div class="archive-entry__rail" aria-hidden="true">
+        <span>002</span>
+        <b></b>
+        <i></i>
+      </div>
+      <div class="archive-entry__body">
+        <div class="archive-entry__head">
+          <h2 class="archive-entry__name">{dict.archive.drop002}</h2>
+          <em class="archive-entry__flag">{dict.archive.encrypted}</em>
+        </div>
+        <dl class="archive-entry__meta">
+          <div>
+            <dt>{dict.archive.statusLabel}</dt>
+            <dd>{dict.archive.drop002Status}</dd>
+          </div>
+          <div>
+            <dt>{dict.archive.seasonLabel}</dt>
+            <dd>{dict.archive.redacted}</dd>
+          </div>
+          <div>
+            <dt>{dict.archive.unitsLabel}</dt>
+            <dd>{dict.archive.redacted}</dd>
+          </div>
+          <div>
+            <dt>{dict.archive.selloutLabel}</dt>
+            <dd>{dict.archive.redacted}</dd>
+          </div>
+        </dl>
+        <p class="archive-entry__note">{dict.archive.drop002Note}</p>
+      </div>
+    </li>
+
+    <li class="archive-entry archive-entry--active reveal-delay-05" data-reveal>
+      <div class="archive-entry__rail" aria-hidden="true">
+        <span>001</span>
+        <b></b>
+        <i></i>
+      </div>
+      <div class="archive-entry__body">
+        <div class="archive-entry__head">
+          <h2 class="archive-entry__name">
+            <a href={routePath('drop', locale)} data-cursor={dict.nav.cursorEnter}>
+              {dict.archive.drop001} <span aria-hidden="true">→</span>
+            </a>
+          </h2>
+          <em class="archive-entry__flag">{dict.archive.drop001Status}</em>
+        </div>
+        <dl class="archive-entry__meta">
+          <div>
+            <dt>{dict.archive.statusLabel}</dt>
+            <dd class="archive-entry__meta-accent">{dict.archive.drop001Status}</dd>
+          </div>
+          <div>
+            <dt>{dict.archive.seasonLabel}</dt>
+            <dd>{dict.archive.drop001Season}</dd>
+          </div>
+          <div>
+            <dt>{dict.archive.unitsLabel}</dt>
+            <dd>{unitCount} {dict.archive.unitsSuffix}</dd>
+          </div>
+          <div>
+            <dt>{dict.archive.selloutLabel}</dt>
+            <dd>{dict.archive.drop001Sellout}</dd>
+          </div>
+        </dl>
+        <div class="archive-entry__actions">
+          <a class="button" href={routePath('drop', locale)} data-cursor={dict.nav.cursorEnter}>
+            {dict.archive.enter} <span>→</span>
+          </a>
+          {
+            activeCollection && (
+              <a
+                class="button button--outline"
+                href={collectionPath(locale, activeCollection.slug[locale])}
+                data-cursor={dict.nav.cursorView}
+              >
+                {dict.archive.viewCollection}
+              </a>
+            )
+          }
+        </div>
+      </div>
+    </li>
+
+    <li class="archive-entry archive-entry--retired reveal-delay-1" data-reveal>
+      <div class="archive-entry__rail" aria-hidden="true">
+        <span>000</span>
+        <b></b>
+        <i></i>
+      </div>
+      <div class="archive-entry__body">
+        <div class="archive-entry__head">
+          <h2 class="archive-entry__name">{dict.archive.drop000}</h2>
+          <em class="archive-entry__flag">{dict.archive.retired}</em>
+        </div>
+        <dl class="archive-entry__meta">
+          <div>
+            <dt>{dict.archive.statusLabel}</dt>
+            <dd>{dict.archive.drop000Status}</dd>
+          </div>
+          <div>
+            <dt>{dict.archive.seasonLabel}</dt>
+            <dd>{dict.archive.drop000Season}</dd>
+          </div>
+          <div>
+            <dt>{dict.archive.unitsLabel}</dt>
+            <dd>{dict.archive.drop000Units}</dd>
+          </div>
+          <div>
+            <dt>{dict.archive.selloutLabel}</dt>
+            <dd>{dict.archive.drop000Sellout}</dd>
+          </div>
+        </dl>
+
+        <div class="archive-footage" data-reveal>
+          <div class="archive-footage__copy">
+            <span class="eyebrow">{dict.archive.footageEyebrow}</span>
+            <p>{dict.archive.footageBody}</p>
+          </div>
+          <figure class="archive-footage__frame archive-footage__frame--wide">
+            <Image
+              src={campaignGroup}
+              alt={dict.archive.footageAltA}
+              width={1825}
+              height={862}
+              widths={[768, 1280, 1825]}
+              sizes="(max-width: 850px) 100vw, 56vw"
+              loading="lazy"
+            />
+            <figcaption>{dict.archive.footage}</figcaption>
+          </figure>
+          <figure class="archive-footage__frame archive-footage__frame--tall">
+            <Image
+              src={campaignDuo}
+              alt={dict.archive.footageAltB}
+              width={864}
+              height={1821}
+              widths={[480, 864]}
+              sizes="(max-width: 850px) 100vw, 24vw"
+              loading="lazy"
+            />
+          </figure>
+        </div>
+      </div>
+    </li>
+  </ol>
 </section>
 
 <style>
-  .archive-page { max-width: 82rem; min-height: 100vh; margin: 0 auto; padding: clamp(8rem, 15vh, 11rem) var(--page-pad); }
-  .archive-page h1 { margin: 1rem 0 clamp(3rem, 7vh, 5rem); font-size: clamp(4rem, 9vw, 9rem); }
-  .archive-list { border-top: 1px solid rgb(232 230 225 / 12%); }
-  .archive-row { display: flex; align-items: baseline; justify-content: space-between; gap: 2rem; padding: clamp(1.7rem, 4vh, 2.8rem) 0; border-bottom: 1px solid rgb(232 230 225 / 12%); }
-  .archive-row > div { display: flex; align-items: baseline; gap: 1.4rem; }
-  .archive-row span, .archive-row em { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; letter-spacing: 0.16em; font-style: normal; }
-  .archive-row span { color: var(--vx-accent); }
-  .archive-row em { color: #7a7d80; text-align: right; }
-  .archive-row strong { font-family: 'Anton', sans-serif; font-size: clamp(2.4rem, 5.5vw, 5.5rem); font-weight: 400; line-height: 1; }
-  a.archive-row:hover strong { color: var(--vx-accent); }
-  .archive-row--encrypted strong, .archive-row--retired strong, .archive-row--retired span, .archive-row--retired em { color: var(--vx-dim); }
-  .archive-row--retired strong { text-decoration: line-through 3px; }
-  .archive-image { position: relative; height: min(55vh, 35rem); margin: clamp(3rem, 7vh, 5rem) 0 0; overflow: hidden; border: 1px solid rgb(232 230 225 / 7%); }
-  .archive-image img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.2); }
-  .archive-image figcaption { position: absolute; bottom: 1rem; left: 1rem; padding: 0.45rem 0.65rem; background: rgb(5 5 5 / 78%); font-family: 'JetBrains Mono', monospace; font-size: 0.52rem; letter-spacing: 0.16em; }
+  .archive-page {
+    max-width: 82rem;
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: clamp(8rem, 15vh, 11rem) var(--page-pad) clamp(5rem, 10vh, 8rem);
+  }
 
-  @media (max-width: 650px) {
-    .archive-row { align-items: flex-start; flex-direction: column; gap: 0.8rem; }
-    .archive-row em { text-align: left; }
+  .archive-hero__row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .archive-hero h1 {
+    margin: 1rem 0 0;
+    font-size: clamp(4rem, 9vw, 9rem);
+  }
+
+  .archive-hero__meta {
+    margin: 0;
+    color: #7a7d80;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    line-height: 2;
+    text-align: right;
+    text-transform: uppercase;
+  }
+
+  .archive-hero__meta span {
+    color: var(--vx-accent);
+  }
+
+  .archive-timeline {
+    margin: clamp(3rem, 7vh, 5rem) 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--vx-line);
+  }
+
+  .archive-entry {
+    display: grid;
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+    gap: clamp(1rem, 2.5vw, 2.25rem);
+    padding: clamp(2rem, 5vh, 3.25rem) 0;
+    border-bottom: 1px solid var(--vx-line);
+  }
+
+  .archive-entry__rail {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding-top: 0.4rem;
+  }
+
+  .archive-entry__rail span {
+    color: var(--vx-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.16em;
+  }
+
+  .archive-entry__rail b {
+    width: 7px;
+    height: 7px;
+    border: 1px solid var(--vx-dim);
+    border-radius: 50%;
+  }
+
+  .archive-entry__rail i {
+    flex: 1;
+    width: 1px;
+    background: linear-gradient(var(--vx-line), transparent);
+  }
+
+  .archive-entry--active .archive-entry__rail span {
+    color: var(--vx-accent);
+  }
+
+  .archive-entry--active .archive-entry__rail b {
+    border-color: var(--vx-accent);
+    background: var(--vx-accent);
+    animation: pulse 2.2s ease infinite;
+  }
+
+  .archive-entry__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+  }
+
+  .archive-entry__name {
+    margin: 0;
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(2.4rem, 5.5vw, 5.5rem);
+    font-weight: 400;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .archive-entry__name a {
+    transition: color 0.25s ease;
+  }
+
+  .archive-entry__name a:hover {
+    color: var(--vx-accent);
+  }
+
+  .archive-entry__flag {
+    color: #7a7d80;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    font-style: normal;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .archive-entry--active .archive-entry__flag {
+    color: var(--vx-accent);
+  }
+
+  .archive-entry--encrypted .archive-entry__name,
+  .archive-entry--retired .archive-entry__name {
+    color: var(--vx-dim);
+  }
+
+  .archive-entry--retired .archive-entry__name {
+    text-decoration: line-through 3px;
+  }
+
+  .archive-entry--retired .archive-entry__flag,
+  .archive-entry--encrypted .archive-entry__flag {
+    color: var(--vx-dim);
+  }
+
+  .archive-entry__meta {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    width: max-content;
+    max-width: 100%;
+    margin: 1.6rem 0 0;
+    border: 1px solid rgb(232 230 225 / 12%);
+  }
+
+  .archive-entry__meta > div {
+    display: grid;
+    gap: 0.5rem;
+    padding: 0.85rem 1.2rem;
+    border-right: 1px solid rgb(232 230 225 / 12%);
+  }
+
+  .archive-entry__meta > div:last-child {
+    border-right: 0;
+  }
+
+  .archive-entry__meta dt {
+    color: var(--vx-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+  }
+
+  .archive-entry__meta dd {
+    margin: 0;
+    color: var(--vx-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .archive-entry__meta dd.archive-entry__meta-accent {
+    color: var(--vx-accent);
+  }
+
+  .archive-entry--encrypted .archive-entry__meta dd,
+  .archive-entry--retired .archive-entry__meta dd {
+    color: var(--vx-dim);
+  }
+
+  .archive-entry__note {
+    margin: 1.4rem 0 0;
+    color: var(--vx-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    line-height: 2;
+    text-transform: uppercase;
+  }
+
+  .archive-entry__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.8rem;
+  }
+
+  .archive-footage {
+    display: grid;
+    align-items: end;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.5fr) minmax(0, 0.65fr);
+    gap: clamp(1rem, 2vw, 2rem);
+    margin-top: clamp(2.5rem, 6vh, 4rem);
+  }
+
+  .archive-footage__copy {
+    display: grid;
+    gap: 1.2rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .archive-footage__copy p {
+    max-width: 22rem;
+    margin: 0;
+    color: #7a7d80;
+    font-size: 0.86rem;
+    line-height: 1.75;
+  }
+
+  .archive-footage__frame {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid rgb(232 230 225 / 7%);
+  }
+
+  .archive-footage__frame :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1) contrast(1.2);
+    transition: filter 0.4s ease;
+  }
+
+  .archive-footage__frame:hover :global(img) {
+    filter: grayscale(0.4) contrast(1.08);
+  }
+
+  .archive-footage__frame--wide {
+    height: min(48vh, 30rem);
+  }
+
+  .archive-footage__frame--tall {
+    height: min(58vh, 36rem);
+  }
+
+  .archive-footage__frame figcaption {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    padding: 0.45rem 0.65rem;
+    background: rgb(5 5 5 / 78%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.52rem;
+    letter-spacing: 0.16em;
+  }
+
+  @media (max-width: 850px) {
+    .archive-footage {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .archive-footage__copy {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .archive-hero__row {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .archive-hero__meta {
+      text-align: left;
+    }
+
+    .archive-entry {
+      grid-template-columns: 1fr;
+      gap: 1.1rem;
+    }
+
+    .archive-entry__rail {
+      align-items: center;
+      flex-direction: row;
+      padding-top: 0;
+    }
+
+    .archive-entry__rail i {
+      width: auto;
+      height: 1px;
+      background: linear-gradient(90deg, var(--vx-line), transparent);
+    }
+
+    .archive-entry__head {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .archive-entry__meta {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      width: 100%;
+    }
+
+    .archive-entry__meta > div {
+      border-bottom: 1px solid rgb(232 230 225 / 12%);
+    }
+
+    .archive-entry__meta > div:nth-child(2n) {
+      border-right: 0;
+    }
+
+    .archive-entry__meta > div:nth-last-child(-n + 2) {
+      border-bottom: 0;
+    }
+
+    .archive-footage {
+      grid-template-columns: 1fr;
+    }
+
+    .archive-footage__frame--wide {
+      height: 38vh;
+    }
+
+    .archive-footage__frame--tall {
+      height: 55vh;
+    }
   }
 </style>

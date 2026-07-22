@@ -223,6 +223,17 @@ img {
   background: var(--vx-black);
   opacity: 1;
   transition: opacity 0.45s ease;
+
+  /* Failsafe: if client JS never runs (network/module failure), the overlay
+     dismisses itself — the site must never be trapped behind the boot screen. */
+  animation: boot-autodismiss 0.45s ease 2.6s forwards;
+}
+
+@keyframes boot-autodismiss {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
 }
 
 .boot-screen[hidden] {
@@ -302,6 +313,11 @@ img {
   font-size: 0.625rem;
   letter-spacing: 0.28em;
   line-height: 1.8;
+}
+
+/* Accent variant for eyebrows — shared across page components. */
+.release-dot {
+  color: var(--vx-accent);
 }
 
 .display-title {
@@ -964,6 +980,22 @@ img {
   height: min(42vh, 25rem);
 }
 
+/* Catalog variant: uniform rows so every piece reads at the same size. */
+.product-grid--catalog {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: clamp(18px, 2vw, 30px) clamp(14px, 1.8vw, 26px);
+}
+
+.product-grid--catalog .product-card {
+  grid-column: auto;
+  margin-top: 0;
+}
+
+.product-grid--catalog .product-card__image {
+  height: min(48vh, 28rem);
+}
+
 /* Generic content pages */
 .page-hero {
   padding: clamp(7rem, 14vh, 10rem) var(--page-pad) 2.25rem;
@@ -1145,6 +1177,14 @@ img {
   .product-card--5 .product-card__image {
     height: min(52vh, 34rem);
   }
+
+  .product-grid--catalog {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .product-grid--catalog .product-card__image {
+    height: min(44vh, 26rem);
+  }
 }
 
 @media (max-width: 620px) {
@@ -1202,6 +1242,15 @@ img {
   .product-grid--compact .product-card__image {
     height: 68vh;
     max-height: 38rem;
+  }
+
+  .product-grid--catalog {
+    grid-template-columns: 1fr;
+  }
+
+  .product-grid--catalog .product-card__image {
+    height: 62vh;
+    max-height: 34rem;
   }
 
   .page-hero__row {

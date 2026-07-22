@@ -7,9 +7,16 @@ import type { Locale } from './config';
  */
 export const routes = {
   home: { es: '/', en: '/en' },
-  products: { es: '/productos', en: '/en/products' },
+  // '/catalog' on both locales is a deliberate product decision (was
+  // '/productos' + '/en/products'); the old URLs 301 in astro.config.mjs.
+  products: { es: '/catalog', en: '/en/catalog' },
   collections: { es: '/colecciones', en: '/en/collections' },
-  archive: { es: '/archivo', en: '/en/archive' },
+  // '/archive' on es is a deliberate product decision (was '/archivo');
+  // the old URL 301s in astro.config.mjs.
+  archive: { es: '/archive', en: '/en/archive' },
+  // '/drop' is intentionally shared: "drop" is brand vocabulary in both locales.
+  drop: { es: '/drop', en: '/en/drop' },
+  collection: { es: '/coleccion', en: '/en/collection' },
   manifesto: { es: '/manifiesto', en: '/en/manifesto' },
   privacy: { es: '/privacidad', en: '/en/privacy' },
   terms: { es: '/terminos', en: '/en/terms' },
@@ -30,7 +37,7 @@ export function routeAlternates(key: RouteKey): Record<Locale, string> {
 
 /** Detail-page paths take per-locale slugs, so alternates need both. */
 export function productPath(locale: Locale, slug: string): string {
-  return locale === 'es' ? `/productos/${slug}` : `/en/products/${slug}`;
+  return locale === 'es' ? `/catalog/${slug}` : `/en/catalog/${slug}`;
 }
 
 export function collectionPath(locale: Locale, slug: string): string {

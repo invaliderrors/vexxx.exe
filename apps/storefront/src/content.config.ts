@@ -41,6 +41,26 @@ const productsCollection = defineCollection({
           .strict(),
       ),
       collection: z.string().min(1).nullable(),
+      category: z.enum([
+        'hoodies',
+        'tees',
+        'bottoms',
+        'outerwear',
+        'accessories',
+      ]),
+      sizes: z.array(z.enum(['XS', 'S', 'M', 'L', 'XL', 'OS'])).min(1),
+      colors: z
+        .array(
+          z.enum([
+            'washed-black',
+            'bone',
+            'gunmetal',
+            'signal-red',
+            'olive-drab',
+            'concrete',
+          ]),
+        )
+        .min(1),
       availability: z.enum(['in-stock', 'out-of-stock', 'pre-order']),
       published: z.boolean(),
     })

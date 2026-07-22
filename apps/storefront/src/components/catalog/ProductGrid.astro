@@ -7,11 +7,18 @@ interface Props {
   products: readonly Product[];
   locale: Locale;
   compact?: boolean | undefined;
+  /** Uniform rows instead of the editorial scatter layout. */
+  catalog?: boolean | undefined;
+  /** When true the grid is a client-side filter target (see FilterBar). */
+  filterable?: boolean | undefined;
 }
 
-const { products, locale, compact = false } = Astro.props;
+const { products, locale, compact = false, catalog = false, filterable = false } = Astro.props;
 ---
 
-<div class:list={['product-grid', { 'product-grid--compact': compact }]}>
+<div
+  class:list={['product-grid', { 'product-grid--compact': compact, 'product-grid--catalog': catalog }]}
+  data-filter-grid={filterable ? '' : undefined}
+>
   {products.map((product, index) => <ProductCard product={product} locale={locale} index={index} compact={compact} />)}
 </div>

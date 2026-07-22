@@ -36,6 +36,20 @@ export const rawProductSchema = z
     price: moneySchema,
     images: z.array(productImage),
     collection: z.string().min(1).nullable(),
+    category: z.enum(['hoodies', 'tees', 'bottoms', 'outerwear', 'accessories']),
+    sizes: z.array(z.enum(['XS', 'S', 'M', 'L', 'XL', 'OS'])).min(1),
+    colors: z
+      .array(
+        z.enum([
+          'washed-black',
+          'bone',
+          'gunmetal',
+          'signal-red',
+          'olive-drab',
+          'concrete',
+        ]),
+      )
+      .min(1),
     availability: z.enum(['in-stock', 'out-of-stock', 'pre-order']),
     published: z.boolean(),
   })
@@ -61,6 +75,9 @@ export function parseProduct(id: string, raw: unknown): Product {
     price: data.price,
     images: data.images,
     collectionId: data.collection,
+    category: data.category,
+    sizes: data.sizes,
+    colors: data.colors,
     availability: data.availability,
     published: data.published,
   };

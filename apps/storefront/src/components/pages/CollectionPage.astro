@@ -1,0 +1,254 @@
+---
+import { Image } from 'astro:assets';
+import campaignGroup from '../../assets/vexxx/campaign-group.png';
+import campaignHero from '../../assets/vexxx/campaign-hero.png';
+import campaignPortrait from '../../assets/vexxx/campaign-portrait.png';
+import duoStairwell from '../../assets/vexxx/fw26-duo-stairwell.png';
+import tunnelCampaign from '../../assets/vexxx/fw26-tunnel-campaign.png';
+import materialStudy from '../../assets/vexxx/material-study-red-tack.png';
+import { t } from '../../i18n';
+import type { Locale } from '../../i18n/config';
+import { productPath, routePath } from '../../i18n/routes';
+import { getCatalog } from '../../lib/catalog';
+import type { Product } from '../../lib/catalog';
+import { formatPrice } from '../../lib/format';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const dict = t(locale);
+
+const catalog = getCatalog();
+const collections = await catalog.getPublishedCollections();
+const collection = collections[0];
+if (!collection) {
+  throw new Error('CollectionPage: no published collection available.');
+}
+const products = await catalog.getProductsByCollection(collection.id);
+
+const piecesBySku = (...fragments: readonly string[]): readonly Product[] =>
+  fragments
+    .map((fragment) => products.find((product) => product.sku.includes(fragment)))
+    .filter((product): product is Product => product !== undefined);
+
+const [lookOne, lookTwo, lookThree, lookFour, lookFive] = dict.collectionPage.lookbookLabels;
+if (!lookOne || !lookTwo || !lookThree || !lookFour || !lookFive) {
+  throw new Error(`The ${locale} dictionary must define all five lookbook labels.`);
+}
+
+const looks = [
+  { image: duoStairwell, label: lookOne, pieces: piecesBySku('JKT', 'CRG') },
+  { image: campaignPortrait, label: lookTwo, pieces: piecesBySku('HOOD') },
+  { image: campaignGroup, label: lookThree, pieces: piecesBySku('TEE', 'LSL') },
+  { image: campaignHero, label: lookFour, pieces: piecesBySku('CAP') },
+  { image: materialStudy, label: lookFive, pieces: piecesBySku('BAG') },
+] as const;
+const lookCount = String(looks.length).padStart(2, '0');
+
+const headingWords = dict.collectionPage.heading.split(' ');
+const headingLead = headingWords[0] ?? dict.collectionPage.heading;
+const headingTail = headingWords.slice(1).join(' ');
+const narrativeWords = dict.collectionPage.narrativeOne.split(' ');
+const collectionNameWords = collection.name[locale].split(' ');
+---
+
+<div class="collection-page">
+  <section class="clx-hero">
+    <Image
+      class="clx-hero__image"
+      src={tunnelCampaign}
+      alt={dict.collectionPage.heroImageAlt}
+      widths={[768, 1280, 1920]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div class="clx-hero__shade" aria-hidden="true"></div>
+    <div class="clx-hero__status eyebrow">
+      <span>{dict.collectionPage.eyebrow}</span>
+      <span>{collection.name[locale]}</span>
+    </div>
+    <div class="clx-hero__count eyebrow" aria-hidden="true">{lookCount} / {dict.collectionPage.looksLabel}</div>
+    <div class="clx-hero__content">
+      <h1 class="display-title">
+        <span data-reveal>{headingLead}</span>
+        {headingTail && <span class="outline-text reveal-delay-1" data-reveal>{headingTail}<b>_</b></span>}
+      </h1>
+      <div class="clx-hero__bottom reveal-delay-2" data-reveal>
+        <p>{dict.collectionPage.body}</p>
+        <span class="clx-hero__stamp">{dict.collectionPage.lookbookEyebrow}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="clx-manifest section-shell">
+    <span class="clx-manifest__ghost" aria-hidden="true">{dict.brand.season}</span>
+    <div class="eyebrow release-dot">{dict.collectionPage.lookbookEyebrow}</div>
+    <h2 class="display-title">
+      {narrativeWords.map((word, index) => <span data-reveal style={`--reveal-delay:${index * 0.09}s`}>{word} </span>)}
+    </h2>
+    <p class="reveal-delay-4" data-reveal>{dict.collectionPage.narrativeTwo}</p>
+  </section>
+
+  <section class="lookbook">
+    <div class="lookbook__rail">
+      <div class="lookbook__rail-inner">
+        <span class="eyebrow release-dot">{dict.collectionPage.lookbookEyebrow}</span>
+        <strong class="lookbook__count" aria-hidden="true">{lookCount}</strong>
+        <span class="lookbook__count-label">{dict.collectionPage.looksLabel}</span>
+        <i class="lookbook__line" aria-hidden="true"></i>
+        <span class="lookbook__collection">{collection.name[locale]} — {dict.brand.season}</span>
+      </div>
+    </div>
+
+    <div class="lookbook__stack">
+      {
+        looks.map((look, index) => (
+          <article class={`look look--${index + 1}`}>
+            <figure class="look__frame" data-reveal={index % 2 === 0 ? 'left' : 'right'}>
+              <Image
+                src={look.image}
+                alt={look.label}
+                loading="lazy"
+                widths={[768, 1280, 1920]}
+                sizes="(max-width: 850px) 100vw, 70vw"
+              />
+              <span class="look__number outline-text" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+            </figure>
+            <div class="look__meta">
+              <h3 class="look__caption">{look.label}</h3>
+              {look.pieces.length > 0 && (
+                <div class="look__pieces">
+                  <span class="look__pieces-label">{dict.collectionPage.pieceLabel}</span>
+                  {look.pieces.map((piece) => (
+                    <a class="look-piece" href={productPath(locale, piece.slug[locale])} data-cursor={dict.nav.cursorView}>
+                      <span>{piece.sku}</span>
+                      <strong>{piece.name[locale]} <b aria-hidden="true">→</b></strong>
+                      <data value={String(piece.price.amount)}>{formatPrice(piece.price, locale)}</data>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="clx-outro">
+    <Image src={campaignGroup} alt="" loading="lazy" aria-hidden="true" widths={[768, 1280, 1920]} sizes="100vw" />
+    <div class="clx-outro__shade" aria-hidden="true"></div>
+    <div class="clx-outro__content" data-reveal>
+      <span class="eyebrow release-dot">{dict.collectionPage.eyebrow}</span>
+      <h2 class="display-title">
+        {collectionNameWords.map((word, index) => (index === collectionNameWords.length - 1 ? <span class="outline-text">{word}</span> : <span>{word} </span>))}
+      </h2>
+      <p>{collection.description[locale]}</p>
+      <a class="button" href={routePath('products', locale)} data-cursor={dict.nav.cursorEnter}>{dict.collectionPage.cta} <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+</div>
+
+<style>
+  .clx-hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: 100svh;
+    overflow: hidden;
+  }
+
+  .clx-hero__image,
+  .clx-hero__shade {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .clx-hero__image { object-fit: cover; object-position: center 38%; filter: saturate(0.82) contrast(1.05); }
+  .clx-hero__shade { background: linear-gradient(180deg, rgb(5 5 5 / 58%), transparent 32%, transparent 52%, rgb(5 5 5 / 94%)); }
+  .clx-hero__status { position: absolute; top: 4.9rem; left: clamp(1rem, 3vw, 2rem); z-index: 2; display: flex; flex-direction: column; }
+  .clx-hero__status span:last-child { color: var(--vx-accent); }
+  .clx-hero__count { position: absolute; top: 4.9rem; right: clamp(1rem, 3vw, 2rem); z-index: 2; color: var(--vx-dim); writing-mode: vertical-rl; }
+  .clx-hero__content { position: relative; z-index: 2; width: 100%; padding: 0 clamp(1rem, 3vw, 2rem) clamp(2.75rem, 7vh, 5rem); }
+  .clx-hero h1 { font-size: clamp(3.375rem, 10.5vw, 10.5rem); line-height: 0.88; letter-spacing: 0.005em; }
+  .clx-hero h1 span { display: block; }
+  .clx-hero h1 b { color: var(--vx-accent); font-weight: 400; -webkit-text-stroke: 0; animation: blink 1.1s steps(1) infinite; }
+  .clx-hero__bottom { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 2rem; margin-top: clamp(1.5rem, 4vh, 2.5rem); }
+  .clx-hero__bottom p { max-width: 27rem; margin: 0; color: #b9bcbd; font-size: 0.94rem; line-height: 1.65; }
+  .clx-hero__stamp { color: var(--vx-dim); font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.24em; text-transform: uppercase; }
+
+  .clx-manifest { position: relative; display: flex; justify-content: center; flex-direction: column; min-height: 88vh; overflow: hidden; }
+  .clx-manifest__ghost { position: absolute; right: -5vw; color: #0b0c0d; font-family: 'Anton', sans-serif; font-size: 48vh; line-height: 1; user-select: none; }
+  .clx-manifest > :not(.clx-manifest__ghost) { position: relative; }
+  .clx-manifest h2 { max-width: 72rem; margin-top: 1.5rem; font-size: clamp(3.25rem, 9.5vw, 10rem); }
+  .clx-manifest h2 span[data-reveal] { display: inline-block; }
+  .clx-manifest p { max-width: 34rem; margin: clamp(2rem, 5vh, 3rem) 0 0; color: #b9bcbd; font-size: clamp(1rem, 1.4vw, 1.2rem); line-height: 1.7; }
+
+  .lookbook { display: grid; grid-template-columns: minmax(0, 0.28fr) minmax(0, 1fr); gap: clamp(2rem, 4vw, 4.5rem); padding: clamp(70px, 11vh, 150px) var(--page-pad); border-top: 1px solid var(--vx-line); }
+  .lookbook__rail-inner { position: sticky; top: calc(var(--header-height) + 2.5rem); display: grid; justify-items: start; gap: 1.1rem; }
+  .lookbook__count { color: var(--vx-paper); font-family: 'Anton', sans-serif; font-size: clamp(4rem, 8vw, 8rem); font-weight: 400; line-height: 0.85; }
+  .lookbook__count-label, .lookbook__collection { color: var(--vx-dim); font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.26em; text-transform: uppercase; }
+  .lookbook__collection { color: var(--vx-muted); }
+  .lookbook__line { display: block; width: 1px; height: clamp(4rem, 12vh, 8rem); background: var(--vx-accent); }
+
+  .lookbook__stack { display: flex; flex-direction: column; gap: clamp(5rem, 12vh, 9rem); min-width: 0; }
+  .look { display: grid; gap: 1.1rem; }
+  .look__frame { position: relative; margin: 0; overflow: hidden; border: 1px solid rgb(232 230 225 / 8%); background: #0b0b0c; }
+  .look__frame :global(img) { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.78) contrast(1.05); transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1), filter 400ms ease; }
+  .look:hover .look__frame :global(img) { transform: scale(1.02); filter: saturate(0.95) contrast(1); }
+  .look__number { position: absolute; right: 0.5rem; bottom: -0.18em; font-family: 'Anton', sans-serif; font-size: clamp(5rem, 11vw, 11rem); line-height: 1; pointer-events: none; user-select: none; }
+
+  .look--1 .look__frame { height: min(88vh, 56rem); }
+  .look--2 { width: min(62%, 34rem); margin-left: auto; }
+  .look--2 .look__frame { height: min(72vh, 46rem); }
+  .look--3 { width: min(82%, 46rem); }
+  .look--3 .look__frame { height: min(56vh, 36rem); }
+  .look--4 { width: min(58%, 32rem); margin-top: -4vh; margin-left: auto; }
+  .look--4 .look__frame { height: min(64vh, 40rem); }
+  .look--5 { width: min(74%, 42rem); }
+  .look--5 .look__frame { height: min(50vh, 32rem); }
+
+  .look__caption { margin: 0; color: var(--vx-muted); font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; font-weight: 400; letter-spacing: 0.24em; text-transform: uppercase; }
+  .look__pieces { display: grid; border-top: 1px solid var(--vx-line); }
+  .look__pieces-label { padding-top: 0.8rem; color: var(--vx-dim); font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; letter-spacing: 0.28em; text-transform: uppercase; }
+  .look-piece { display: grid; align-items: baseline; grid-template-columns: 7rem 1fr auto; gap: 1rem; padding: 0.9rem 0; border-bottom: 1px solid rgb(232 230 225 / 8%); }
+  .look-piece:last-child { border-bottom: 0; }
+  .look-piece > span, .look-piece data { color: var(--vx-dim); font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.16em; }
+  .look-piece data { color: var(--vx-paper); font-size: 0.72rem; }
+  .look-piece strong { font-family: 'Anton', sans-serif; font-size: clamp(1.1rem, 2vw, 1.6rem); font-weight: 400; letter-spacing: 0.02em; line-height: 1.1; text-transform: uppercase; }
+  .look-piece strong b { color: var(--vx-accent); font-weight: 400; }
+  .look-piece:hover strong { color: var(--vx-accent); }
+
+  .clx-outro { position: relative; display: grid; min-height: 92vh; place-items: center; overflow: hidden; border-top: 1px solid var(--vx-line); }
+  .clx-outro > :global(img), .clx-outro__shade { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .clx-outro > :global(img) { object-fit: cover; opacity: 0.42; filter: grayscale(0.4); }
+  .clx-outro__shade { background: radial-gradient(circle, rgb(5 5 5 / 42%), rgb(5 5 5 / 95%)); }
+  .clx-outro__content { position: relative; display: flex; align-items: center; flex-direction: column; gap: clamp(1.5rem, 4vh, 2.4rem); padding: 6rem var(--page-pad); text-align: center; }
+  .clx-outro h2 { font-size: clamp(3rem, 8.5vw, 9rem); }
+  .clx-outro h2 span { display: inline-block; margin: 0 0.18em; }
+  .clx-outro p { max-width: 30rem; margin: 0; color: #b9bcbd; font-size: 0.95rem; line-height: 1.75; }
+
+  @media (max-width: 850px) {
+    .lookbook { grid-template-columns: 1fr; }
+    .lookbook__rail-inner { position: static; grid-template-columns: auto 1fr; align-items: end; column-gap: 1.5rem; }
+    .lookbook__line { display: none; }
+    .look--2, .look--3, .look--4, .look--5 { width: 100%; margin-top: 0; margin-left: 0; }
+    .look--1 .look__frame, .look--2 .look__frame, .look--3 .look__frame, .look--4 .look__frame, .look--5 .look__frame { height: min(62vh, 38rem); }
+  }
+
+  @media (max-width: 620px) {
+    .clx-manifest { min-height: 70vh; }
+    .clx-manifest__ghost { font-size: 34vh; }
+    .clx-manifest h2 { font-size: clamp(2.9rem, 14vw, 4.6rem); }
+    .clx-hero__count { display: none; }
+    .look-piece { grid-template-columns: 1fr auto; }
+    .look-piece > span { grid-column: 1 / -1; }
+    .look__number { font-size: 4.5rem; }
+    .clx-outro { min-height: 75vh; }
+  }
+</style>

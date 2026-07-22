@@ -15,6 +15,9 @@
   "price": { "amount": 29900000, "currency": "COP" },
   "images": [],
   "collection": "drop-001",
+  "category": "accessories",
+  "sizes": ["OS"],
+  "colors": ["washed-black", "gunmetal"],
   "availability": "out-of-stock",
   "published": true
 }

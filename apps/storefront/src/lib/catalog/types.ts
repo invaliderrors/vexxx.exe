@@ -10,6 +10,23 @@ export type LocalizedText = Record<Locale, string>;
 
 export type ProductAvailability = 'in-stock' | 'out-of-stock' | 'pre-order';
 
+export type ProductCategory =
+  | 'hoodies'
+  | 'tees'
+  | 'bottoms'
+  | 'outerwear'
+  | 'accessories';
+
+export type ProductSize = 'XS' | 'S' | 'M' | 'L' | 'XL' | 'OS';
+
+export type ProductColor =
+  | 'washed-black'
+  | 'bone'
+  | 'gunmetal'
+  | 'signal-red'
+  | 'olive-drab'
+  | 'concrete';
+
 export interface ProductImage {
   /** Path under /public or an absolute URL. */
   readonly src: string;
@@ -31,6 +48,10 @@ export interface Product {
   readonly images: readonly ProductImage[];
   /** Collection id, or null for uncollected products. */
   readonly collectionId: string | null;
+  readonly category: ProductCategory;
+  /** Sizes the piece is cut in; accessories are one-size (`OS`). */
+  readonly sizes: readonly ProductSize[];
+  readonly colors: readonly ProductColor[];
   readonly availability: ProductAvailability;
   readonly published: boolean;
 }

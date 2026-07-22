@@ -4,6 +4,7 @@ import campaignGroup from '../../assets/vexxx/campaign-group.png';
 import { t } from '../../i18n';
 import type { Locale } from '../../i18n/config';
 import type { Product } from '../../lib/catalog';
+import FilterBar from './FilterBar.astro';
 import ProductGrid from './ProductGrid.astro';
 
 interface Props {
@@ -12,9 +13,11 @@ interface Props {
   title?: string | undefined;
   description?: string | undefined;
   eyebrow?: string | undefined;
+  /** When true the listing renders the client-side FilterBar above the grid. */
+  filterable?: boolean | undefined;
 }
 
-const { locale, products, title, description, eyebrow } = Astro.props;
+const { locale, products, title, description, eyebrow, filterable = false } = Astro.props;
 const dict = t(locale);
 const pageTitle = title ?? dict.products.heading;
 const pageEyebrow = eyebrow ?? dict.products.eyebrow;
@@ -32,7 +35,11 @@ const pageEyebrow = eyebrow ?? dict.products.eyebrow;
 </section>
 
 <section class="catalog-body">
-  {products.length === 0 ? <p>{dict.products.empty}</p> : <ProductGrid products={products} locale={locale} />}
+  {filterable && products.length > 0 && <FilterBar locale={locale} products={products} />}
+  {products.length === 0 ? <p>{dict.products.empty}</p> : <ProductGrid products={products} locale={locale} catalog filterable={filterable} />}
+  {filterable && products.length > 0 && (
+    <p class="filter-empty" data-filter-empty hidden>{dict.products.filters.noResults}</p>
+  )}
   <div class="campaign-banner" data-reveal>
     <Image
       src={campaignGroup}
@@ -49,11 +56,23 @@ const pageEyebrow = eyebrow ?? dict.products.eyebrow;
   .catalog-description {
     max-width: 38rem;
     margin: 1.5rem 0 0;
-    color: #9a9d9f;
+    color: #b9bcbd;
     line-height: 1.75;
   }
 
   .page-hero__meta span {
     color: var(--vx-accent);
+  }
+
+  .filter-empty {
+    margin: 0;
+    padding: clamp(2.5rem, 6vh, 4rem) 1rem;
+    border: 1px dashed rgb(232 230 225 / 18%);
+    color: var(--vx-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-align: center;
+    text-transform: uppercase;
   }
 </style>

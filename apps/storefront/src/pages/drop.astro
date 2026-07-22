@@ -1,0 +1,33 @@
+---
+import JsonLd from '../components/seo/JsonLd.astro';
+import DropPage from '../components/pages/DropPage.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { t } from '../i18n';
+import { routeAlternates, routePath } from '../i18n/routes';
+import { breadcrumbJsonLd } from '../lib/seo/jsonld';
+import { canonicalUrl } from '../lib/seo/meta';
+
+const locale = 'es' as const;
+const dict = t(locale);
+const site = Astro.site;
+if (!site) {
+  throw new Error('SEO: `site` must be configured in astro.config.mjs');
+}
+---
+
+<BaseLayout locale={locale} title={dict.dropPage.metaTitle} description={dict.dropPage.metaDescription} path={routePath('drop', locale)} alternates={routeAlternates('drop')}>
+  <JsonLd
+    slot="head"
+    data={breadcrumbJsonLd([
+      {
+        name: dict.product.breadcrumbHome,
+        url: canonicalUrl(site, routePath('home', locale)),
+      },
+      {
+        name: dict.dropPage.heading,
+        url: canonicalUrl(site, routePath('drop', locale)),
+      },
+    ])}
+  />
+  <DropPage locale={locale} />
+</BaseLayout>

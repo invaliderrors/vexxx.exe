@@ -33,6 +33,12 @@ const status = product.availability === 'out-of-stock'
 <article
   class:list={['product-card', `product-card--${(index % 5) + 1}`, { 'product-card--compact': compact }]}
   data-reveal
+  data-filter-card
+  data-category={product.category}
+  data-sizes={product.sizes.join(',')}
+  data-colors={product.colors.join(',')}
+  data-availability={product.availability}
+  data-price={String(product.price.amount)}
   style={`--reveal-delay:${(index % 5) * 0.05}s`}
 >
   <a class="product-card__image" href={productPath(locale, product.slug[locale])} data-cursor={dict.nav.cursorAcquire}>

@@ -14,6 +14,9 @@ const validRawProduct = {
   collection: 'drop-001',
   availability: 'in-stock',
   published: true,
+  category: 'tees',
+  sizes: ['XS', 'S', 'M', 'L', 'XL'],
+  colors: ['washed-black'],
 };
 
 describe('parseProduct', () => {
@@ -22,6 +25,43 @@ describe('parseProduct', () => {
     expect(product.id).toBe('vx-tee-001');
     expect(product.collectionId).toBe('drop-001');
     expect(product.price).toEqual({ amount: 4990, currency: 'EUR' });
+  });
+
+  it('maps category, sizes and colors to the domain type', () => {
+    const product = parseProduct('vx-tee-001', validRawProduct);
+    expect(product.category).toBe('tees');
+    expect(product.sizes).toEqual(['XS', 'S', 'M', 'L', 'XL']);
+    expect(product.colors).toEqual(['washed-black']);
+  });
+
+  it('rejects an unknown category', () => {
+    expect(() =>
+      parseProduct('x', { ...validRawProduct, category: 'headwear' }),
+    ).toThrow();
+  });
+
+  it('rejects an empty sizes array', () => {
+    expect(() =>
+      parseProduct('x', { ...validRawProduct, sizes: [] }),
+    ).toThrow();
+  });
+
+  it('rejects sizes outside the enum', () => {
+    expect(() =>
+      parseProduct('x', { ...validRawProduct, sizes: ['XXL'] }),
+    ).toThrow();
+  });
+
+  it('rejects an empty colors array', () => {
+    expect(() =>
+      parseProduct('x', { ...validRawProduct, colors: [] }),
+    ).toThrow();
+  });
+
+  it('rejects colors outside the enum', () => {
+    expect(() =>
+      parseProduct('x', { ...validRawProduct, colors: ['neon-green'] }),
+    ).toThrow();
   });
 
   it('rejects float prices', () => {

@@ -1,0 +1,420 @@
+---
+/**
+ * Client island — justification (SEO rule 5, zero client JS by default):
+ * faceted filtering/sorting of an already-rendered product grid is inherently
+ * client-side state. This script is progressive enhancement only: the full
+ * grid is server-rendered and crawlable without JS, no content is fetched or
+ * hidden at load, and every label comes from the i18n dictionaries. Pure
+ * filter logic lives in src/lib/catalog/filter.ts with vitest coverage.
+ */
+import { t } from '../../i18n';
+import type { Locale } from '../../i18n/config';
+import type { Product } from '../../lib/catalog';
+import type {
+  ProductAvailability,
+  ProductCategory,
+  ProductColor,
+  ProductSize,
+} from '../../lib/catalog/types';
+import { colorSwatchHex } from './swatches';
+
+interface Props {
+  locale: Locale;
+  products: readonly Product[];
+}
+
+const { locale, products } = Astro.props;
+const dict = t(locale);
+const labels = dict.products.filters;
+
+const categoryOrder: readonly ProductCategory[] = [
+  'hoodies',
+  'tees',
+  'bottoms',
+  'outerwear',
+  'accessories',
+];
+const sizeOrder: readonly ProductSize[] = ['XS', 'S', 'M', 'L', 'XL', 'OS'];
+const colorOrder: readonly ProductColor[] = [
+  'washed-black',
+  'bone',
+  'gunmetal',
+  'signal-red',
+  'olive-drab',
+  'concrete',
+];
+const availabilityOrder: readonly ProductAvailability[] = ['in-stock', 'pre-order', 'out-of-stock'];
+
+const categories = categoryOrder.filter((category) =>
+  products.some((product) => product.category === category),
+);
+const sizes = sizeOrder.filter((size) => products.some((product) => product.sizes.includes(size)));
+const colors = colorOrder.filter((color) =>
+  products.some((product) => product.colors.includes(color)),
+);
+const availabilities = availabilityOrder.filter((availability) =>
+  products.some((product) => product.availability === availability),
+);
+
+const total = String(products.length).padStart(2, '0');
+
+const sortOptions = [
+  { value: 'featured', label: labels.sortFeatured },
+  { value: 'price-asc', label: labels.sortPriceAsc },
+  { value: 'price-desc', label: labels.sortPriceDesc },
+] as const;
+---
+
+<aside class="filter-bar" data-filter-bar data-reveal aria-label={labels.title}>
+  <div class="filter-bar__head">
+    <span class="eyebrow">{labels.title}</span>
+    <p class="filter-bar__count" aria-live="polite">
+      {labels.showing} <span data-filter-count>{total}</span> <i>/ {total}</i>
+    </p>
+    <button type="button" class="filter-bar__clear" data-filter-clear hidden>
+      [ {labels.clear} ]
+    </button>
+  </div>
+  <div class="filter-bar__groups">
+    <fieldset class="filter-group">
+      <legend>{labels.category}</legend>
+      <div class="filter-group__options">
+        {categories.map((category) => (
+          <button
+            type="button"
+            class="filter-chip"
+            data-filter-group="category"
+            data-filter-value={category}
+            aria-pressed="false"
+          >
+            {labels.categoryNames[category]}
+          </button>
+        ))}
+      </div>
+    </fieldset>
+    <fieldset class="filter-group">
+      <legend>{labels.size}</legend>
+      <div class="filter-group__options">
+        {sizes.map((size) => (
+          <button
+            type="button"
+            class="filter-chip"
+            data-filter-group="size"
+            data-filter-value={size}
+            aria-pressed="false"
+          >
+            {size}
+          </button>
+        ))}
+      </div>
+    </fieldset>
+    <fieldset class="filter-group">
+      <legend>{labels.color}</legend>
+      <div class="filter-group__options">
+        {colors.map((color) => (
+          <button
+            type="button"
+            class="filter-chip"
+            data-filter-group="color"
+            data-filter-value={color}
+            aria-pressed="false"
+          >
+            <span class="filter-chip__swatch" style={`--swatch:${colorSwatchHex[color]}`} aria-hidden="true"></span>
+            {labels.colorNames[color]}
+          </button>
+        ))}
+      </div>
+    </fieldset>
+    <fieldset class="filter-group">
+      <legend>{labels.availability}</legend>
+      <div class="filter-group__options">
+        {availabilities.map((availability) => (
+          <button
+            type="button"
+            class="filter-chip"
+            data-filter-group="availability"
+            data-filter-value={availability}
+            aria-pressed="false"
+          >
+            {labels.availabilityNames[availability]}
+          </button>
+        ))}
+      </div>
+    </fieldset>
+    <fieldset class="filter-group filter-group--sort">
+      <legend>{labels.sort}</legend>
+      <div class="filter-group__options">
+        {sortOptions.map((option) => (
+          <button
+            type="button"
+            class="filter-chip"
+            data-filter-sort={option.value}
+            aria-pressed={option.value === 'featured' ? 'true' : 'false'}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+    </fieldset>
+  </div>
+</aside>
+
+<style>
+  .filter-bar {
+    margin-bottom: clamp(2.5rem, 6vh, 4.5rem);
+    border: 1px solid var(--vx-line);
+    background: var(--vx-black-soft);
+  }
+
+  .filter-bar__head {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    padding: 0.95rem 1.25rem;
+    border-bottom: 1px solid var(--vx-line);
+  }
+
+  .filter-bar__count {
+    margin: 0 auto 0 0;
+    color: var(--vx-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .filter-bar__count span {
+    color: var(--vx-accent);
+  }
+
+  .filter-bar__count i {
+    color: var(--vx-dim);
+    font-style: normal;
+  }
+
+  .filter-bar__clear {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--vx-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.25s ease;
+  }
+
+  .filter-bar__clear:hover {
+    color: var(--vx-accent);
+  }
+
+  .filter-bar__groups {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  }
+
+  .filter-group {
+    min-width: 0;
+    margin: 0;
+    padding: 1rem 1.25rem 1.25rem;
+    border: 0;
+    border-right: 1px solid var(--vx-line);
+    border-bottom: 1px solid var(--vx-line);
+  }
+
+  .filter-group legend {
+    padding: 0;
+    margin-bottom: 0.85rem;
+    color: var(--vx-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+  }
+
+  .filter-group__options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid rgb(232 230 225 / 17%);
+    background: transparent;
+    color: var(--vx-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+  }
+
+  .filter-chip:hover {
+    border-color: var(--vx-accent);
+    color: var(--vx-paper);
+  }
+
+  .filter-chip[aria-pressed='true'] {
+    border-color: var(--vx-accent);
+    background: rgb(255 59 59 / 8%);
+    color: var(--vx-accent);
+  }
+
+  .filter-chip__swatch {
+    width: 0.7rem;
+    height: 0.7rem;
+    border: 1px solid rgb(232 230 225 / 25%);
+    background: var(--swatch, transparent);
+  }
+
+  @media (max-width: 620px) {
+    .filter-group {
+      border-right: 0;
+    }
+  }
+</style>
+
+<script>
+  import {
+    compareCards,
+    hasActiveFilters,
+    isSortOrder,
+    matchesFilters,
+    parseFacetList,
+    parsePrice,
+    type CardFacts,
+    type FilterState,
+    type SortOrder,
+  } from '../../lib/catalog/filter';
+
+  interface CardEntry {
+    readonly element: HTMLElement;
+    readonly facts: CardFacts;
+  }
+
+  function initializeFilterBar(bar: HTMLElement): void {
+    const foundGrid = document.querySelector<HTMLElement>('[data-filter-grid]');
+    if (!foundGrid) return;
+    const grid: HTMLElement = foundGrid;
+
+    const entries: readonly CardEntry[] = Array.from(
+      grid.querySelectorAll<HTMLElement>('[data-filter-card]'),
+    ).map((element, index) => ({
+      element,
+      facts: {
+        category: element.dataset.category ?? '',
+        sizes: parseFacetList(element.dataset.sizes),
+        colors: parseFacetList(element.dataset.colors),
+        availability: element.dataset.availability ?? '',
+        price: parsePrice(element.dataset.price),
+        index,
+      },
+    }));
+
+    const selected = {
+      category: new Set<string>(),
+      size: new Set<string>(),
+      color: new Set<string>(),
+      availability: new Set<string>(),
+    };
+    let sort: SortOrder = 'featured';
+
+    const countElement = bar.querySelector<HTMLElement>('[data-filter-count]');
+    const clearButton = bar.querySelector<HTMLElement>('[data-filter-clear]');
+    const emptyMessage = document.querySelector<HTMLElement>('[data-filter-empty]');
+
+    function isFilterGroup(value: string): value is keyof typeof selected {
+      return value in selected;
+    }
+
+    function apply(): void {
+      const state: FilterState = selected;
+      const filtering = hasActiveFilters(state) || sort !== 'featured';
+      let visibleCount = 0;
+
+      entries.forEach((entry) => {
+        const matches = matchesFilters(entry.facts, state);
+        entry.element.hidden = !matches;
+        // Once the visitor filters, reveal-on-scroll must not hide results.
+        entry.element.classList.add('vx-on');
+        if (matches) visibleCount += 1;
+      });
+
+      [...entries]
+        .sort((a, b) => compareCards(a.facts, b.facts, sort))
+        .forEach((entry) => grid.appendChild(entry.element));
+
+      if (countElement) countElement.textContent = String(visibleCount).padStart(2, '0');
+      if (emptyMessage) emptyMessage.hidden = visibleCount > 0;
+      if (clearButton) clearButton.hidden = !filtering;
+      if (filtering) {
+        grid.setAttribute('data-filter-active', '');
+      } else {
+        grid.removeAttribute('data-filter-active');
+      }
+    }
+
+    function syncSortButtons(): void {
+      bar.querySelectorAll<HTMLElement>('[data-filter-sort]').forEach((sortButton) => {
+        sortButton.setAttribute('aria-pressed', sortButton.dataset.filterSort === sort ? 'true' : 'false');
+      });
+    }
+
+    function clearAll(): void {
+      selected.category.clear();
+      selected.size.clear();
+      selected.color.clear();
+      selected.availability.clear();
+      sort = 'featured';
+      bar.querySelectorAll<HTMLElement>('[data-filter-group]').forEach((groupButton) => {
+        groupButton.setAttribute('aria-pressed', 'false');
+      });
+      syncSortButtons();
+      apply();
+    }
+
+    bar.addEventListener('click', (event) => {
+      const button = event.target instanceof Element
+        ? event.target.closest<HTMLElement>('button')
+        : null;
+      if (!button) return;
+
+      if (button.hasAttribute('data-filter-clear')) {
+        clearAll();
+        return;
+      }
+
+      const sortValue = button.dataset.filterSort;
+      if (sortValue !== undefined) {
+        if (!isSortOrder(sortValue)) return;
+        sort = sortValue;
+        syncSortButtons();
+        apply();
+        return;
+      }
+
+      const group = button.dataset.filterGroup;
+      const value = button.dataset.filterValue;
+      if (group === undefined || value === undefined || !isFilterGroup(group)) return;
+
+      const groupSelection = selected[group];
+      if (groupSelection.has(value)) {
+        groupSelection.delete(value);
+        button.setAttribute('aria-pressed', 'false');
+      } else {
+        groupSelection.add(value);
+        button.setAttribute('aria-pressed', 'true');
+      }
+      apply();
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-filter-bar]').forEach(initializeFilterBar);
+</script>

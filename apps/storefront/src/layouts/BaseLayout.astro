@@ -52,7 +52,7 @@ if (!site) {
 const otherLocale: Locale = locale === 'es' ? 'en' : 'es';
 const products = await getCatalog().getPublishedProducts();
 const homePath = routePath('home', locale);
-const dropPath = `${homePath}#drop`;
+const dropPath = routePath('drop', locale);
 const accessPath = `${homePath}#access`;
 ---
 
@@ -193,7 +193,7 @@ const accessPath = `${homePath}#access`;
           <a href={routePath('products', locale)} data-cursor={dict.nav.cursorEnter}><span>02</span>{dict.nav.products}</a>
           <a href={routePath('archive', locale)} data-cursor={dict.nav.cursorEnter}><span>03</span>{dict.nav.archive}</a>
           <a href={routePath('manifesto', locale)} data-cursor={dict.nav.cursorEnter}><span>04</span>{dict.nav.manifesto}</a>
-          <a href={accessPath} data-cursor={dict.nav.cursorEnter}><span>05</span>{dict.nav.access}</a>
+          <a href={routePath('collection', locale)} data-cursor={dict.nav.cursorEnter}><span>05</span>{dict.nav.collection}</a>
         </nav>
         <div class="menu-visual">
           <Image src={vexxxMark} alt="" loading="lazy" />

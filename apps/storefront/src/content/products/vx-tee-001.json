@@ -18,6 +18,9 @@
   },
   "images": [],
   "collection": "drop-001",
+  "category": "tees",
+  "sizes": ["XS", "S", "M", "L", "XL"],
+  "colors": ["washed-black"],
   "availability": "in-stock",
   "published": true
 }
