@@ -124,6 +124,15 @@ const accessPath = `${homePath}#access`;
             <path d="m12.7 12.7 5 5"></path>
           </svg>
         </button>
+        <a
+          class="header-locale"
+          href={alternates[otherLocale]}
+          hreflang={otherLocale}
+          rel="alternate"
+          aria-label={dict.nav.localeLabel}
+        >
+          {`[ ${dict.nav.localeShort} ]`}
+        </a>
         <a class="header-access" href={accessPath}>{dict.nav.access}</a>
         <button
           class="cart-trigger"
@@ -171,9 +180,6 @@ const accessPath = `${homePath}#access`;
           <p class="footer-label">{dict.footer.signal}</p>
           <a href="https://www.instagram.com" rel="noreferrer">{dict.footer.instagram}</a>
           <a href="https://www.tiktok.com" rel="noreferrer">{dict.footer.tiktok}</a>
-          <a href={alternates[otherLocale]} hreflang={otherLocale} rel="alternate">
-            {dict.nav.localeLabel}
-          </a>
         </div>
       </div>
       <div class="footer-bottom">

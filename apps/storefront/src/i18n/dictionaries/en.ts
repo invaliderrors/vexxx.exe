@@ -26,6 +26,7 @@ export const en: Dictionary = {
     search: 'Search',
     cart: 'Cart',
     localeLabel: 'Español',
+    localeShort: 'ES',
     cursorEnter: 'ENTER',
     cursorAcquire: 'ACQUIRE',
     cursorDrag: 'DRAG',

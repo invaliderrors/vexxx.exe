@@ -506,6 +506,9 @@ if (!shellPiece || !materialPiece || !duoPiece) {
   }
 
   @media (max-width: 620px) {
+    /* Stacked full-width hero buttons need clearance above the scroll cue. */
+    .hero__content { padding-bottom: 7.5rem; }
+    .hero__scroll { bottom: 2.25rem; }
     .manifesto-intro { min-height: 72vh; }
     .manifesto-intro__ghost { font-size: 45vh; }
     .manifesto-intro h2 { font-size: clamp(3.7rem, 18vw, 6rem); }

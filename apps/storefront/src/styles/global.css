@@ -407,6 +407,7 @@ img {
 
 .header-system,
 .header-access,
+.header-locale,
 .cart-trigger {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.55rem;
@@ -479,12 +480,14 @@ img {
 
 .search-trigger,
 .header-access,
+.header-locale,
 .overlay__bar button {
   transition: color 0.25s ease;
 }
 
 .search-trigger:hover,
 .header-access:hover,
+.header-locale:hover,
 .overlay__bar button:hover {
   color: var(--vx-accent);
 }
@@ -492,6 +495,12 @@ img {
 .header-access {
   padding: 0.75rem 0.5rem;
   color: var(--vx-muted);
+}
+
+.header-locale {
+  padding: 0.75rem 0.4rem;
+  color: var(--vx-dim);
+  white-space: nowrap;
 }
 
 .cart-trigger {
@@ -1190,6 +1199,32 @@ img {
 @media (max-width: 620px) {
   :root {
     --page-pad: 1rem;
+  }
+
+  /* Small screens: burger + wordmark + search/cart only. Access stays
+     reachable through the menu overlay and footer. */
+  .header-system,
+  .header-access {
+    display: none;
+  }
+
+  .site-header__side {
+    gap: 0.75rem;
+  }
+
+  /* In-flow wordmark: space-between spaces it between burger and actions,
+     so the actions cluster can never slide underneath it. */
+  .wordmark {
+    position: static;
+    transform: none;
+  }
+
+  .wordmark img {
+    width: 5.25rem;
+  }
+
+  .header-locale {
+    padding-inline: 0.25rem;
   }
 
   .footer-grid {

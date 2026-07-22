@@ -28,6 +28,7 @@ export const es = {
     search: 'Buscar',
     cart: 'Carrito',
     localeLabel: 'English',
+    localeShort: 'EN',
     cursorEnter: 'ENTRAR',
     cursorAcquire: 'ADQUIRIR',
     cursorDrag: 'ARRASTRAR',
